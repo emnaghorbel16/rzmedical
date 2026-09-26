@@ -85,7 +85,12 @@ export const getInvoiceByOrderId = async (orderId: number) => {
 
 export const getMyInvoices = async (userId: number) => {
   const factures = await prisma.facture.findMany({
-    where: { commande: { utilisateurId: userId } },
+    where: {
+      OR: [
+        { commande: { utilisateurId: userId } },
+        { utilisateurId: userId },
+      ],
+    },
     orderBy: { creeLe: 'desc' },
     include: FACTURE_INCLUDE,
   });

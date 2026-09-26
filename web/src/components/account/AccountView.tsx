@@ -19,6 +19,7 @@ import {
   addSupportMessage,
   getMySupportTickets,
   getMyOrders,
+  getMyInvoices,
   imageUrl,
   updateMe,
   downloadInvoicePdf,
@@ -39,15 +40,17 @@ import {
   MapPinIcon,
   PercentIcon,
   UserIcon,
+  FileTextIcon,
   type IconProps,
 } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 
-type Tab = "profil" | "commandes" | "support";
+type Tab = "profil" | "commandes" | "factures" | "support";
 
 const NAV: { id: Tab; label: string; icon: ComponentType<IconProps> }[] = [
   { id: "profil", label: "Profil", icon: UserIcon },
   { id: "commandes", label: "Mes commandes", icon: PackageIcon },
+  { id: "factures", label: "Mes factures", icon: FileTextIcon },
   { id: "support", label: "Support", icon: AlertCircleIcon },
 ];
 
@@ -80,7 +83,7 @@ export function AccountView() {
 
   // URL-driven tab: /compte?tab=commandes or /compte (default: profil)
   const rawTab = searchParams.get("tab");
-  const tab: Tab = rawTab === "commandes" || rawTab === "support" ? rawTab : "profil";
+  const tab: Tab = rawTab === "commandes" || rawTab === "factures" || rawTab === "support" ? rawTab : "profil";
 
   const setTab = (id: Tab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -229,6 +232,8 @@ export function AccountView() {
             <ProfilePanel user={user} token={token!} setUser={setUser} />
           ) : tab === "commandes" ? (
             <OrdersPanel token={token!} />
+          ) : tab === "factures" ? (
+            <FacturesPanel token={token!} />
           ) : (
             <SupportPanel token={token!} />
           )}
@@ -864,6 +869,124 @@ function OrderCard({ order, token }: { order: Commande; token: string }) {
           )}
         </footer>
       )}
+    </article>
+  );
+}
+
+// --- Factures ----------------------------------------------------------------
+
+function FacturesPanel({ token }: { token: string }) {
+  const [invoices, setInvoices] = useState<any[] | null>(null);
+  const [error, setError] = useState(false);
+
+  const load = useCallback(async () => {
+    setError(false);
+    setInvoices(null);
+    try {
+      const data = await getMyInvoices(token);
+      setInvoices(data);
+    } catch {
+      setError(true);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-border bg-surface p-2 shadow-sm">
+        <ErrorState
+          title="Impossible de charger vos factures"
+          description="Une erreur est survenue. Veuillez réessayer."
+          retry={load}
+        />
+      </div>
+    );
+  }
+
+  if (invoices === null) {
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <div key={i} className="h-24 w-full rounded-2xl bg-slate-100 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
+  if (invoices.length === 0) {
+    return (
+      <div className="rounded-2xl border border-border bg-surface shadow-sm">
+        <EmptyState
+          icon={<FileTextIcon size={30} />}
+          title="Aucune facture"
+          description="Vos factures validées apparaîtront ici."
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      {invoices.map((invoice) => (
+        <InvoiceCard key={invoice.id} invoice={invoice} token={token} />
+      ))}
+    </div>
+  );
+}
+
+function InvoiceCard({ invoice, token }: { invoice: any; token: string }) {
+  const toast = useToast();
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      await downloadInvoicePdf(token, invoice.id, invoice.numero);
+    } catch (err: any) {
+      toast.error(err.message || "Impossible de télécharger la facture.");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <article className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
+        <div>
+          <div className="flex items-center gap-3">
+            <FileTextIcon size={20} className="text-navy-900" />
+            <h3 className="font-semibold text-navy-900">Facture N° {invoice.numero}</h3>
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            {formatDate(invoice.creeLe)}
+            {invoice.commande && ` • Commande ${orderNumber(invoice.commande.id)}`}
+          </p>
+        </div>
+        <div className="flex items-center gap-6">
+          <div className="text-right">
+            <p className="text-xs text-muted mb-0.5">Total TTC</p>
+            <p className="font-display font-bold tabular-nums text-navy-900">
+              {formatTND(invoice.montantTTC)}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-azure-50 text-azure-600 transition-colors hover:bg-azure-100 disabled:opacity-50"
+            title="Télécharger le PDF"
+          >
+            {downloading ? (
+              <span className="h-5 w-5 shrink-0 rounded-full border-2 border-azure-600 border-t-transparent animate-spin" />
+            ) : (
+              <DownloadIcon size={20} />
+            )}
+          </button>
+        </div>
+      </div>
     </article>
   );
 }
