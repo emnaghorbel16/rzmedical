@@ -1,18 +1,23 @@
 /**
  * Centralized API & Base URL helper with automatic host resolution for mobile / network devices.
+ * Always ensures the returned URL ends with /api (admin always calls /api/...)
  */
 export const getApiUrl = (): string => {
   const IS_SERVER = typeof window === "undefined";
   const envUrl = IS_SERVER
     ? (process.env.BACKEND_URL ? `${process.env.BACKEND_URL}/api` : (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000/api"))
     : (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000/api");
+
+  // Normalize: always ensure URL ends with /api (no double /api/api)
+  const normalized = envUrl.replace(/\/api\/?$/, "").trimEnd() + "/api";
+
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
     if (hostname && hostname !== "localhost" && hostname !== "127.0.0.1") {
-      return envUrl.replace("localhost", hostname).replace("127.0.0.1", hostname);
+      return normalized.replace("localhost", hostname).replace("127.0.0.1", hostname);
     }
   }
-  return envUrl.replace("localhost", "127.0.0.1");
+  return normalized.replace("localhost", "127.0.0.1");
 };
 
 export const getBaseUrl = (): string => {
