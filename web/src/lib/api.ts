@@ -89,8 +89,10 @@ async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T>
 
   let res: Response;
   try {
-    res = await fetch(`${API_URL}${path}`, init);
-  } catch {
+    const IS_SERVER = typeof window === "undefined";
+    const fetchBaseUrl = IS_SERVER ? (process.env.BACKEND_URL || API_URL) : API_URL;
+    res = await fetch(`${fetchBaseUrl}${path}`, init);
+  } catch (e) {
     throw new ApiError(
       "Impossible de contacter le serveur. Vérifiez votre connexion et réessayez.",
       0,
