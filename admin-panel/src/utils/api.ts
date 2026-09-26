@@ -4,7 +4,7 @@
 export const getApiUrl = (): string => {
   const IS_SERVER = typeof window === "undefined";
   const envUrl = IS_SERVER
-    ? (process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000/api")
+    ? (process.env.BACKEND_URL ? `${process.env.BACKEND_URL}/api` : (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000/api"))
     : (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000/api");
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
