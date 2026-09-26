@@ -7,7 +7,8 @@
     "start": "node dist/src/server.js",
     "dev": "nodemon --exec tsx src/server.ts",
     "build": "tsc",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "seed:admin": "node dist/src/seed-admin.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

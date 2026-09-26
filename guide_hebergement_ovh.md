@@ -210,10 +210,18 @@ Suivre les logs en direct :
 docker compose -f docker-compose.prod.yml logs -f
 ```
 
-### 4.4 — Appliquer les migrations Prisma
+### 4.4 — Appliquer le schéma de base de données
+
+> ✅ **Aucune action nécessaire** — Le schéma est appliqué **automatiquement** au démarrage du conteneur backend via `prisma db push`. Vérifiez simplement que le backend a bien démarré :
 
 ```bash
-docker exec rzmedical_backend_prod npx prisma migrate deploy
+docker logs rzmedical_backend_prod --tail 10
+```
+
+Vous devez voir :
+```
+🚀  Your database is now in sync with your Prisma schema.
+✅ Serveur MediSupply démarré !
 ```
 
 ### 4.5 — Créer le compte administrateur (seed — première fois uniquement)
