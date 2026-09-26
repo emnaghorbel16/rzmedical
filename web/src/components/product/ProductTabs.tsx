@@ -4,6 +4,20 @@ import { formatDate } from "@/lib/format";
 import { imageUrl } from "@/lib/api";
 import { PdfPages } from "./PdfPages";
 
+function renderDescription(value: string) {
+  const parts = value.split(/(\*[^*]+\*|_[^_]+_|\[(?:red|blue|green)\][\s\S]*?\[\/(?:red|blue|green)\])/g).filter(Boolean);
+  return parts.map((part, index) => {
+    const bold = part.match(/^\*([^*]+)\*$/); if (bold) return <strong key={index} className="font-bold">{bold[1]}</strong>;
+    const italic = part.match(/^_([^_]+)_$/); if (italic) return <em key={index} className="italic">{italic[1]}</em>;
+    const color = part.match(/^\[(red|blue|green)\]([\s\S]*?)\[\/\1\]$/); 
+    if (color) {
+      const colorValue = color[1] === "red" ? "text-red-600" : color[1] === "blue" ? "text-blue-600" : "text-green-600";
+      return <span key={index} className={colorValue}>{color[2]}</span>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+}
+
 export function ProductTabs({ product }: { product: Produit }) {
   const description = product.description?.trim();
   const paragraphs = description ? description.split(/\n{2,}|\r\n{2,}/) : [];
@@ -25,7 +39,7 @@ export function ProductTabs({ product }: { product: Produit }) {
           <div className="max-w-3xl space-y-4 text-[15px] leading-relaxed text-navy-700">
             {paragraphs.map((p, i) => (
               <p key={i} className="whitespace-pre-line">
-                {p}
+                {renderDescription(p)}
               </p>
             ))}
           </div>
