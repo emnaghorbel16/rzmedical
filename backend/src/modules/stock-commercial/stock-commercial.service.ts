@@ -379,9 +379,7 @@ export async function validerInventaire(id: number, userId?: number) {
       totalEcartQte += ligne.ecart;
       totalValeurEcart += Number(ligne.valeurEcart);
 
-      // Si écart différent de zéro, on ajuste le stock global
-      // Note: l'écart = ce qu'on trouve (voiture) - ce qu'il devrait y avoir (restante)
-      // Si écart négatif (-1), il manque 1 produit. Il a été perdu/donné. Le stock global doit diminuer.
+      // 1. Si écart différent de zéro, on enregistre l'ajustement pour traçabilité (sans toucher au stock principal)
       if (ligne.ecart !== 0) {
         await recordStockMovement(tx as any, {
           productId: ligne.produitId,
@@ -397,15 +395,37 @@ export async function validerInventaire(id: number, userId?: number) {
           depot: `Voiture ${inv.commercial?.prenom} ${inv.commercial?.nom}`,
           nature: 'INVENTORY_ADJUSTMENT'
         });
+      }
 
-        // Mise à jour rétrocompatible table statique
+      // 2. Le stock restant physiquement (voiture) est retourné au dépôt central
+      if (ligne.quantiteVoiture > 0) {
+        await recordStockMovement(tx as any, {
+          productId: ligne.produitId,
+          quantity: ligne.quantiteVoiture,
+          type: StockMovementType.RETURN,
+          stockDelta: ligne.quantiteVoiture, // on AJOUTE au stock principal
+          reference: inv.code,
+          sourceType: 'InventaireCommercial',
+          sourceId: inv.id,
+          userId,
+          operationKey: `INVC_RETURN:${inv.id}:${ligne.produitId}`,
+          skipStockUpdate: false, // Mise à jour effective du stock global
+          depot: 'DEPOT PRINCIPAL',
+          nature: 'RETOUR_COMMERCIAL'
+        });
+      }
+
+      // 3. Mise à jour de la table statique du commercial
+      // On retire la quantité théorique (restante) de son stock,
+      // puisque l'inventaire clôture ce bon et la marchandise est restituée (ou perdue).
+      if (ligne.quantiteRestante > 0) {
         const existing = await tx.stockCommercial.findUnique({
           where: { commercialId_produitId: { commercialId: inv.commercialId, produitId: ligne.produitId } }
         });
         if (existing) {
           await tx.stockCommercial.update({
             where: { id: existing.id },
-            data: { quantite: { increment: ligne.ecart } }
+            data: { quantite: { decrement: ligne.quantiteRestante } }
           });
         }
       }

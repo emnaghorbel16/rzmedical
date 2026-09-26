@@ -3837,6 +3837,7 @@ export const UtilisateurScalarFieldEnum = {
   prenom: 'prenom',
   nom: 'nom',
   telephone: 'telephone',
+  cin: 'cin',
   photo: 'photo',
   adresse: 'adresse',
   dateNaissance: 'dateNaissance',

@@ -13,12 +13,14 @@ interface Commercial {
   prenom: string | null;
   nom: string | null;
   telephone: string | null;
+  cin: string | null;
   photo: string | null;
   adresse: string | null;
   typeUtilisateur: string;
   creeLe: string;
   dernierLogin: string | null;
   matriculeVoiture: string | null;
+  matriculeFiscale: string | null;
 }
 
 export default function CommerciauxPage() {
@@ -36,6 +38,8 @@ export default function CommerciauxPage() {
   const [formPrenom, setFormPrenom] = useState("");
   const [formNom, setFormNom] = useState("");
   const [formEmail, setFormEmail] = useState("");
+  const [formCin, setFormCin] = useState("");
+  const [formMatriculeFiscale, setFormMatriculeFiscale] = useState("");
   const [formMatriculeY, setFormMatriculeY] = useState("");
   const [formMatriculeX, setFormMatriculeX] = useState("");
   const [formTelephone, setFormTelephone] = useState("");
@@ -68,6 +72,7 @@ export default function CommerciauxPage() {
 
   const resetForm = () => {
     setFormPrenom(""); setFormNom(""); setFormEmail("");
+    setFormCin(""); setFormMatriculeFiscale("");
     setFormMatriculeY(""); setFormMatriculeX(""); setFormTelephone(""); setFormAdresse("");
     setFormError(null);
   };
@@ -77,6 +82,7 @@ export default function CommerciauxPage() {
   const openEditModal = (c: Commercial) => {
     setEditCommercial(c);
     setFormPrenom(c.prenom || ""); setFormNom(c.nom || ""); setFormEmail(c.email);
+    setFormCin(c.cin || ""); setFormMatriculeFiscale(c.matriculeFiscale || "");
     if (c.matriculeVoiture) {
       const parts = c.matriculeVoiture.split(" تونس ");
       if (parts.length === 2) {
@@ -102,6 +108,8 @@ export default function CommerciauxPage() {
     try {
       const payload: Record<string, unknown> = {
         prenom: formPrenom || null, nom: formNom || null, email: formEmail,
+        cin: formCin || null,
+        matriculeFiscale: formMatriculeFiscale || null,
         telephone: formTelephone || null, adresse: formAdresse || null, typeUtilisateur: "COMMERCIAL",
         matriculeVoiture: (formMatriculeY && formMatriculeX) ? `${formMatriculeY} تونس ${formMatriculeX}` : null,
       };
@@ -293,6 +301,16 @@ export default function CommerciauxPage() {
               <div>
                 <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Email *</label>
                 <input type="email" value={formEmail} onChange={e => setFormEmail(e.target.value)} className="w-full rounded-xl border border-gray-300 p-2.5 text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" placeholder="commercial@exemple.com" required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">CIN</label>
+                  <input type="text" value={formCin} onChange={e => setFormCin(e.target.value)} className="w-full rounded-xl border border-gray-300 p-2.5 text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" placeholder="12345678" maxLength={8} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Matricule Fiscale</label>
+                  <input type="text" value={formMatriculeFiscale} onChange={e => setFormMatriculeFiscale(e.target.value)} className="w-full rounded-xl border border-gray-300 p-2.5 text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white" placeholder="1742623LAM000" />
+                </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Matricule de Voiture</label>

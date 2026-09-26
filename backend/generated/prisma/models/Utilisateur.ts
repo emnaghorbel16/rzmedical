@@ -45,6 +45,7 @@ export type UtilisateurMinAggregateOutputType = {
   prenom: string | null
   nom: string | null
   telephone: string | null
+  cin: string | null
   photo: string | null
   adresse: string | null
   dateNaissance: Date | null
@@ -68,6 +69,7 @@ export type UtilisateurMaxAggregateOutputType = {
   prenom: string | null
   nom: string | null
   telephone: string | null
+  cin: string | null
   photo: string | null
   adresse: string | null
   dateNaissance: Date | null
@@ -91,6 +93,7 @@ export type UtilisateurCountAggregateOutputType = {
   prenom: number
   nom: number
   telephone: number
+  cin: number
   photo: number
   adresse: number
   dateNaissance: number
@@ -128,6 +131,7 @@ export type UtilisateurMinAggregateInputType = {
   prenom?: true
   nom?: true
   telephone?: true
+  cin?: true
   photo?: true
   adresse?: true
   dateNaissance?: true
@@ -151,6 +155,7 @@ export type UtilisateurMaxAggregateInputType = {
   prenom?: true
   nom?: true
   telephone?: true
+  cin?: true
   photo?: true
   adresse?: true
   dateNaissance?: true
@@ -174,6 +179,7 @@ export type UtilisateurCountAggregateInputType = {
   prenom?: true
   nom?: true
   telephone?: true
+  cin?: true
   photo?: true
   adresse?: true
   dateNaissance?: true
@@ -284,6 +290,7 @@ export type UtilisateurGroupByOutputType = {
   prenom: string | null
   nom: string | null
   telephone: string | null
+  cin: string | null
   photo: string | null
   adresse: string | null
   dateNaissance: Date | null
@@ -330,6 +337,7 @@ export type UtilisateurWhereInput = {
   prenom?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   nom?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   telephone?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
+  cin?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   photo?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   adresse?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   dateNaissance?: Prisma.DateTimeNullableFilter<"Utilisateur"> | Date | string | null
@@ -369,6 +377,7 @@ export type UtilisateurOrderByWithRelationInput = {
   prenom?: Prisma.SortOrderInput | Prisma.SortOrder
   nom?: Prisma.SortOrderInput | Prisma.SortOrder
   telephone?: Prisma.SortOrderInput | Prisma.SortOrder
+  cin?: Prisma.SortOrderInput | Prisma.SortOrder
   photo?: Prisma.SortOrderInput | Prisma.SortOrder
   adresse?: Prisma.SortOrderInput | Prisma.SortOrder
   dateNaissance?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -412,6 +421,7 @@ export type UtilisateurWhereUniqueInput = Prisma.AtLeast<{
   prenom?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   nom?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   telephone?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
+  cin?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   photo?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   adresse?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   dateNaissance?: Prisma.DateTimeNullableFilter<"Utilisateur"> | Date | string | null
@@ -451,6 +461,7 @@ export type UtilisateurOrderByWithAggregationInput = {
   prenom?: Prisma.SortOrderInput | Prisma.SortOrder
   nom?: Prisma.SortOrderInput | Prisma.SortOrder
   telephone?: Prisma.SortOrderInput | Prisma.SortOrder
+  cin?: Prisma.SortOrderInput | Prisma.SortOrder
   photo?: Prisma.SortOrderInput | Prisma.SortOrder
   adresse?: Prisma.SortOrderInput | Prisma.SortOrder
   dateNaissance?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -482,6 +493,7 @@ export type UtilisateurScalarWhereWithAggregatesInput = {
   prenom?: Prisma.StringNullableWithAggregatesFilter<"Utilisateur"> | string | null
   nom?: Prisma.StringNullableWithAggregatesFilter<"Utilisateur"> | string | null
   telephone?: Prisma.StringNullableWithAggregatesFilter<"Utilisateur"> | string | null
+  cin?: Prisma.StringNullableWithAggregatesFilter<"Utilisateur"> | string | null
   photo?: Prisma.StringNullableWithAggregatesFilter<"Utilisateur"> | string | null
   adresse?: Prisma.StringNullableWithAggregatesFilter<"Utilisateur"> | string | null
   dateNaissance?: Prisma.DateTimeNullableWithAggregatesFilter<"Utilisateur"> | Date | string | null
@@ -504,6 +516,7 @@ export type UtilisateurCreateInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -542,6 +555,7 @@ export type UtilisateurUncheckedCreateInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -579,6 +593,7 @@ export type UtilisateurUpdateInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -617,6 +632,7 @@ export type UtilisateurUncheckedUpdateInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -655,6 +671,7 @@ export type UtilisateurCreateManyInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -677,6 +694,7 @@ export type UtilisateurUpdateManyMutationInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -699,6 +717,7 @@ export type UtilisateurUncheckedUpdateManyInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -727,6 +746,7 @@ export type UtilisateurCountOrderByAggregateInput = {
   prenom?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   telephone?: Prisma.SortOrder
+  cin?: Prisma.SortOrder
   photo?: Prisma.SortOrder
   adresse?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
@@ -756,6 +776,7 @@ export type UtilisateurMaxOrderByAggregateInput = {
   prenom?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   telephone?: Prisma.SortOrder
+  cin?: Prisma.SortOrder
   photo?: Prisma.SortOrder
   adresse?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
@@ -779,6 +800,7 @@ export type UtilisateurMinOrderByAggregateInput = {
   prenom?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   telephone?: Prisma.SortOrder
+  cin?: Prisma.SortOrder
   photo?: Prisma.SortOrder
   adresse?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
@@ -1143,6 +1165,7 @@ export type UtilisateurCreateWithoutTicketsSupportInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1180,6 +1203,7 @@ export type UtilisateurUncheckedCreateWithoutTicketsSupportInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1232,6 +1256,7 @@ export type UtilisateurUpdateWithoutTicketsSupportInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1269,6 +1294,7 @@ export type UtilisateurUncheckedUpdateWithoutTicketsSupportInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1305,6 +1331,7 @@ export type UtilisateurCreateWithoutActiviteCategorieInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1342,6 +1369,7 @@ export type UtilisateurUncheckedCreateWithoutActiviteCategorieInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1408,6 +1436,7 @@ export type UtilisateurScalarWhereInput = {
   prenom?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   nom?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   telephone?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
+  cin?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   photo?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   adresse?: Prisma.StringNullableFilter<"Utilisateur"> | string | null
   dateNaissance?: Prisma.DateTimeNullableFilter<"Utilisateur"> | Date | string | null
@@ -1430,6 +1459,7 @@ export type UtilisateurCreateWithoutMouvementsStockInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1467,6 +1497,7 @@ export type UtilisateurUncheckedCreateWithoutMouvementsStockInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1519,6 +1550,7 @@ export type UtilisateurUpdateWithoutMouvementsStockInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1556,6 +1588,7 @@ export type UtilisateurUncheckedUpdateWithoutMouvementsStockInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1592,6 +1625,7 @@ export type UtilisateurCreateWithoutCommandesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1629,6 +1663,7 @@ export type UtilisateurUncheckedCreateWithoutCommandesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1681,6 +1716,7 @@ export type UtilisateurUpdateWithoutCommandesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1718,6 +1754,7 @@ export type UtilisateurUncheckedUpdateWithoutCommandesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1754,6 +1791,7 @@ export type UtilisateurCreateWithoutBonsLivraisonInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1791,6 +1829,7 @@ export type UtilisateurUncheckedCreateWithoutBonsLivraisonInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1832,6 +1871,7 @@ export type UtilisateurCreateWithoutBonsLivraisonAsCommInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1869,6 +1909,7 @@ export type UtilisateurUncheckedCreateWithoutBonsLivraisonAsCommInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -1921,6 +1962,7 @@ export type UtilisateurUpdateWithoutBonsLivraisonInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1958,6 +2000,7 @@ export type UtilisateurUncheckedUpdateWithoutBonsLivraisonInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2005,6 +2048,7 @@ export type UtilisateurUpdateWithoutBonsLivraisonAsCommInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2042,6 +2086,7 @@ export type UtilisateurUncheckedUpdateWithoutBonsLivraisonAsCommInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2078,6 +2123,7 @@ export type UtilisateurCreateWithoutFacturesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2115,6 +2161,7 @@ export type UtilisateurUncheckedCreateWithoutFacturesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2167,6 +2214,7 @@ export type UtilisateurUpdateWithoutFacturesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2204,6 +2252,7 @@ export type UtilisateurUncheckedUpdateWithoutFacturesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2240,6 +2289,7 @@ export type UtilisateurCreateWithoutDevisInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2277,6 +2327,7 @@ export type UtilisateurUncheckedCreateWithoutDevisInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2329,6 +2380,7 @@ export type UtilisateurUpdateWithoutDevisInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2366,6 +2418,7 @@ export type UtilisateurUncheckedUpdateWithoutDevisInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2402,6 +2455,7 @@ export type UtilisateurCreateWithoutTokenResetInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2439,6 +2493,7 @@ export type UtilisateurUncheckedCreateWithoutTokenResetInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2491,6 +2546,7 @@ export type UtilisateurUpdateWithoutTokenResetInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2528,6 +2584,7 @@ export type UtilisateurUncheckedUpdateWithoutTokenResetInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2564,6 +2621,7 @@ export type UtilisateurCreateWithoutChargesGeneralesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2601,6 +2659,7 @@ export type UtilisateurUncheckedCreateWithoutChargesGeneralesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2653,6 +2712,7 @@ export type UtilisateurUpdateWithoutChargesGeneralesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2690,6 +2750,7 @@ export type UtilisateurUncheckedUpdateWithoutChargesGeneralesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2726,6 +2787,7 @@ export type UtilisateurCreateWithoutChargesCnssInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2763,6 +2825,7 @@ export type UtilisateurUncheckedCreateWithoutChargesCnssInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2815,6 +2878,7 @@ export type UtilisateurUpdateWithoutChargesCnssInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2852,6 +2916,7 @@ export type UtilisateurUncheckedUpdateWithoutChargesCnssInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2888,6 +2953,7 @@ export type UtilisateurCreateWithoutCharges9ba4aInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2925,6 +2991,7 @@ export type UtilisateurUncheckedCreateWithoutCharges9ba4aInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -2977,6 +3044,7 @@ export type UtilisateurUpdateWithoutCharges9ba4aInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3014,6 +3082,7 @@ export type UtilisateurUncheckedUpdateWithoutCharges9ba4aInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3050,6 +3119,7 @@ export type UtilisateurCreateWithoutStockCommercialInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3087,6 +3157,7 @@ export type UtilisateurUncheckedCreateWithoutStockCommercialInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3139,6 +3210,7 @@ export type UtilisateurUpdateWithoutStockCommercialInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3176,6 +3248,7 @@ export type UtilisateurUncheckedUpdateWithoutStockCommercialInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3212,6 +3285,7 @@ export type UtilisateurCreateWithoutBonsEntreeInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3249,6 +3323,7 @@ export type UtilisateurUncheckedCreateWithoutBonsEntreeInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3301,6 +3376,7 @@ export type UtilisateurUpdateWithoutBonsEntreeInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3338,6 +3414,7 @@ export type UtilisateurUncheckedUpdateWithoutBonsEntreeInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3374,6 +3451,7 @@ export type UtilisateurCreateWithoutInventairesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3411,6 +3489,7 @@ export type UtilisateurUncheckedCreateWithoutInventairesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3452,6 +3531,7 @@ export type UtilisateurCreateWithoutInventairesValidesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3489,6 +3569,7 @@ export type UtilisateurUncheckedCreateWithoutInventairesValidesInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3541,6 +3622,7 @@ export type UtilisateurUpdateWithoutInventairesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3578,6 +3660,7 @@ export type UtilisateurUncheckedUpdateWithoutInventairesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3625,6 +3708,7 @@ export type UtilisateurUpdateWithoutInventairesValidesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3662,6 +3746,7 @@ export type UtilisateurUncheckedUpdateWithoutInventairesValidesInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3699,6 +3784,7 @@ export type UtilisateurCreateManyActiviteCategorieInput = {
   prenom?: string | null
   nom?: string | null
   telephone?: string | null
+  cin?: string | null
   photo?: string | null
   adresse?: string | null
   dateNaissance?: Date | string | null
@@ -3720,6 +3806,7 @@ export type UtilisateurUpdateWithoutActiviteCategorieInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3757,6 +3844,7 @@ export type UtilisateurUncheckedUpdateWithoutActiviteCategorieInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3794,6 +3882,7 @@ export type UtilisateurUncheckedUpdateManyWithoutActiviteCategorieInput = {
   prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3964,6 +4053,7 @@ export type UtilisateurSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   prenom?: boolean
   nom?: boolean
   telephone?: boolean
+  cin?: boolean
   photo?: boolean
   adresse?: boolean
   dateNaissance?: boolean
@@ -4004,6 +4094,7 @@ export type UtilisateurSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   prenom?: boolean
   nom?: boolean
   telephone?: boolean
+  cin?: boolean
   photo?: boolean
   adresse?: boolean
   dateNaissance?: boolean
@@ -4028,6 +4119,7 @@ export type UtilisateurSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   prenom?: boolean
   nom?: boolean
   telephone?: boolean
+  cin?: boolean
   photo?: boolean
   adresse?: boolean
   dateNaissance?: boolean
@@ -4052,6 +4144,7 @@ export type UtilisateurSelectScalar = {
   prenom?: boolean
   nom?: boolean
   telephone?: boolean
+  cin?: boolean
   photo?: boolean
   adresse?: boolean
   dateNaissance?: boolean
@@ -4068,7 +4161,7 @@ export type UtilisateurSelectScalar = {
   misAJourLe?: boolean
 }
 
-export type UtilisateurOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "motDePasseHash" | "prenom" | "nom" | "telephone" | "photo" | "adresse" | "dateNaissance" | "typeUtilisateur" | "remise" | "matriculeFiscale" | "matriculeVoiture" | "activite" | "activiteCategoryId" | "otpCode" | "otpExpire" | "dernierLogin" | "creeLe" | "misAJourLe", ExtArgs["result"]["utilisateur"]>
+export type UtilisateurOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "motDePasseHash" | "prenom" | "nom" | "telephone" | "cin" | "photo" | "adresse" | "dateNaissance" | "typeUtilisateur" | "remise" | "matriculeFiscale" | "matriculeVoiture" | "activite" | "activiteCategoryId" | "otpCode" | "otpExpire" | "dernierLogin" | "creeLe" | "misAJourLe", ExtArgs["result"]["utilisateur"]>
 export type UtilisateurInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   activiteCategorie?: boolean | Prisma.Utilisateur$activiteCategorieArgs<ExtArgs>
   commandes?: boolean | Prisma.Utilisateur$commandesArgs<ExtArgs>
@@ -4122,6 +4215,7 @@ export type $UtilisateurPayload<ExtArgs extends runtime.Types.Extensions.Interna
     prenom: string | null
     nom: string | null
     telephone: string | null
+    cin: string | null
     photo: string | null
     adresse: string | null
     dateNaissance: Date | null
@@ -4581,6 +4675,7 @@ export interface UtilisateurFieldRefs {
   readonly prenom: Prisma.FieldRef<"Utilisateur", 'String'>
   readonly nom: Prisma.FieldRef<"Utilisateur", 'String'>
   readonly telephone: Prisma.FieldRef<"Utilisateur", 'String'>
+  readonly cin: Prisma.FieldRef<"Utilisateur", 'String'>
   readonly photo: Prisma.FieldRef<"Utilisateur", 'String'>
   readonly adresse: Prisma.FieldRef<"Utilisateur", 'String'>
   readonly dateNaissance: Prisma.FieldRef<"Utilisateur", 'DateTime'>

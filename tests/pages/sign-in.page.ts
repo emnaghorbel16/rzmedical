@@ -6,7 +6,7 @@ export class SignInPage {
   readonly submit: Locator;
 
   constructor(readonly page: Page) {
-    this.email = page.getByPlaceholder('admin@rzmedical.com');
+    this.email = page.getByPlaceholder('admin@randzmedical.com');
     this.password = page.getByPlaceholder('Votre mot de passe');
     this.submit = page.getByRole('button', { name: /Continuer/i });
   }

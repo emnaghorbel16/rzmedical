@@ -115,6 +115,7 @@ model Utilisateur {
   prenom             String?
   nom                String?
   telephone          String?
+  cin                String?
   photo              String?
   adresse            String?
   dateNaissance      DateTime?

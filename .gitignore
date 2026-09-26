@@ -1,9 +1,13 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ============================================================
+#  RZMedical — .gitignore
+#  Monorepo : web/ | admin-panel/ | backend/ | prisma/ | tests/
+# ============================================================
 
-# dependencies
-/node_modules
-**/node_modules/
-/.pnp
+# ─────────────────────────────────────────
+# 1. DÉPENDANCES
+# ─────────────────────────────────────────
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -11,52 +15,199 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# ─────────────────────────────────────────
+# 2. VARIABLES D'ENVIRONNEMENT (SECRETS)
+# ─────────────────────────────────────────
+# Ne jamais committer les secrets — les fichiers .example sont committés
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
 
-# next.js
-/.next/
-**/.next/
-/out/
+# Garder les templates de configuration
+!.env.example
 
-# production
-/build
-**/dist/
+# ─────────────────────────────────────────
+# 3. NEXT.JS (web/ & admin-panel/)
+# ─────────────────────────────────────────
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
 
-# misc
-.DS_Store
+# ─────────────────────────────────────────
+# 4. BUILD & DIST
+# ─────────────────────────────────────────
+dist/
+build/
+/backend/dist/
+
+# ─────────────────────────────────────────
+# 5. PRISMA ORM
+# ─────────────────────────────────────────
+# Clients générés — recréés avec `prisma generate`
+**/generated/prisma/
+/src/generated/prisma/
+/backend/generated/
+
+# ─────────────────────────────────────────
+# 6. UPLOADS & FICHIERS UTILISATEURS
+# ─────────────────────────────────────────
+# Fichiers uploadés par les admins/clients (logos, produits, BL…)
+/backend/uploads/
+/web/public/uploads/
+/admin-panel/public/uploads/
+
+# Certificats SSL locaux
+/web/certificates/
+/admin-panel/certificates/
 *.pem
+*.key
+*.crt
+*.p12
+*.pfx
 
-# debug
+# ─────────────────────────────────────────
+# 7. TESTS & COUVERTURE
+# ─────────────────────────────────────────
+# Playwright
+/playwright-report/
+/test-results/
+/playwright/.cache/
+
+# Jest / couverture
+/coverage/
+.nyc_output/
+
+# ─────────────────────────────────────────
+# 8. LOGS
+# ─────────────────────────────────────────
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# env files (secrets — ne pas committer)
-.env
-.env.local
-.env.*.local
-# Les fichiers .env.example sont des templates et doivent être committés
-!.env.example
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-/src/generated/prisma
-
-# Temp files and IDE folders
 build.log
-*.docx
-temp_*.md
-implementation_plan*.md
+lerna-debug.log*
+
+# ─────────────────────────────────────────
+# 9. BASE DE DONNÉES
+# ─────────────────────────────────────────
+# Dumps PostgreSQL locaux (potentiellement très volumineux et contiennent des données)
+*.dump
+*.sql.gz
+*.backup
+
+# SQLite (si utilisé localement)
+*.sqlite
+*.sqlite3
+*.db
+
+# ─────────────────────────────────────────
+# 10. DOCKER
+# ─────────────────────────────────────────
+# Les fichiers docker-compose et Dockerfile sont committés
+# Seuls les overrides locaux sont ignorés
+docker-compose.override.yml
+docker-compose.local.yml
+
+# ─────────────────────────────────────────
+# 11. SYSTÈME D'EXPLOITATION
+# ─────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverrideAttributes
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ─────────────────────────────────────────
+# 12. ÉDITEURS & IDEs
+# ─────────────────────────────────────────
+# VSCode (sauf les paramètres partagés de l'équipe)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+# JetBrains (IntelliJ, WebStorm…)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim / Emacs
+*.swp
+*.swo
+*.swn
+.*.swp
+\#*\#
+.#*
+
+# ─────────────────────────────────────────
+# 13. AGENTS IA & OUTILS DE DÉVELOPPEMENT
+# ─────────────────────────────────────────
 .claude/
 .windsurf/
+.cursor/
 .agents/
+.gemini/
 
-# Local runtime data
-/backend/uploads/
+# ─────────────────────────────────────────
+# 14. VERCEL / DÉPLOIEMENT
+# ─────────────────────────────────────────
+.vercel/
+.netlify/
+
+# ─────────────────────────────────────────
+# 15. SCRIPTS DE DÉBOGAGE TEMPORAIRES
+# ─────────────────────────────────────────
+# Fichiers de debug créés pendant le développement
+/backend/check-admins.ts
+/backend/check_seq.*
+/backend/fix-*.ts
+/backend/fix_*.ts
+/backend/get_token.*
+/backend/query-inv.*
+/backend/query.sql
+/backend/test-*.ts
+/backend/test_*.ts
+/backend/migration_*.sql
+temp_*.md
+implementation_plan*.md
+logout
+
+# ─────────────────────────────────────────
+# 16. DOCUMENTS & FICHIERS BINAIRES LOCAUX
+# ─────────────────────────────────────────
+*.docx
+*.xlsx
+*.pdf
+# Exception : ne pas ignorer les PDFs qui font partie du code source
+!**/public/**/*.pdf
+
+# Données OCR lourdes (Tesseract)
+/backend/fra.traineddata
+*.traineddata
+
+# ─────────────────────────────────────────
+# 17. CACHE & FICHIERS TEMPORAIRES
+# ─────────────────────────────────────────
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.prettiercache
+*.tmp
+*.temp

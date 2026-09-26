@@ -7,7 +7,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const email = process.env.ADMIN_EMAIL || 'admin@rzmedical.com';
+  const email = process.env.ADMIN_EMAIL || 'admin@randzmedical.com';
   const password = process.env.ADMIN_PASSWORD || 'Admin@RZ2024!';
   const prenom = 'Super';
   const nom = 'Admin';

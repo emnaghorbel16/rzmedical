@@ -196,7 +196,7 @@ export default function SignInForm() {
                   <Label>Email <span className="text-error-500">*</span></Label>
                   <Input
                     type="email"
-                    placeholder="admin@rzmedical.com"
+                    placeholder="admin@randzmedical.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
