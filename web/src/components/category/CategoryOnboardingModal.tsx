@@ -6,8 +6,6 @@ import { useCategory } from "@/providers/CategoryProvider";
 import type { CategorieListItem } from "@/lib/types";
 import { cn } from "@/lib/cn";
 
-const ACCENT = "#2196d2";
-
 export function CategoryOnboardingModal({
   categories,
 }: {
@@ -23,7 +21,7 @@ export function CategoryOnboardingModal({
 
   const handleSelect = (cat: CategorieListItem) => {
     setSelected(cat.id);
-    setTimeout(() => selectCategory(cat), 180);
+    setTimeout(() => selectCategory(cat), 220);
   };
 
   return createPortal(
@@ -33,91 +31,97 @@ export function CategoryOnboardingModal({
       aria-modal="true"
       aria-labelledby="onboarding-title"
     >
-      <div className="absolute inset-0 bg-navy-950/85" aria-hidden />
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" aria-hidden />
 
+      {/* Card */}
       <div
-        style={{ animation: "rzIn 380ms cubic-bezier(0.16,1,0.3,1) both" }}
-        className="relative w-full max-w-[420px] bg-white border border-slate-200"
+        style={{ animation: "rzIn 360ms cubic-bezier(0.16,1,0.3,1) both" }}
+        className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-100 overflow-hidden"
       >
-        {/* Filet d'accent latéral, pas horizontal — casse la symétrie top-down attendue */}
-        <div className="flex">
-          <div className="w-[3px] shrink-0" style={{ background: ACCENT }} aria-hidden />
+        {/* Header accent strip */}
+        <div className="h-1 w-full bg-gradient-to-r from-azure-500 to-azure-400" />
 
-          <div className="flex-1 min-w-0">
-            {/* En-tête décalé, non centré, avec numérotation contextuelle */}
-            <div className="pl-6 pr-7 pt-7 pb-4">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-                Étape 1 sur 1
-              </span>
-              <h1
-                id="onboarding-title"
-                className="mt-1.5 font-serif text-[21px] font-medium text-navy-900 leading-[1.15]"
-              >
-                Configurez votre catalogue
-              </h1>
-              <p className="mt-2 text-[13px] leading-relaxed text-slate-500 max-w-[92%]">
-                Choisissez le rayon dans lequel vous exercez. RZ Medical
-                adapte automatiquement les produits affichés.
-              </p>
-            </div>
-
-            {/* Liste avec index numérique — remplace le point décoratif par un repère fonctionnel */}
-            <div className="pb-2">
-              {categories.map((cat, i) => {
-                const isSelected = selected === cat.id;
-                const isLast = i === categories.length - 1;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => handleSelect(cat)}
-                    className={cn(
-                      "group relative flex w-full items-baseline gap-3 pl-6 pr-7 py-3 text-left outline-none transition-colors duration-150",
-                      !isLast && "border-b border-slate-100",
-                      isSelected ? "bg-[#2196d2]/[0.06]" : "hover:bg-slate-50",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "font-serif text-[12px] tabular-nums shrink-0 transition-colors",
-                        isSelected ? "text-[#2196d2]" : "text-slate-300 group-hover:text-slate-400",
-                      )}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={cn(
-                        "flex-1 min-w-0 truncate text-[14px] transition-colors",
-                        isSelected
-                          ? "font-semibold text-navy-900"
-                          : "font-normal text-slate-700 group-hover:text-navy-900",
-                      )}
-                    >
-                      {cat.nom}
-                    </span>
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "text-[12px] font-serif italic shrink-0 transition-all duration-150",
-                        isSelected
-                          ? "opacity-100 translate-x-0 text-[#2196d2]"
-                          : "opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 text-slate-400",
-                      )}
-                    >
-                      choisi
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 text-center">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-azure-50">
+            <svg className="h-6 w-6 text-azure-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
           </div>
+          <h1
+            id="onboarding-title"
+            className="text-xl font-bold text-navy-900"
+          >
+            Choisissez votre domaine
+          </h1>
+          <p className="mt-1.5 text-sm text-slate-500">
+            Sélectionnez votre rayon d&apos;activité pour personnaliser votre catalogue.
+          </p>
+        </div>
+
+        {/* Category buttons */}
+        <div className="px-5 pb-6 grid gap-2.5">
+          {categories.map((cat) => {
+            const isSelected = selected === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleSelect(cat)}
+                className={cn(
+                  "group relative flex w-full items-center gap-4 rounded-xl border-2 px-5 py-4 text-left transition-all duration-150 cursor-pointer",
+                  isSelected
+                    ? "border-azure-500 bg-azure-50 shadow-md scale-[1.01]"
+                    : "border-slate-200 bg-white hover:border-azure-300 hover:bg-azure-50/50 hover:shadow-sm active:scale-[0.99]",
+                )}
+              >
+                {/* Indicator circle */}
+                <span
+                  className={cn(
+                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
+                    isSelected
+                      ? "border-azure-500 bg-azure-500"
+                      : "border-slate-300 bg-white group-hover:border-azure-400",
+                  )}
+                >
+                  {isSelected && (
+                    <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+
+                {/* Label */}
+                <span
+                  className={cn(
+                    "flex-1 text-[15px] font-semibold transition-colors",
+                    isSelected ? "text-azure-700" : "text-navy-800 group-hover:text-navy-900",
+                  )}
+                >
+                  {cat.nom}
+                </span>
+
+                {/* Arrow */}
+                <svg
+                  className={cn(
+                    "h-5 w-5 shrink-0 transition-all duration-150",
+                    isSelected ? "text-azure-500 translate-x-0 opacity-100" : "text-slate-300 -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-60",
+                  )}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       <style>{`
         @keyframes rzIn {
-          from { opacity: 0; transform: translateX(-6px) translateY(4px); }
-          to { opacity: 1; transform: translateX(0) translateY(0); }
+          from { opacity: 0; transform: scale(0.94) translateY(8px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
     </div>,
