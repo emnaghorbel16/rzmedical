@@ -27,7 +27,7 @@ export default function EditBonSortiePage() {
     const load = async () => {
       try {
         const token = localStorage.getItem("token") || localStorage.getItem("rzm_token");
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
         const [bonRes, commercialRes, productRes] = await Promise.all([
           fetch(`${API_URL}/stock-commercial/bons-sortie/${id}`, { headers }),
           fetch(`${API_URL}/clients/commerciaux`, { headers }),
