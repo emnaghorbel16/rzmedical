@@ -31,5 +31,5 @@ COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/clie
 
 EXPOSE 4000
 
-# Apply migrations then start server
-CMD sh -c "npx prisma migrate deploy --schema=prisma/schema.prisma && node dist/src/server.js"
+# Apply schema (db push handles missing/incomplete migration history)
+CMD sh -c "npx prisma db push --schema=prisma/schema.prisma --accept-data-loss && node dist/src/server.js"
