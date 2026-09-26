@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/providers";
 import { getCompanyInfo, imageUrl } from "@/lib/api";
@@ -84,6 +85,19 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${sora.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-8KYNSN9MQP"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-8KYNSN9MQP');
+          `}
+        </Script>
         <CompanyProvider initialData={companyInfo}>
           <Providers>{children}</Providers>
         </CompanyProvider>
