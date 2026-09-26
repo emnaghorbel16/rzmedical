@@ -229,7 +229,7 @@ Vous devez voir :
 > Cette étape crée le compte admin avec lequel vous vous connecterez à `https://admin.randzmedical.com`.
 
 ```bash
-docker exec rzmedical_backend_prod npm run db:seed
+docker exec rzmedical_backend_prod npm run seed:admin
 ```
 
 Le script utilise les valeurs définies dans `.env.prod` :
@@ -277,10 +277,10 @@ Dans **l'espace client OVH → Domaines → randzmedical.com → Zone DNS** :
 
 | Type | Sous-domaine | Cible | TTL |
 | :--- | :--- | :--- | :---: |
-| A | `@` (racine) | `198.245.XXX.XXX` | 3600 |
-| A | `www` | `198.245.XXX.XXX` | 3600 |
-| A | `api` | `198.245.XXX.XXX` | 3600 |
-| A | `admin` | `198.245.XXX.XXX` | 3600 |
+| A | `@` (racine) | `141.94.31.219` | 3600 |
+| A | `www` | `141.94.31.219` | 3600 |
+| A | `api` | `141.94.31.219` | 3600 |
+| A | `admin` | `141.94.31.219` | 3600 |
 
 > ⏱️ La propagation DNS prend **15 minutes à 24 heures**.  
 > Vérifiez sur [whatsmydns.net](https://www.whatsmydns.net) avant de passer à l'étape suivante.
