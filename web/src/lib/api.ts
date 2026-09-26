@@ -128,6 +128,7 @@ export interface ProductFilters {
   brand?: string;
   q?: string;
   promo?: boolean;
+  misEnAvantSousCat?: boolean;
   disponible?: boolean;
   minPrix?: number;
   maxPrix?: number;

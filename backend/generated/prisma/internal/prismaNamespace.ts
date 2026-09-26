@@ -3945,6 +3945,7 @@ export const ProduitScalarFieldEnum = {
   ficheTechnique: 'ficheTechnique',
   remise: 'remise',
   disponible: 'disponible',
+  misEnAvantSousCat: 'misEnAvantSousCat',
   sousCategorieId: 'sousCategorieId',
   marqueId: 'marqueId',
   creeLe: 'creeLe',

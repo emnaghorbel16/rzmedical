@@ -22,8 +22,9 @@ async function SubcategoryRail({
   try {
     const result = await getPagedProducts({
       sousCategorieId: subcategory.id,
+      misEnAvantSousCat: true,
       page: 1,
-      limit: 12,
+      limit: 10,
       sort: "recent",
     });
     products = result.products;

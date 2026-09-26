@@ -37,6 +37,7 @@ interface Produit {
   qteVente?: number;
   disponibleALaVente?: boolean;
   disponible: boolean;
+  misEnAvantSousCat?: boolean;
   description?: string;
   expirationDate?: string | null;
   images?: string[];
@@ -70,6 +71,7 @@ export default function ProductsPage() {
   const [formSubCatId, setFormSubCatId] = useState("");
   const [formBrandId, setFormBrandId] = useState("");
   const [formDispo, setFormDispo] = useState(true);
+  const [formMisEnAvant, setFormMisEnAvant] = useState(false);
   const [formDesc, setFormDesc] = useState("");
   const [formExpirationDate, setFormExpirationDate] = useState("");
   const [formImages, setFormImages] = useState<string[]>([]);
@@ -164,7 +166,7 @@ export default function ProductsPage() {
 
   const openAdd = (brandId?: number) => {
     setEditing(null);
-    setFormNom(""); setFormRef(""); setFormPrix(""); setFormPrixAchat(""); setFormTva("0"); setFormRemise("0"); setFormStock("0"); setFormDispo(true);
+    setFormNom(""); setFormRef(""); setFormPrix(""); setFormPrixAchat(""); setFormTva("0"); setFormRemise("0"); setFormStock("0"); setFormDispo(true); setFormMisEnAvant(false);
     setFormDesc(""); setFormExpirationDate(""); setFormImages([]); setFormFicheTechnique(""); setFormVideo(""); setFormMotsCles(""); setFormTags([]);
     setFormSubCatId(subcategories.length > 0 ? subcategories[0].id.toString() : "");
     setFormBrandId(brandId?.toString() || (brands.length > 0 ? brands[0].id.toString() : ""));
@@ -177,7 +179,7 @@ export default function ProductsPage() {
     setFormPrixAchat(item.prixAchat != null ? item.prixAchat.toString() : "");
     setFormTva(item.tva != null ? item.tva.toString() : "0");
     setFormRemise((item.remise ?? 0).toString());
-    setFormStock(item.stock.toString()); setFormDispo(item.disponible);
+    setFormStock(item.stock.toString()); setFormDispo(item.disponible); setFormMisEnAvant(item.misEnAvantSousCat ?? false);
     setFormDesc(item.description || "");
     setFormExpirationDate(item.expirationDate ? item.expirationDate.slice(0, 10) : "");
     setFormImages(item.images || []);
@@ -211,6 +213,7 @@ export default function ProductsPage() {
           remise: Number(formRemise) || 0,
           stock: Number(formStock),
           disponible: formDispo,
+          misEnAvantSousCat: formMisEnAvant,
           description: formDesc.trim() || undefined,
           expirationDate: formExpirationDate || null,
           images: formImages,
@@ -925,10 +928,14 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <div className="mb-4">
+            <div className="flex gap-6 mb-4">
               <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
                 <input type="checkbox" checked={formDispo} onChange={(e) => setFormDispo(e.target.checked)} className="rounded border-gray-300 w-4 h-4 text-brand-500 focus:ring-brand-500" />
                 Produit disponible à la vente
+              </label>
+              <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
+                <input type="checkbox" checked={formMisEnAvant} onChange={(e) => setFormMisEnAvant(e.target.checked)} className="rounded border-gray-300 w-4 h-4 text-brand-500 focus:ring-brand-500" />
+                Mis en avant sur l'accueil de la sous-catégorie
               </label>
             </div>
 

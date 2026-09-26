@@ -26,6 +26,7 @@ export interface ProductQuery {
   promo?: boolean;          // uniquement les produits en promotion
   disponible?: boolean;
   disponibleALaVente?: boolean;
+  misEnAvantSousCat?: boolean;
   minPrix?: number;
   maxPrix?: number;
   sort?: string;            // 'recent' | 'prix-asc' | 'prix-desc' | 'nom' | 'remise'
@@ -79,6 +80,7 @@ export const getAll = async (query: ProductQuery = {}) => {
   }
 
   if (query.disponible !== undefined) where.disponible = query.disponible;
+  if (query.misEnAvantSousCat !== undefined) where.misEnAvantSousCat = query.misEnAvantSousCat;
   if (query.promo || query.filter === 'promo') where.remise = { gt: 0 };
   if (query.minPrix !== undefined || query.maxPrix !== undefined) {
     where.prix = {};

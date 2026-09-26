@@ -23,6 +23,7 @@ export const getAll = async (req: Request, res: Response) => {
       q: q.q as string | undefined,
       promo: toBool(q.promo),
       disponible: toBool(q.disponible),
+      misEnAvantSousCat: toBool(q.misEnAvantSousCat),
       minPrix: toNum(q.minPrix),
       maxPrix: toNum(q.maxPrix),
       sort: q.sort as string | undefined,
@@ -76,13 +77,13 @@ export const getByReference = async (req: Request, res: Response) => {
 
 export const create = async (req: Request, res: Response) => {
   try {
-    const { nom, reference, description, expirationDate, prix, prixAchat, tva, remise, stock, images, video, motsCles, ficheTechnique, disponible, disponibleALaVente, sousCategorieId, marqueId } = req.body;
+    const { nom, reference, description, expirationDate, prix, prixAchat, tva, remise, stock, images, video, motsCles, ficheTechnique, disponible, disponibleALaVente, misEnAvantSousCat, sousCategorieId, marqueId } = req.body;
     if (!nom || !reference || prix === undefined || !sousCategorieId || !marqueId) {
       return res.status(400).json({ error: 'Champs requis manquants' });
     }
     const data = await service.create({
       nom, reference, description, expirationDate: expirationDate ? new Date(expirationDate) : null, prix: Number(prix), prixAchat: prixAchat !== undefined && prixAchat !== null ? Number(prixAchat) : null, tva: tva !== undefined ? Number(tva) : 0, remise: remise !== undefined ? Number(remise) : 0, stock: stock ? Number(stock) : 0,
-      images, video, motsCles, ficheTechnique, disponible, disponibleALaVente: disponibleALaVente ?? disponible ?? true, sousCategorieId: Number(sousCategorieId), marqueId: Number(marqueId)
+      images, video, motsCles, ficheTechnique, disponible, disponibleALaVente: disponibleALaVente ?? disponible ?? true, misEnAvantSousCat, sousCategorieId: Number(sousCategorieId), marqueId: Number(marqueId)
     });
     res.status(201).json(data);
   } catch (err: any) {
