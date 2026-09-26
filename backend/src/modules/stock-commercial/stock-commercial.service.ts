@@ -80,6 +80,25 @@ export async function getAllStocksCommerciaux() {
     .sort((a, b) => a.produit.nom.localeCompare(b.produit.nom));
 }
 
+export async function getStockCommercial(commercialId: number) {
+  const stock = await prisma.stockCommercial.findMany({
+    where: { commercialId },
+    include: {
+      commercial: { select: { id: true, nom: true, prenom: true, email: true } },
+      produit: { select: { id: true, nom: true, reference: true } }
+    }
+  });
+
+  return stock
+    .filter(s => s.quantite > 0)
+    .map(s => ({
+      commercial: s.commercial,
+      produit: s.produit,
+      quantite: s.quantite
+    }))
+    .sort((a, b) => a.produit.nom.localeCompare(b.produit.nom));
+}
+
 // ─── Bon de Sortie ──────────────────────────────────────────────────────────
 
 export async function createBonSortie(data: any) {
