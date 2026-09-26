@@ -43,6 +43,7 @@ interface Commande {
   id: number;
   creeLe: string;
   total: number;
+  totalTTC?: number;
   statut: "EN_ATTENTE" | "CONFIRMEE" | "LIVREE" | "ANNULEE";
   utilisateur: Utilisateur;
   lignes: LigneCommande[];

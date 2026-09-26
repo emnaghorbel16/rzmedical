@@ -358,7 +358,7 @@ export default function NewFactureFournisseurPage({ categorie = "FOURNISSEUR" }:
             {/* Fournisseur searchable */}
             <div className="relative">
               <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Fournisseur</label>
-              <select
+              <input
                 type="text"
                 value={fournisseurSearch}
                 onChange={(e) => { setFournisseurSearch(e.target.value); setShowFournisseurDropdown(true); }}

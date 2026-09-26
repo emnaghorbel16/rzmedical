@@ -41,6 +41,8 @@ interface Invoice {
   bonsLivraison?: { id: number; code: string; statut: string }[];
   isPendingBL?: boolean;
   bonLivraisonId?: number;
+  montantPaye?: number;
+  solde?: number;
 }
 
 interface PendingBL {

@@ -68,6 +68,7 @@ interface BonSortie {
   statut: string;
   commercialId: number;
   commercial: { nom: string; prenom: string };
+  inventaires?: { id: number; statut: string }[];
   lignes?: {
     id: number;
     produitId: number;
