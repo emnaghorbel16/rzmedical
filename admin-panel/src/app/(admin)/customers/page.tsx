@@ -596,7 +596,7 @@ export default function CustomersPage() {
                                 {[client.prenom, client.nom].filter(Boolean).join(" ") || "Client #" + client.id}
                               </p>
                               {client.typeUtilisateur === "COMMERCIAL" && (
-                                <Badge color="indigo" size="sm">Commercial</Badge>
+                                <Badge color="primary" size="sm">Commercial</Badge>
                               )}
                             </div>
                             <p className="text-xs text-gray-400">ID #{client.id}</p>
