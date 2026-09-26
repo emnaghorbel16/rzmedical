@@ -142,7 +142,7 @@ export default function BonsCommandePage() {
 
   // Stats calculations (on current view)
   const totalBonsTTC = bons.reduce((acc, b) => acc + (b.montantTTC || 0), 0);
-  const transformedCount = bons.filter(b => b.statut === "RECEPTIONNE" || b.statut === "PARTIELLEMENT_RECU").length;
+  const transformedCount = bons.filter(b => b.statut === "RECEPTIONNE" || b.statut === "RECEPTIONNE_PARTIEL").length;
 
   return (
     <div className="box-border flex h-[calc(100dvh-8rem)] w-full min-w-0 min-h-0 max-w-full flex-col overflow-hidden p-4 md:p-6">
