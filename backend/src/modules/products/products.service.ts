@@ -196,6 +196,7 @@ export const create = async (data: {
   ficheTechnique?: string;
   disponible?: boolean;
   disponibleALaVente?: boolean;
+  misEnAvantSousCat?: boolean;
   sousCategorieId: number;
   marqueId: number;
 }) => prisma.$transaction(async (tx) => {
