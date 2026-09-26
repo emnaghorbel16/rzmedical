@@ -44,7 +44,9 @@ export function imageUrl(path: string | null | undefined): string {
   ) {
     return path;
   }
-  return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  
+  const baseUrl = API_URL.replace(/\/api\/?$/, "");
+  return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 /** Erreur d'API porteuse du code HTTP (0 = échec réseau). */
