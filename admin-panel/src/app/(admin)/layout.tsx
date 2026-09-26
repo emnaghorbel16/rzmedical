@@ -7,6 +7,7 @@ import Backdrop from "@/layout/Backdrop";
 import React from "react";
 import { ExerciceProvider } from "@/context/ExerciceContext";
 import { CompanyInfoProvider } from "@/context/CompanyInfoContext";
+import { DynamicFavicon } from "@/components/common/DynamicFavicon";
 
 export default function AdminLayout({
   children,
@@ -22,6 +23,7 @@ export default function AdminLayout({
 
   return (
     <CompanyInfoProvider>
+      <DynamicFavicon />
       <ExerciceProvider>
         <div className="min-h-screen xl:flex">
           <AppSidebar />

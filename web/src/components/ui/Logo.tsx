@@ -30,7 +30,7 @@ export function Logo({
   return (
     <div className={cn(
       "relative flex items-center h-12 w-[80px] shrink-0 sm:h-14 sm:w-[100px]",
-      isLight && "bg-white rounded-xl px-2 py-1 shadow-sm", // Add a white pill background for dark themes
+      
       className
     )}>
       <Image
