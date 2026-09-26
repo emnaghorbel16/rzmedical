@@ -56,17 +56,18 @@ export default function SignInForm() {
     e.preventDefault();
     setError(null); setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+            const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       const data = await parseJsonSafe(res);
       if (!res.ok) throw new Error(data.error || "Erreur de connexion");
-      setSuccess("Code envoyé ! Vérifiez votre email.");
-      setStep("otp");
-      setCountdown(600);
-      setTimeout(() => otpRefs.current[0]?.focus(), 100);
+      
+      // OTP is disabled on backend, we get token directly
+      localStorage.setItem("rzm_token", data.token);
+      localStorage.setItem("rzm_user", JSON.stringify(data.user));
+      router.push("/");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erreur");
     } finally {

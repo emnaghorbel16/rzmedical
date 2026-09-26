@@ -42,21 +42,29 @@ export async function login(emailInput: string, password: string) {
   if (!valid) {
     throw new Error('Mot de passe incorrect.');
   }
+  // Generate JWT immediately (no OTP)
+  const token = jwt.sign(
+    { id: user.id, email: user.email, type: user.typeUtilisateur },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_IN } as any
+  );
 
-  // Generate OTP
-  const otp = generateOtp();
-  const expire = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
-
-  // Save OTP to database
   await prisma.utilisateur.update({
     where: { id: user.id },
-    data: { otpCode: otp, otpExpire: expire },
+    data: { dernierLogin: new Date() },
   });
 
-  // Send OTP by email
-  await sendOtpEmail(email, otp, user.prenom || 'Administrateur');
-
-  return { message: 'Code OTP envoyé à votre adresse email' };
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      prenom: user.prenom,
+      nom: user.nom,
+      telephone: user.telephone,
+      photo: user.photo,
+    },
+  };
 }
 
 // Step 2: Verify OTP and return JWT
