@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 /** Classe de grille produits, réutilisable (ex. pagination client LoadMore). */
 export const PRODUCT_GRID_CLASS =
-  "grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 lg:gap-6";
+  "grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6";
 
 const GRID = PRODUCT_GRID_CLASS;
 
