@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+import { useCompanyInfo } from "../context/CompanyInfoContext";
+import { getApiUrl } from "@/utils/api";
 import { useAuth } from "../hooks/useAuth";
 import {
   BoxCubeIcon,
@@ -186,6 +188,9 @@ const othersItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered, toggleMobileSidebar } = useSidebar();
   const pathname = usePathname();
+  const { companyInfo } = useCompanyInfo();
+  const API_URL = getApiUrl();
+  const logoSrc = companyInfo?.logoUrl ? (companyInfo.logoUrl.startsWith("http") ? companyInfo.logoUrl : `${API_URL.replace("/api", "")}${companyInfo.logoUrl}`) : "/images/logo/logo-rzmedical.png";
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -397,24 +402,24 @@ const AppSidebar: React.FC = () => {
         <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <Image
+              <img
                 className="dark:hidden"
-                src="/images/logo/logo-rzmedical.png"
+                src={logoSrc}
                 alt="Logo"
                 width={150}
                 height={40}
               />
-              <Image
+              <img
                 className="hidden dark:block"
-                src="/images/logo/logo-rzmedical.png"
+                src={logoSrc}
                 alt="Logo"
                 width={150}
                 height={40}
               />
             </>
           ) : (
-            <Image
-              src="/images/logo/logo-rzmedical.png"
+            <img
+              src={logoSrc}
               alt="Logo"
               width={32}
               height={32}

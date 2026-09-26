@@ -6,9 +6,14 @@ import ExerciceDropdown from "@/components/header/ExerciceDropdown";
 import { useSidebar } from "@/context/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useCompanyInfo } from "@/context/CompanyInfoContext";
+import { getApiUrl } from "@/utils/api";
 import React, { useState ,useEffect,useRef} from "react";
 
 const AppHeader: React.FC = () => {
+  const { companyInfo } = useCompanyInfo();
+  const API_URL = getApiUrl();
+  const logoSrc = companyInfo?.logoUrl ? (companyInfo.logoUrl.startsWith("http") ? companyInfo.logoUrl : `${API_URL.replace("/api", "")}${companyInfo.logoUrl}`) : "/images/logo/logo-rzmedical.png";
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
@@ -84,18 +89,18 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link href="/" className="hidden items-center sm:flex lg:hidden">
-            <Image
+            <img
               width={120}
               height={28}
               className="h-6 w-auto object-contain dark:hidden"
-              src="/images/logo/logo-rzmedical.png"
+              src={logoSrc}
               alt="RZMedical Logo"
             />
-            <Image
+            <img
               width={120}
               height={28}
               className="hidden h-6 w-auto object-contain dark:block"
-              src="/images/logo/logo-rzmedical.png"
+              src={logoSrc}
               alt="RZMedical Logo"
             />
           </Link>
