@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { useCompanyInfo } from "../context/CompanyInfoContext";
-import { getApiUrl } from "@/utils/api";
+import { getApiUrl, getBaseUrl } from "@/utils/api";
 import { useAuth } from "../hooks/useAuth";
 import {
   BoxCubeIcon,

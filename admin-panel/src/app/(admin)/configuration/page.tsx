@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { API_URL } from "@/utils/api";
+import { API_URL, getBaseUrl } from "@/utils/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useCompanyInfo } from "@/context/CompanyInfoContext";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";

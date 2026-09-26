@@ -7,7 +7,7 @@ import { useSidebar } from "@/context/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useCompanyInfo } from "@/context/CompanyInfoContext";
-import { getApiUrl } from "@/utils/api";
+import { getApiUrl, getBaseUrl } from "@/utils/api";
 import React, { useState ,useEffect,useRef} from "react";
 
 const AppHeader: React.FC = () => {

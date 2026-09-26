@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useCompanyInfo } from "@/context/CompanyInfoContext";
-import { getApiUrl } from "@/utils/api";
+import { getApiUrl, getBaseUrl } from "@/utils/api";
 
 export function DynamicFavicon() {
   const { companyInfo } = useCompanyInfo();
