@@ -190,7 +190,7 @@ const AppSidebar: React.FC = () => {
   const pathname = usePathname();
   const { companyInfo } = useCompanyInfo();
   const API_URL = getApiUrl();
-  const logoSrc = companyInfo?.logoUrl ? (companyInfo.logoUrl.startsWith("http") ? companyInfo.logoUrl : `${API_URL.replace("/api", "")}${companyInfo.logoUrl}`) : "/images/logo/logo-rzmedical.png";
+  const logoSrc = companyInfo?.logoUrl ? (companyInfo.logoUrl.startsWith("http") ? companyInfo.logoUrl : `${getBaseUrl()}${companyInfo.logoUrl}`) : "/images/logo/logo-rzmedical.png";
 
   const renderMenuItems = (
     navItems: NavItem[],

@@ -18,7 +18,7 @@ export function DynamicFavicon() {
       const API_URL = getApiUrl();
       const src = companyInfo.logoUrl.startsWith("http") 
         ? companyInfo.logoUrl 
-        : `${API_URL.replace("/api", "")}${companyInfo.logoUrl}`;
+        : `${getBaseUrl()}${companyInfo.logoUrl}`;
       link.href = src;
     }
   }, [companyInfo?.logoUrl]);

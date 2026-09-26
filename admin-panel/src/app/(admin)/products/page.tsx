@@ -540,7 +540,7 @@ export default function ProductsPage() {
                     <TableRow key={item.id} className={isInline ? "bg-brand-50/40 dark:bg-brand-950/20" : ""}>
                       <TableCell className="px-4 py-4">
                         {item.images && item.images.length > 0 ? (
-                          <img src={item.images[0].startsWith("/") ? API_URL.replace("/api", "") + item.images[0] : item.images[0]} alt={item.nom} className="h-10 w-10 object-cover rounded-md border" />
+                          <img src={item.images[0].startsWith("/") ? getBaseUrl() + item.images[0] : item.images[0]} alt={item.nom} className="h-10 w-10 object-cover rounded-md border" />
                         ) : (
                           <div className="h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center text-xs text-gray-400">-</div>
                         )}
@@ -876,7 +876,7 @@ export default function ProductsPage() {
                           title="Choisir comme image principale (première image)"
                         >
                           <img
-                            src={img.startsWith("/") ? API_URL.replace("/api", "") + img : img}
+                            src={img.startsWith("/") ? getBaseUrl() + img : img}
                             alt="Aperçu"
                             className="h-full w-full object-cover"
                           />
@@ -903,7 +903,7 @@ export default function ProductsPage() {
               <div>
                 <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Fiche Technique (PDF)</label>
                 <input type="file" accept="application/pdf" onChange={handleSingleUpload} className="w-full rounded-xl border border-gray-300 p-2 text-xs dark:bg-gray-800 dark:border-gray-700 dark:text-white" />
-                {formFicheTechnique && <a href={formFicheTechnique.startsWith("/") ? API_URL.replace("/api", "") + formFicheTechnique : formFicheTechnique} target="_blank" rel="noreferrer" className="text-xs text-brand-500 mt-1 block hover:underline">Voir le fichier PDF actuel</a>}
+                {formFicheTechnique && <a href={formFicheTechnique.startsWith("/") ? getBaseUrl() + formFicheTechnique : formFicheTechnique} target="_blank" rel="noreferrer" className="text-xs text-brand-500 mt-1 block hover:underline">Voir le fichier PDF actuel</a>}
               </div>
             </div>
 

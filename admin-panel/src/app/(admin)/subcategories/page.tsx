@@ -235,7 +235,7 @@ export default function SubcategoriesPage() {
               {formImage && (
                 <div className="relative mt-3 inline-block">
                   <img
-                    src={formImage.startsWith("/") || formImage.startsWith("uploads") ? (formImage.startsWith("/") ? API_URL.replace("/api", "") + formImage : API_URL.replace("/api", "") + "/" + formImage) : formImage}
+                    src={formImage.startsWith("/") || formImage.startsWith("uploads") ? (formImage.startsWith("/") ? getBaseUrl() + formImage : getBaseUrl() + "/" + formImage) : formImage}
                     alt="Aperçu"
                     className="h-24 w-24 rounded-lg object-cover border"
                   />

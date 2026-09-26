@@ -213,7 +213,7 @@ export default function BrandsPage() {
               {formLogo && (
                 <div className="relative mt-2 inline-block">
                   <img
-                    src={formLogo.startsWith("/") ? API_URL.replace("/api", "") + formLogo : formLogo}
+                    src={formLogo.startsWith("/") ? getBaseUrl() + formLogo : formLogo}
                     alt="Aperçu"
                     className="h-12 rounded-lg border object-contain p-1"
                   />

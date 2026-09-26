@@ -195,7 +195,7 @@ export default function ConfigurationPage() {
             <div className="w-28 h-28 bg-gray-100 dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden">
               {logoUrl ? (
                 <img
-                  src={logoUrl.startsWith("http") ? logoUrl : `${API_URL.replace("/api", "")}${logoUrl}`}
+                  src={logoUrl.startsWith("http") ? logoUrl : `${getBaseUrl()}${logoUrl}`}
                   alt="Logo"
                   className="w-full h-full object-contain p-2"
                 />
