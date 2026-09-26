@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import Badge from "@/components/ui/badge/Badge";
+import FeaturedProductsModal from "./FeaturedProductsModal";
 
 const API_URL = getApiUrl();
 
@@ -38,6 +39,7 @@ export default function SubcategoriesPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [featuredModalId, setFeaturedModalId] = useState<SousCategorie | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchData = useCallback(async () => {
@@ -184,6 +186,7 @@ export default function SubcategoriesPage() {
                       <Badge color={item._count.produits > 0 ? "success" : "warning"} size="sm">{item._count.produits} produits</Badge>
                     </TableCell>
                     <TableCell className="px-6 py-4 text-end">
+                      <button onClick={() => setFeaturedModalId(item)} className="text-sm text-amber-500 hover:underline mr-3">Produits en avant</button>
                       <button onClick={() => openEdit(item)} className="text-sm text-brand-500 hover:underline mr-3">Modifier</button>
                       <button onClick={() => setDeleteId(item.id)} className="text-sm text-red-500 hover:underline">Supprimer</button>
                     </TableCell>
@@ -299,6 +302,14 @@ export default function SubcategoriesPage() {
             </div>
           </div>
         </div>
+      )}
+      
+      {featuredModalId && (
+        <FeaturedProductsModal 
+          subcategoryId={featuredModalId.id}
+          subcategoryName={featuredModalId.nom}
+          onClose={() => { setFeaturedModalId(null); fetchData(); }}
+        />
       )}
     </div>
   );

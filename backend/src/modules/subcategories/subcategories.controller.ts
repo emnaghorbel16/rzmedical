@@ -72,3 +72,16 @@ export const remove = async (req: Request, res: Response) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const setFeaturedProducts = async (req: Request, res: Response) => {
+  try {
+    const { productIds } = req.body;
+    if (!Array.isArray(productIds)) {
+      return res.status(400).json({ error: 'productIds doit être un tableau' });
+    }
+    await service.setFeaturedProducts(Number(req.params.id), productIds);
+    res.json({ message: 'Produits en avant mis à jour avec succès' });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+};

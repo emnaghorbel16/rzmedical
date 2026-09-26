@@ -28,3 +28,21 @@ export const reorder = (items: { id: number; ordre: number }[]) =>
 
 export const remove = (id: number) =>
   prisma.sousCategorie.delete({ where: { id } });
+
+export const setFeaturedProducts = async (subcategoryId: number, productIds: number[]) => {
+  return prisma.$transaction([
+    // Unset all featured products in this subcategory
+    prisma.produit.updateMany({
+      where: { sousCategorieId: subcategoryId },
+      data: { misEnAvantSousCat: false },
+    }),
+    // Set featured for the selected ones
+    prisma.produit.updateMany({
+      where: { 
+        id: { in: productIds },
+        sousCategorieId: subcategoryId 
+      },
+      data: { misEnAvantSousCat: true },
+    }),
+  ]);
+};
