@@ -8,7 +8,7 @@ function parseBackendPatterns(url: string) {
     const parsed = new URL(url);
     const protocol = parsed.protocol.replace(":", "") as "http" | "https";
     const hostname = parsed.hostname;
-    const port = parsed.port || (protocol === "https" ? "443" : "80");
+    const port = parsed.port;
     return [{ protocol, hostname, port, pathname: "/uploads/**" }];
   } catch {
     // Fallback if URL parsing fails
