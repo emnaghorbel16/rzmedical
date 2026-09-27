@@ -52,7 +52,7 @@ export function SubcategoryBanner({
             alt=""
             className={cn(
               "absolute inset-0 h-full w-full object-center z-0",
-              isLogo ? "object-contain py-4 sm:py-8" : "object-cover scale-105 blur-[2px]"
+              isLogo ? "object-contain py-4 sm:py-8 mix-blend-multiply" : "object-cover scale-105 blur-[2px]"
             )}
           />
         ) : null}
