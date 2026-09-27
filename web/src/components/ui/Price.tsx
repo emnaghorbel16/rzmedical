@@ -25,16 +25,22 @@ export function Price({
   className,
 }: {
   prix: string | number;
+  tva?: string | number;
   remise?: string | number;
   remiseClient?: string | number;
   size?: PriceSize;
   showBadge?: boolean;
   className?: string;
 }) {
-  const base = parsePrice(prix);
-  const current = clientPrice(prix, remise, remiseClient);
-  const discounted = base > 0 && current < base - 0.0001;
-  const pct = discounted ? Math.round((1 - current / base) * 100) : 0;
+  const tvaRate = parsePrice(tva);
+  const baseHT = parsePrice(prix);
+  const baseTTC = baseHT * (1 + tvaRate / 100);
+  
+  const currentHT = clientPrice(prix, remise, remiseClient);
+  const currentTTC = currentHT * (1 + tvaRate / 100);
+  
+  const discounted = baseTTC > 0 && currentTTC < baseTTC - 0.0001;
+  const pct = discounted ? Math.round((1 - currentTTC / baseTTC) * 100) : 0;
 
   return (
     <div className={cn("flex flex-wrap items-baseline gap-x-2 gap-y-1", className)}>
@@ -44,12 +50,12 @@ export function Price({
           CURRENT_SIZE[size],
         )}
       >
-        {formatTND(current)}
+        {formatTND(currentTTC)}
       </span>
       {discounted && (
         <>
           <span className="text-sm text-faint line-through tabular-nums">
-            {formatTND(base)}
+            {formatTND(baseTTC)}
           </span>
           {showBadge && pct > 0 && (
             <Badge variant="promo" size="sm">

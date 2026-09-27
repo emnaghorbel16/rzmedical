@@ -17,6 +17,7 @@ function toCartItem(product: Produit): AddItemInput {
     nom: product.nom,
     image: product.images?.[0] ?? null,
     prix: parsePrice(product.prix),
+    tva: parsePrice(product.tva),
     remise: parsePrice(product.remise),
     stock: product.stock,
     disponible: product.disponible,

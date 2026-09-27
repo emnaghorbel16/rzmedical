@@ -113,7 +113,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     let subtotal = 0;
     for (const i of items) {
       count += i.quantite;
-      subtotal += discountedPrice(i.prix, i.remise) * i.quantite;
+      const dpHT = discountedPrice(i.prix, i.remise);
+      const dpTTC = dpHT * (1 + (i.tva ?? 0) / 100);
+      subtotal += dpTTC * i.quantite;
     }
     return { count, subtotal: Math.round(subtotal * 100) / 100 };
   }, [items]);

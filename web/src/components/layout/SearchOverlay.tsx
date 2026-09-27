@@ -232,6 +232,7 @@ export function SearchOverlay() {
                           </span>
                           <Price
                             prix={p.prix}
+                            tva={p.tva}
                             remise={p.remise}
                             size="sm"
                             showBadge={false}

@@ -88,6 +88,7 @@ export interface Produit {
   video: string | null;
   motsCles: string[];
   ficheTechnique: string | null;
+  tva: string; // Decimal en string, pourcentage 0-100
   remise: string; // Decimal en string, pourcentage 0-100
   disponible: boolean;
   sousCategorieId: number;
@@ -230,6 +231,7 @@ export interface CartItem {
   nom: string;
   image: string | null;
   prix: number; // prix catalogue de base (avant toute remise)
+  tva: number; // pourcentage de TVA
   remise: number; // pourcentage de remise produit
   stock: number;
   disponible: boolean;

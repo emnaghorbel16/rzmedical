@@ -364,7 +364,8 @@ export function CheckoutView() {
         <div className={cn("overflow-hidden transition-all duration-300 ease-out-soft", showMobileSummary ? "max-h-[700px] opacity-100 mt-4 border-t border-border pt-4" : "max-h-0 opacity-0 pointer-events-none")}>
           <ul className="space-y-3">
             {items.map((item) => {
-              const unit = clientPrice(item.prix, item.remise, remiseClient);
+              const unitHT = clientPrice(item.prix, item.remise, remiseClient);
+              const unit = unitHT * (1 + (item.tva ?? 0) / 100);
               return (
                 <li key={item.produitId} className="flex items-center gap-3">
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-white">
@@ -594,7 +595,8 @@ export function CheckoutView() {
 
             <ul className="mt-4 space-y-3">
               {items.map((item) => {
-                const unit = clientPrice(item.prix, item.remise, remiseClient);
+                const unitHT = clientPrice(item.prix, item.remise, remiseClient);
+                const unit = unitHT * (1 + (item.tva ?? 0) / 100);
                 return (
                   <li key={item.produitId} className="flex items-center gap-3">
                     <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border bg-white">

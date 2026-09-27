@@ -165,7 +165,7 @@ export function ProductCard({
 
         {/* Price & Cart Area */}
         <div className="mt-auto pt-4 flex items-end justify-between gap-3">
-          <Price prix={product.prix} remise={product.remise} remiseClient={remiseClient} size="md" className="whitespace-nowrap" />
+          <Price prix={product.prix} tva={product.tva} remise={product.remise} remiseClient={remiseClient} size="md" className="whitespace-nowrap" />
         </div>
 
         {/* CTA */}

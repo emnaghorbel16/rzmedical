@@ -106,7 +106,8 @@ export function CartView() {
         {/* Lignes */}
         <ul className="divide-y divide-border rounded-2xl border border-border bg-surface">
           {items.map((item) => {
-            const unit = clientPrice(item.prix, item.remise, remiseClient);
+            const unitHT = clientPrice(item.prix, item.remise, remiseClient);
+            const unit = unitHT * (1 + (item.tva ?? 0) / 100);
             const lineTotal = round2(unit * item.quantite);
             const outOfStock = !item.disponibleALaVente;
 

@@ -68,6 +68,7 @@ export function ProductInfo({ product }: { product: Produit }) {
       <div className="mt-5">
         <Price
           prix={product.prix}
+          tva={product.tva}
           remise={product.remise}
           remiseClient={remiseClient}
           size="xl"
