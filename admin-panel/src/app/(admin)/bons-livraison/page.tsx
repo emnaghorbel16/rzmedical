@@ -517,14 +517,25 @@ export default function BonsLivraisonPage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Bons de Livraison</h2>
           <p className="text-sm text-gray-500 mt-1">{filteredBls.length} bon(s) de livraison</p>
         </div>
-        <div className="w-full sm:w-64">
-          <input
-            type="text"
-            placeholder="Rechercher code, client..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-500"
-          />
+        <div className="flex items-center gap-3">
+          <div className="w-full sm:w-64">
+            <input
+              type="text"
+              placeholder="Rechercher code, client..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-500"
+            />
+          </div>
+          <Link
+            href="/invoices/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-amber-700 hover:bg-amber-800 px-4 py-2.5 text-sm font-semibold text-white transition-colors shadow-sm whitespace-nowrap"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Nouveau BL / Facture
+          </Link>
         </div>
       </div>
 
