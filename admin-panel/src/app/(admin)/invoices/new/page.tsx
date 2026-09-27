@@ -1111,10 +1111,10 @@ function AddFactureForm() {
                         />
                       </td>
                       <td className="p-2">
-                        <input type="number" min="1" step="1" className={smallInputCls + " text-center"} value={line.quantite} onChange={e => updateLine(idx, "quantite", Math.max(1, Math.trunc(Number(e.target.value) || 1)))} />
+                        <input type="number" min="1" step="1" inputMode="numeric" pattern="[0-9]*" className={smallInputCls + " text-center"} value={line.quantite} onChange={e => updateLine(idx, "quantite", Math.max(1, Math.trunc(Number(e.target.value) || 1)))} />
                       </td>
                       <td className="p-2">
-                        <input type="number" min="0" step="1" className={smallInputCls + " text-center"} value={line.quantiteAv} onChange={e => updateLine(idx, "quantiteAv", Math.max(0, Math.trunc(Number(e.target.value) || 0)))} />
+                        <input type="number" min="0" step="1" inputMode="numeric" pattern="[0-9]*" className={smallInputCls + " text-center"} value={line.quantiteAv} onChange={e => updateLine(idx, "quantiteAv", Math.max(0, Math.trunc(Number(e.target.value) || 0)))} />
                       </td>
                       <td className="p-2">
                         <input type="number" min="0" step="0.001" className={smallInputCls + " text-right"} value={line.prixUnitaireHT} onChange={e => updateLine(idx, "prixUnitaireHT", Number(e.target.value))} />
