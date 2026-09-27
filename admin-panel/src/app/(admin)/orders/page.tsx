@@ -256,22 +256,22 @@ export default function OrdersPage() {
       <PageBreadcrumb pageTitle="Commandes" />
 
       {/* Stats Cards */}
-      <div className="shrink-0 grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+      <div className="shrink-0 grid grid-cols-3 gap-2 sm:gap-3 mb-3">
         {[
           { label: "Total Commandes", value: filteredOrders.length, isCurrency: false },
           { label: "Montant Total TTC", value: Number(totalCommandesTTC).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }), isCurrency: true },
           { label: "Commandes Livrées", value: livreesCount, isCurrency: false, cls: "text-emerald-600" },
         ].map((s) => (
-          <div key={s.label} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-3 shadow-sm">
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{s.label}</p>
-            <p className={`text-lg font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}>
+          <div key={s.label} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-2 sm:p-3 shadow-sm">
+            <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1 leading-tight line-clamp-1" title={s.label}>{s.label}</p>
+            <p className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}>
               {s.value} {s.isCurrency ? "TND" : ""}
             </p>
           </div>
         ))}
       </div>
       
-      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Gestion des commandes</h3>
           <p className="text-sm text-gray-500">{filteredOrders.length} commande(s)</p>
@@ -308,25 +308,25 @@ export default function OrdersPage() {
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setActiveStatus("ALL")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "ALL" ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "ALL" ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
           >
             Toutes
           </button>
           <button
             onClick={() => setActiveStatus("EN_ATTENTE")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "EN_ATTENTE" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "EN_ATTENTE" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
           >
             En attente
           </button>
           <button
             onClick={() => setActiveStatus("PAYEE")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "PAYEE" ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "PAYEE" ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
           >
             En cours (Payée/Expédiée)
           </button>
           <button
             onClick={() => setActiveStatus("LIVREE")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "LIVREE" ? "bg-green-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "LIVREE" ? "bg-green-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
           >
             Livrées
           </button>
@@ -356,7 +356,7 @@ export default function OrdersPage() {
               ) : (
                 filteredOrders.map((order) => (
                   <React.Fragment key={order.id}>
-                    <TableRow className={`border-b border-gray-100 last:border-0 hover:bg-gray-50/50 dark:border-gray-800 dark:hover:bg-gray-800/30 ${expandedOrderId === order.id ? 'bg-gray-50 dark:bg-gray-800/20' : ''}`}>
+                    <TableRow className={`border-b border-gray-100 last:border-0 hover:bg-gray-50/50 dark:border-gray-800 dark:hover:bg-gray-800/30 ${expandedOrderId === order.id ? 'bg-gray-50 dark:bg-gray-800/20' : ''}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}>
                       <TableCell className="font-medium text-gray-800 dark:text-gray-200">
                         #{order.id.toString().padStart(5, '0')}
                       </TableCell>
@@ -369,7 +369,7 @@ export default function OrdersPage() {
                           <p className="text-xs text-gray-500">{order.utilisateur.email}</p>
                           {order.utilisateur.telephone && (
                             <a 
-                              href={`tel:${order.utilisateur.telephone}`}
+                              href={`tel:${order.utilisateur.telephone}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
                               className="text-xs text-brand-600 hover:underline dark:text-brand-400"
                               title="Appeler le client"
                             >
@@ -402,7 +402,7 @@ export default function OrdersPage() {
                               </Link>
                               {order.facture.fichierPdf && (
                                 <a
-                                  href={`${API_URL.replace('/api', '')}${order.facture.fichierPdf}`}
+                                  href={`${API_URL.replace('/api', '')}${order.facture.fichierPdf}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-xs text-gray-600 hover:underline flex items-center gap-1"
@@ -428,7 +428,7 @@ export default function OrdersPage() {
                           </div>
                         ) : (
                           <Link
-                            href={`/invoices/new?orderId=${order.id}`}
+                            href={`/invoices/new?orderId=${order.id}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
                             className="text-xs font-semibold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1.5 rounded-lg border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/60 inline-flex items-center gap-1 shadow-xs transition"
                           >
                             📄 Créer facture
@@ -474,7 +474,7 @@ export default function OrdersPage() {
                                     Modifier le contenu
                                   </button>
                                   <Link
-                                    href={`/invoices/new?orderId=${order.id}`}
+                                    href={`/invoices/new?orderId=${order.id}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
                                     className="px-3 py-1.5 text-xs font-semibold text-white bg-amber-700 rounded-lg hover:bg-amber-800 transition-colors inline-flex items-center gap-1.5 shadow-xs"
                                   >
                                     <span>📦</span> Créer Bon de Livraison / Facture
@@ -552,7 +552,7 @@ export default function OrdersPage() {
                                 <h5 className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">Stock produit</h5>
                                 <div className="space-y-3">
                                   {order.lignes.map((ligne) => (
-                                    <div key={`${ligne.produitId}-${ligne.quantite}`} className="rounded-lg border border-gray-100 bg-gray-50 p-2.5 dark:border-gray-700 dark:bg-gray-900/40">
+                                    <div key={`${ligne.produitId}-${ligne.quantite}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`} className="rounded-lg border border-gray-100 bg-gray-50 p-2.5 dark:border-gray-700 dark:bg-gray-900/40">
                                       <p className="text-sm font-medium text-gray-800 dark:text-white">{ligne.produit.nom}</p>
                                       <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] text-gray-600 dark:text-gray-300">
                                         <span>Stock: <strong>{ligne.produit.stock ?? 0}</strong></span>
@@ -576,7 +576,7 @@ export default function OrdersPage() {
                                 <select 
                                   onChange={addProductToOrder}
                                   value=""
-                                  className="w-full max-w-md rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                                  className="w-full max-w-md rounded-lg border border-gray-300 bg-white px-3 py-3 text-base min-h-[44px] focus:border-brand-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                 >
                                   <option value="" disabled>+ Ajouter un produit...</option>
                                   {allProducts.map(p => (
@@ -604,8 +604,8 @@ export default function OrdersPage() {
                                           type="number"
                                           min="1"
                                           value={ligne.quantite}
-                                          onChange={(e) => updateLineQty(idx, parseInt(e.target.value) || 1)}
-                                          className="w-16 rounded border px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                          onChange={(e) => updateLineQty(idx, Math.trunc(parseInt(e.target.value)) || 1)}
+                                          className="w-20 rounded-md border px-3 py-2 text-base min-h-[40px] dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                         />
                                       </div>
                                     ) : (
@@ -664,3 +664,7 @@ export default function OrdersPage() {
     </div>
   );
 }
+
+
+
+
