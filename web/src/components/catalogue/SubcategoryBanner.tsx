@@ -9,6 +9,7 @@ export function SubcategoryBanner({
   image,
   breadcrumb,
   titleAs = "h1",
+  isLogo,
 }: {
   name: string;
   image?: string | null;
