@@ -14,7 +14,7 @@ export const runtime = "nodejs";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MAX_TOOL_ROUNDS = 4; // évite les boucles infinies d'appels d'outils
 
-async function groqChat(body: Record<string, unknown>, fallbackModel?: string) {
+async function groqChat(body: Record<string, unknown>, fallbackModel?: string): Promise<{ data: any; headers: Headers }> {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) throw new Error("GROQ_API_KEY n'est pas configurée.");
 
@@ -28,7 +28,6 @@ async function groqChat(body: Record<string, unknown>, fallbackModel?: string) {
   });
 
   if (!response.ok) {
-    // On 429 (rate limit), automatically retry with the smaller model
     if (response.status === 429 && fallbackModel && body.model !== fallbackModel) {
       console.warn(`Rate limit on ${body.model}, retrying with ${fallbackModel}`);
       return groqChat({ ...body, model: fallbackModel });
@@ -37,7 +36,48 @@ async function groqChat(body: Record<string, unknown>, fallbackModel?: string) {
     throw new Error(`Erreur Groq (${response.status}): ${error}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return { data, headers: response.headers };
+}
+
+// ─── Enregistre l'usage Groq dans le backend ─────────────────────────────────
+async function recordGroqUsage(
+  data: any,
+  headers: Headers,
+  modele: string
+): Promise<void> {
+  try {
+    const usage = data?.usage;
+    if (!usage) return;
+
+    const tokensPrompt = usage.prompt_tokens ?? 0;
+    const tokensCompletion = usage.completion_tokens ?? 0;
+    const tokensTotal = usage.total_tokens ?? tokensPrompt + tokensCompletion;
+
+    // Headers rate-limit Groq
+    const tokensRestants = headers.get("x-ratelimit-remaining-tokens")
+      ? Number(headers.get("x-ratelimit-remaining-tokens"))
+      : null;
+    const requetesRestantes = headers.get("x-ratelimit-remaining-requests")
+      ? Number(headers.get("x-ratelimit-remaining-requests"))
+      : null;
+
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    const secret = process.env.INTERNAL_SECRET;
+    if (!secret) return;
+
+    await fetch(`${backendUrl}/api/groq-stats/record`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-secret": secret,
+      },
+      body: JSON.stringify({ modele, tokensPrompt, tokensCompletion, tokensTotal, tokensRestants, requetesRestantes }),
+    });
+  } catch (err) {
+    // Non bloquant — on log seulement
+    console.error("[recordGroqUsage] Erreur:", err);
+  }
 }
 
 const SYSTEM_PROMPT = `Tu es "RZBot", l'assistant virtuel intelligent de RZMedical — une entreprise tunisienne spécialisée dans la vente d'équipements et consommables médico-dentaires professionnels.
@@ -305,7 +345,7 @@ Mots-clés: [2-3 mots-clés courts pour chercher dans un catalogue médical]`,
         temperature: 0.1,
         max_tokens: 120,
       });
-      const text = res.choices?.[0]?.message?.content;
+      const text = res.data?.choices?.[0]?.message?.content;
       if (text) return text;
     } catch (error) {
       lastError = error instanceof Error ? error.message : String(error);
@@ -367,12 +407,14 @@ export async function POST(req: Request) {
               stream: false,
             }, "openai/gpt-oss-20b");
 
-            const choice = response.choices?.[0];
+            const choice = response.data?.choices?.[0];
             const message = choice?.message;
             const toolCalls: ToolCall[] | undefined = message?.tool_calls;
 
             if (!toolCalls || toolCalls.length === 0) {
               finalText = message?.content;
+              // Enregistrer l'usage de la réponse finale
+              recordGroqUsage(response.data, response.headers, GROQ_MODEL).catch(() => {});
               break;
             }
 
@@ -391,7 +433,6 @@ export async function POST(req: Request) {
           }
 
           if (!finalText) {
-            // Sécurité si on a atteint MAX_TOOL_ROUNDS sans réponse finale
             const fallback = await groqChat({
               model: GROQ_MODEL,
               messages: [
@@ -403,7 +444,8 @@ export async function POST(req: Request) {
               ],
               stream: false,
             });
-            finalText = fallback.choices?.[0]?.message?.content;
+            finalText = fallback.data?.choices?.[0]?.message?.content;
+            recordGroqUsage(fallback.data, fallback.headers, GROQ_MODEL).catch(() => {});
           }
 
           if (finalText) {

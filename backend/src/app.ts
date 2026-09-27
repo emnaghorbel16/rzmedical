@@ -28,6 +28,7 @@ import tiersRoutes from './modules/tiers/tiers.routes';
 import achatsRoutes from './modules/achats/achats.routes';
 import stockRoutes from './modules/stock/stock.routes';
 import stockCommercialRoutes from './modules/stock-commercial/stock-commercial.routes';
+import groqStatsRoutes from './modules/groq-stats/groq-stats.routes';
 
 const app = express();
 
@@ -70,6 +71,7 @@ app.use('/api/tiers', tiersRoutes);
 app.use('/api/achats', achatsRoutes);
 app.use('/api/stock', stockRoutes);
 app.use('/api/stock-commercial', stockCommercialRoutes);
+app.use('/api/groq-stats', groqStatsRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Bienvenue sur l\'API MediSupply' });
