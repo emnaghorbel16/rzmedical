@@ -63,9 +63,6 @@ export function ProductInfo({ product }: { product: Produit }) {
       <h1 className="mt-2 text-2xl font-bold leading-tight text-navy-900 sm:text-3xl">
         {product.nom}
       </h1>
-      <p className="mt-1.5 text-sm text-muted">
-        Référence : <span className="font-medium text-navy-700">{product.reference}</span>
-      </p>
 
       {/* Prix */}
       <div className="mt-5">

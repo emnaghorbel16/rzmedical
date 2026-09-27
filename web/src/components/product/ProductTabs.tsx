@@ -54,7 +54,6 @@ export function ProductTabs({ product }: { product: Produit }) {
       <section>
         <h2 className="mb-4 text-lg font-bold text-navy-900">Caractéristiques</h2>
         <dl className="max-w-2xl divide-y divide-border">
-          <Row label="Référence" value={product.reference} />
           {product.marque?.nom && <Row label="Marque" value={product.marque.nom} />}
           {product.sousCategorie?.categorie?.nom && (
             <Row label="Catégorie" value={product.sousCategorie.categorie.nom} />
@@ -70,20 +69,6 @@ export function ProductTabs({ product }: { product: Produit }) {
           />
           {product.expirationDate && (
             <Row label="Date de péremption" value={formatDate(product.expirationDate)} />
-          )}
-          {(product.motsCles ?? []).length > 0 && (
-            <div className="flex flex-col gap-2 py-3 sm:flex-row sm:gap-6">
-              <dt className="w-full text-sm text-muted sm:w-48 sm:shrink-0">
-                Mots-clés
-              </dt>
-              <dd className="flex flex-wrap gap-1.5">
-                {product.motsCles.map((m) => (
-                  <Badge key={m} variant="neutral" size="sm">
-                    {m}
-                  </Badge>
-                ))}
-              </dd>
-            </div>
           )}
         </dl>
       </section>
