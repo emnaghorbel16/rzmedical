@@ -10,10 +10,7 @@ export function ProductRail({ products, className }: { products: Produit[]; clas
       aria-label="Produits défilables"
       tabIndex={0}
       className={cn(
-        // Mobile (vertical)
-        "flex flex-col gap-4 pb-4 w-full",
-        // Desktop (horizontal rail)
-        "sm:flex-row sm:snap-x sm:snap-mandatory sm:overflow-x-auto sm:overscroll-x-contain sm:pb-4 sm:pr-4 sm:scroll-smooth sm:[scrollbar-width:thin] sm:[scrollbar-color:theme(colors.azure.500)_transparent] sm:[scrollbar-height:1px] sm:[&::-webkit-scrollbar]:h-[1px] sm:[&::-webkit-scrollbar-track]:bg-transparent sm:[&::-webkit-scrollbar-thumb]:bg-azure-500/50 sm:[&::-webkit-scrollbar-thumb:hover]:bg-azure-500/70 sm:[&::-webkit-scrollbar-thumb]:rounded sm:[&::-webkit-scrollbar-thumb:hover]:bg-azure-500/80 sm:gap-5",
+        "flex flex-row snap-x snap-mandatory overflow-x-auto overscroll-x-contain pb-4 pr-4 scroll-smooth [scrollbar-width:none] sm:[scrollbar-width:thin] sm:[scrollbar-color:theme(colors.azure.500)_transparent] [&::-webkit-scrollbar]:hidden sm:[&::-webkit-scrollbar]:block sm:[&::-webkit-scrollbar]:h-[2px] sm:[&::-webkit-scrollbar-track]:bg-transparent sm:[&::-webkit-scrollbar-thumb]:bg-azure-500/50 sm:[&::-webkit-scrollbar-thumb:hover]:bg-azure-500/70 sm:[&::-webkit-scrollbar-thumb]:rounded gap-4 sm:gap-5",
         className,
       )}
     >
@@ -21,7 +18,7 @@ export function ProductRail({ products, className }: { products: Produit[]; clas
         <ProductCard
           key={product.id}
           product={product}
-          className="w-full shrink-0 sm:snap-start sm:w-[280px] lg:w-[292px] [&:hover]:translate-y-[-2px] [&:hover]:shadow-xl transition-all duration-500"
+          className="w-[260px] shrink-0 snap-start sm:w-[280px] lg:w-[292px] [&:hover]:translate-y-[-2px] [&:hover]:shadow-xl transition-all duration-500"
         />
       ))}
     </div>
