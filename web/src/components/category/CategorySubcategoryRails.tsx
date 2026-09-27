@@ -4,6 +4,7 @@ import type { CategorieListItem, Produit } from "@/lib/types";
 import { toSlug } from "@/lib/slug";
 import { Container } from "@/components/ui/Container";
 import { ProductRail } from "@/components/catalogue/ProductRail";
+import { MobileProductCarousel } from "@/components/catalogue/MobileProductCarousel";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { ArrowRightIcon } from "@/components/ui/icons";
 
@@ -60,10 +61,17 @@ async function SubcategoryRail({
             </div>
           }
         />
-        <ProductRail
-          products={products}
-          className="[scrollbar-color:theme(colors.azure.500)_transparent]"
-        />
+
+        {/* Mobile : carousel horizontal, 1 produit à la fois */}
+        <MobileProductCarousel products={products} subcategoryId={subcategory.id} />
+
+        {/* Desktop : rail horizontal inchangé */}
+        <div className="hidden sm:block">
+          <ProductRail
+            products={products}
+            className="[scrollbar-color:theme(colors.azure.500)_transparent]"
+          />
+        </div>
       </Container>
     </section>
   );
@@ -96,3 +104,4 @@ export async function CategorySubcategoryRails({
     </div>
   );
 }
+
