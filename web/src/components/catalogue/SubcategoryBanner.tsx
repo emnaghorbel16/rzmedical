@@ -31,26 +31,33 @@ export function SubcategoryBanner({
           boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
         }}
       >
-        {/* Background base & image */}
-        {bg && !isLogo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={bg}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover object-center scale-105 blur-[2px]"
-          />
-        ) : null}
-
         {/* Overlays and gradients */}
         <div
           aria-hidden
           className={cn(
             "absolute inset-0 z-0",
-            bg && !isLogo
-              ? "bg-gradient-to-r from-navy-960/85 via-navy-960/60 to-navy-960/85"
-              : "bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950"
+            isLogo
+              ? "bg-gray-500"
+              : bg
+                ? "bg-gradient-to-r from-navy-960/85 via-navy-960/60 to-navy-960/85"
+                : "bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950"
           )}
         />
+
+        {/* Background base & image */}
+        {bg ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={bg}
+            alt=""
+            className={cn(
+              "absolute inset-0 h-full w-full object-center z-0",
+              isLogo ? "object-contain py-4 sm:py-8" : "object-cover scale-105 blur-[2px]"
+            )}
+          />
+        ) : null}
+
+
 
         {/* Subtle top border highlight */}
         <div className="absolute top-0 left-0 right-0 h-px bg-white/10 pointer-events-none z-10" />
@@ -58,16 +65,6 @@ export function SubcategoryBanner({
         {/* Content */}
         <Container className="relative z-10 py-5 sm:py-6">
           <div className="mx-auto max-w-3xl text-center flex flex-col items-center">
-            {bg && isLogo ? (
-              <div className="mb-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={bg}
-                  alt={name}
-                  className="h-20 sm:h-28 w-auto object-contain drop-shadow-md"
-                />
-              </div>
-            ) : null}
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 rounded-full border border-azure-400/25 bg-azure-500/10 px-3.5 py-1 mb-3 select-none">
               <span className="h-px w-4 bg-azure-400/60" />
