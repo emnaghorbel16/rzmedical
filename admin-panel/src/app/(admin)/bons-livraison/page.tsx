@@ -491,31 +491,31 @@ export default function BonsLivraisonPage() {
   const facturesCount = validBLs.filter((bonLivraison) => bonLivraison.factures.length > 0).length;
 
   return (
-    <div className="box-border mx-auto flex h-[calc(100dvh-8rem)] w-full min-w-0 max-w-7xl min-h-0 flex-col gap-6 overflow-hidden p-6">
-      <div className="mb-2">
+    <div className="box-border mx-auto flex h-[calc(100dvh-8rem)] w-full min-w-0 max-w-7xl min-h-0 flex-col gap-3 overflow-hidden p-4">
+      <div className="mb-1">
         <PageBreadcrumb pageTitle="Bons de Livraison" />
       </div>
 
       {/* Stats Cards */}
-      <div className="shrink-0 grid grid-cols-2 md:grid-cols-3 gap-3 mb-2">
+      <div className="shrink-0 grid grid-cols-2 md:grid-cols-3 gap-2 mb-1">
         {[
           { label: "Total BL (Actifs)", value: validBLs.length, isCurrency: false },
           { label: "Montant Total TTC", value: Number(totalBLsTTC).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }), isCurrency: true },
           { label: "BL Facturés", value: facturesCount, isCurrency: false, cls: "text-emerald-600" },
         ].map((s) => (
-          <div key={s.label} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-3 shadow-sm">
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{s.label}</p>
-            <p className={`text-lg font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}>
+          <div key={s.label} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-2 shadow-sm">
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-0.5">{s.label}</p>
+            <p className={`text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}>
               {s.value} {s.isCurrency ? "TND" : ""}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Bons de Livraison</h2>
-          <p className="text-sm text-gray-500 mt-1">{filteredBls.length} bon(s) de livraison</p>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Bons de Livraison</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{filteredBls.length} bon(s) de livraison</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="w-full sm:w-64">
