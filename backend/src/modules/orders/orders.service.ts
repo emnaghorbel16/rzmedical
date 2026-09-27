@@ -1,3 +1,4 @@
+import nodemailer from 'nodemailer';
 import prisma from '../../config/prisma';
 import { generateDocumentNumber } from '../exercices/document-numbers.service';
 
@@ -35,6 +36,48 @@ const orderInclude = {
   },
 } as const;
 
+async function sendNewOrderEmail(commande: any, client: any) {
+  try {
+    const info = await prisma.infoSociete.findUnique({ where: { id: 1 } });
+    if (!info?.email) return; // Pas d'email configuré
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: Number(process.env.EMAIL_PORT) || 587,
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: { rejectUnauthorized: false },
+    });
+
+    const itemsHtml = commande.lignes.map((l: any) => 
+      `<li>${l.quantite}x ${l.produit?.nom || 'Produit'} - ${l.prixUnitaire} TND</li>`
+    ).join('');
+
+    const html = `
+      <h2>Nouvelle commande reçue</h2>
+      <p><strong>Numéro :</strong> ${commande.numero}</p>
+      <p><strong>Client :</strong> ${client.nom} ${client.prenom} (${client.email})</p>
+      <p><strong>Total :</strong> ${commande.total} TND</p>
+      <p><strong>Détails :</strong></p>
+      <ul>${itemsHtml}</ul>
+      <br />
+      <p><a href="https://admin.randzmedical.com/orders">Voir dans l'administration</a></p>
+    `;
+
+    await transporter.sendMail({
+      from: `"RZMedical System" <${process.env.EMAIL_USER}>`,
+      to: info.email,
+      subject: `Nouvelle commande: ${commande.numero}`,
+      html,
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de l'email de nouvelle commande:", error);
+  }
+}
+
 export const createOrder = async (userId: number, lignes: LigneInput[]) => {
   if (!Array.isArray(lignes) || lignes.length === 0) {
     throw new OrderError('Le panier est vide');
@@ -55,7 +98,7 @@ export const createOrder = async (userId: number, lignes: LigneInput[]) => {
   }
 
   // Transaction : tout est validé, recalculé et décrémenté de façon atomique
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const client = await tx.utilisateur.findUnique({ where: { id: userId } });
     if (!client) {
       throw new OrderError('Utilisateur non trouvé', 404);
@@ -102,6 +145,15 @@ export const createOrder = async (userId: number, lignes: LigneInput[]) => {
 
     return commande;
   });
+
+  // Envoyer l'email de notification en arrière-plan
+  if (result) {
+    prisma.utilisateur.findUnique({ where: { id: userId } }).then(client => {
+      if (client) sendNewOrderEmail(result, client);
+    });
+  }
+
+  return result;
 };
 
 export const getMyOrders = (userId: number) =>
