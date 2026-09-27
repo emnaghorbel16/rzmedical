@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { getApiUrl } from "@/utils/api";
 
@@ -21,12 +22,34 @@ type Movement = {
   valuation?: number | null;
   reference?: string | null;
   documentType?: string | null;
+  sourceType?: string | null;
+  sourceId?: number | null;
   product: { nom: string; reference: string };
 };
 
 type Result = { items: Movement[]; total: number; page: number; limit: number; totalPages: number };
 
 const labelType = (type: string) => ({ PURCHASE: "ENTREE", SALE: "SORTIE", ADJUSTMENT: "AJUSTEMENT", INVENTORY: "INVENTAIRE", RETURN_CLIENT: "RETOUR CLIENT", RETURN_SUPPLIER: "RETOUR FOURNISSEUR", TRANSFER: "TRANSFERT" }[type] ?? type);
+
+const renderDocumentLink = (movement: Movement) => {
+  const label = movement.reference ?? movement.documentType ?? "-";
+  if (!movement.sourceId || !movement.sourceType || label === "-") return <span>{label}</span>;
+  
+  let href = "";
+  if (movement.sourceType === "BON_LIVRAISON") href = `/bons-livraison/${movement.sourceId}`;
+  else if (movement.sourceType === "COMMANDE") href = `/orders/${movement.sourceId}`;
+  else if (movement.sourceType === "FACTURE") href = `/invoices/${movement.sourceId}`;
+  else if (movement.sourceType === "ACHAT") href = `/achats/${movement.sourceId}`;
+  
+  if (href) {
+    return (
+      <Link href={href} className="font-medium text-brand-600 hover:text-brand-700 hover:underline">
+        {label}
+      </Link>
+    );
+  }
+  return <span>{label}</span>;
+};
 
 export default function MouvementsStockPage() {
   const [result, setResult] = useState<Result>({ items: [], total: 0, page: 1, limit: 25, totalPages: 1 });
@@ -97,7 +120,7 @@ export default function MouvementsStockPage() {
                 <td className="px-3 py-3">{movement.cump == null ? "-" : `${Number(movement.cump).toFixed(3)} TND`}</td>
                 <td className="px-3 py-3 font-medium">{movement.stockAfter}</td>
                 <td className="px-3 py-3">{movement.valuation == null ? "-" : `${Number(movement.valuation).toFixed(3)} TND`}</td>
-                <td className="px-3 py-3">{movement.reference ?? movement.documentType ?? "-"}</td>
+                <td className="px-3 py-3">{renderDocumentLink(movement)}</td>
               </tr>)}
             </tbody>
           </table>
