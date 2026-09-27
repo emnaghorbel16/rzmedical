@@ -14,6 +14,7 @@ export function SubcategoryBanner({
   image?: string | null;
   breadcrumb: BreadcrumbItem[];
   titleAs?: "h1" | "p";
+  isLogo?: boolean;
 }) {
   const Title = titleAs;
   const bg = image ? imageUrl(image) : null;
@@ -30,7 +31,7 @@ export function SubcategoryBanner({
         }}
       >
         {/* Background base & image */}
-        {bg ? (
+        {bg && !isLogo ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={bg}
@@ -44,7 +45,7 @@ export function SubcategoryBanner({
           aria-hidden
           className={cn(
             "absolute inset-0 z-0",
-            bg
+            bg && !isLogo
               ? "bg-gradient-to-r from-navy-960/85 via-navy-960/60 to-navy-960/85"
               : "bg-gradient-to-r from-navy-950 via-navy-900 to-navy-950"
           )}
@@ -56,6 +57,16 @@ export function SubcategoryBanner({
         {/* Content */}
         <Container className="relative z-10 py-5 sm:py-6">
           <div className="mx-auto max-w-3xl text-center flex flex-col items-center">
+            {bg && isLogo ? (
+              <div className="mb-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={bg}
+                  alt={name}
+                  className="h-20 sm:h-28 w-auto object-contain drop-shadow-md"
+                />
+              </div>
+            ) : null}
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 rounded-full border border-azure-400/25 bg-azure-500/10 px-3.5 py-1 mb-3 select-none">
               <span className="h-px w-4 bg-azure-400/60" />

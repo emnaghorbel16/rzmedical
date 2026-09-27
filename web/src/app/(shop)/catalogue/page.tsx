@@ -168,6 +168,7 @@ export default async function CataloguePage({
           name={bannerName}
           image={bannerImage}
           breadcrumb={bannerBreadcrumb}
+          isLogo={!!marque}
         />
       ) : null}
 
