@@ -904,9 +904,9 @@ export default function ProductsPage() {
                 )}
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Fiche Technique (PDF)</label>
-                <input type="file" accept="application/pdf" onChange={handleSingleUpload} className="w-full rounded-xl border border-gray-300 p-2 text-xs dark:bg-gray-800 dark:border-gray-700 dark:text-white" />
-                {formFicheTechnique && <a href={formFicheTechnique.startsWith("/") ? getBaseUrl() + formFicheTechnique : formFicheTechnique} target="_blank" rel="noreferrer" className="text-xs text-brand-500 mt-1 block hover:underline">Voir le fichier PDF actuel</a>}
+                <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Fiche Technique (PDF ou Image)</label>
+                <input type="file" accept="application/pdf,image/jpeg,image/png,image/webp,image/gif" onChange={handleSingleUpload} className="w-full rounded-xl border border-gray-300 p-2 text-xs dark:bg-gray-800 dark:border-gray-700 dark:text-white" />
+                {formFicheTechnique && <a href={formFicheTechnique.startsWith("/") ? getBaseUrl() + formFicheTechnique : formFicheTechnique} target="_blank" rel="noreferrer" className="text-xs text-brand-500 mt-1 block hover:underline">Voir le fichier actuel</a>}
               </div>
             </div>
 
