@@ -369,7 +369,7 @@ export default function OrdersPage() {
                           <p className="text-xs text-gray-500">{order.utilisateur.email}</p>
                           {order.utilisateur.telephone && (
                             <a 
-                              href={`tel:${order.utilisateur.telephone}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+                              href={`tel:${order.utilisateur.telephone}`}
                               className="text-xs text-brand-600 hover:underline dark:text-brand-400"
                               title="Appeler le client"
                             >
@@ -402,7 +402,7 @@ export default function OrdersPage() {
                               </Link>
                               {order.facture.fichierPdf && (
                                 <a
-                                  href={`${API_URL.replace('/api', '')}${order.facture.fichierPdf}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+                                  href={`${API_URL.replace('/api', '')}${order.facture.fichierPdf}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-xs text-gray-600 hover:underline flex items-center gap-1"
@@ -428,7 +428,7 @@ export default function OrdersPage() {
                           </div>
                         ) : (
                           <Link
-                            href={`/invoices/new?orderId=${order.id}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+                            href={`/invoices/new?orderId=${order.id}`}
                             className="text-xs font-semibold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1.5 rounded-lg border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/60 inline-flex items-center gap-1 shadow-xs transition"
                           >
                             📄 Créer facture
@@ -474,7 +474,7 @@ export default function OrdersPage() {
                                     Modifier le contenu
                                   </button>
                                   <Link
-                                    href={`/invoices/new?orderId=${order.id}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+                                    href={`/invoices/new?orderId=${order.id}`}
                                     className="px-3 py-1.5 text-xs font-semibold text-white bg-amber-700 rounded-lg hover:bg-amber-800 transition-colors inline-flex items-center gap-1.5 shadow-xs"
                                   >
                                     <span>📦</span> Créer Bon de Livraison / Facture
@@ -552,7 +552,7 @@ export default function OrdersPage() {
                                 <h5 className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">Stock produit</h5>
                                 <div className="space-y-3">
                                   {order.lignes.map((ligne) => (
-                                    <div key={`${ligne.produitId}-${ligne.quantite}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`} className="rounded-lg border border-gray-100 bg-gray-50 p-2.5 dark:border-gray-700 dark:bg-gray-900/40">
+                                    <div key={`${ligne.produitId}-${ligne.quantite}`} className="rounded-lg border border-gray-100 bg-gray-50 p-2.5 dark:border-gray-700 dark:bg-gray-900/40">
                                       <p className="text-sm font-medium text-gray-800 dark:text-white">{ligne.produit.nom}</p>
                                       <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] text-gray-600 dark:text-gray-300">
                                         <span>Stock: <strong>{ligne.produit.stock ?? 0}</strong></span>
