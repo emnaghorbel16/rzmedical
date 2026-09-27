@@ -1220,3 +1220,16 @@ model LigneInventaire {
   @@map("lignes_inventaire")
 }
 
+model GroqUsage {
+  id                Int      @id @default(autoincrement())
+  modele            String
+  tokensPrompt      Int
+  tokensCompletion  Int
+  tokensTotal       Int
+  tokensRestants    Int?
+  requetesRestantes Int?
+  creeLe            DateTime @default(now())
+
+  @@index([creeLe])
+  @@map("groq_usage")
+}
