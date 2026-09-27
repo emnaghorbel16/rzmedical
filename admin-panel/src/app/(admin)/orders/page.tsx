@@ -308,25 +308,25 @@ export default function OrdersPage() {
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setActiveStatus("ALL")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "ALL" ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "ALL" ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
           >
             Toutes
           </button>
           <button
             onClick={() => setActiveStatus("EN_ATTENTE")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "EN_ATTENTE" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "EN_ATTENTE" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
           >
             En attente
           </button>
           <button
             onClick={() => setActiveStatus("PAYEE")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "PAYEE" ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "PAYEE" ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
           >
             En cours (Payée/Expédiée)
           </button>
           <button
             onClick={() => setActiveStatus("LIVREE")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "LIVREE" ? "bg-green-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeStatus === "LIVREE" ? "bg-green-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"}`}
           >
             Livrées
           </button>
@@ -356,7 +356,7 @@ export default function OrdersPage() {
               ) : (
                 filteredOrders.map((order) => (
                   <React.Fragment key={order.id}>
-                    <TableRow className={`border-b border-gray-100 last:border-0 hover:bg-gray-50/50 dark:border-gray-800 dark:hover:bg-gray-800/30 ${expandedOrderId === order.id ? 'bg-gray-50 dark:bg-gray-800/20' : ''}className={`text-sm sm:text-base font-bold ${s.cls ?? "text-gray-800 dark:text-white"}`}>
+                    <TableRow className={`border-b border-gray-100 last:border-0 hover:bg-gray-50/50 dark:border-gray-800 dark:hover:bg-gray-800/30 ${expandedOrderId === order.id ? 'bg-gray-50 dark:bg-gray-800/20' : ''}`}>
                       <TableCell className="font-medium text-gray-800 dark:text-gray-200">
                         #{order.id.toString().padStart(5, '0')}
                       </TableCell>
