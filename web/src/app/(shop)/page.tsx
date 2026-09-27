@@ -12,7 +12,7 @@ import { GlobalBannerCarousel } from "@/components/layout/GlobalBannerCarousel";
 import { Hero } from "@/components/home/Hero";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { FeatureStrip } from "@/components/home/FeatureStrip";
-import { NewArrivalsByCategoryLoader } from "@/components/home/NewArrivalsByCategoryLoader";
+import { NewArrivals } from "@/components/home/NewArrivals";
 import { PromoSection } from "@/components/home/PromoSection";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { CategoryCard } from "@/components/catalogue/CategoryCard";
@@ -64,15 +64,15 @@ export default async function HomePage() {
       {/* Categories section */}
       
 
-      {/* Nouveautés par catégorie */}
+      {/* New arrivals */}
       <Suspense
         fallback={
           <Container className="py-14 lg:py-20">
-            <ProductGridSkeleton count={10} />
+            <ProductGridSkeleton count={8} />
           </Container>
         }
       >
-        <NewArrivalsByCategoryLoader />
+        <NewArrivals />
       </Suspense>
 
       <Suspense fallback={null}>
