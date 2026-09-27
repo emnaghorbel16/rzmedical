@@ -18,6 +18,7 @@ const CURRENT_SIZE: Record<PriceSize, string> = {
  */
 export function Price({
   prix,
+  tva = 0,
   remise = 0,
   remiseClient = 0,
   size = "md",
