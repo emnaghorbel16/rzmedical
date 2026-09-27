@@ -102,27 +102,29 @@ model Marque {
 }
 
 model Produit {
-  id              Int             @id @default(autoincrement())
-  nom             String
-  reference       String          @unique
-  description     String?
-  expirationDate  DateTime?
-  prix            Decimal         @db.Decimal(10, 2)
-  stock           Int             @default(0)
-  image           String?
-  ficheTechnique  String?
-  disponible      Boolean         @default(true)
-  sousCategorieId Int
-  sousCategorie   SousCategorie   @relation(fields: [sousCategorieId], references: [id])
-  marqueId        Int
-  marque          Marque          @relation(fields: [marqueId], references: [id])
-  creeLe          DateTime        @default(now())
-  misAJourLe      DateTime        @updatedAt
+  id                 Int             @id @default(autoincrement())
+  nom                String
+  reference          String          @unique
+  description        String?
+  expirationDate     DateTime?
+  prix               Decimal         @db.Decimal(10, 2)
+  stock              Int             @default(0)
+  image              String?
+  ficheTechnique     String?
+  disponible         Boolean         @default(true)
+  misEnAvantSousCat  Boolean         @default(false)
+  sousCategorieId    Int
+  sousCategorie      SousCategorie   @relation(fields: [sousCategorieId], references: [id])
+  marqueId           Int
+  marque             Marque          @relation(fields: [marqueId], references: [id])
+  creeLe             DateTime        @default(now())
+  misAJourLe         DateTime        @updatedAt
 
   lignesCommande  LigneCommande[]
 
   @@index([sousCategorieId])
   @@index([marqueId])
+  @@index([misEnAvantSousCat])
   @@map("produits")
 }
 
