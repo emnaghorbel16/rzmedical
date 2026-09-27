@@ -237,6 +237,30 @@ export function getNewProducts(limit = 12): Promise<Produit[]> {
   });
 }
 
+/** 10 derniers produits ajoutés, groupés par catégorie principale. */
+export async function getNewProductsByCategory(
+  categories: CategorieListItem[],
+  limit = 10,
+): Promise<{ categorie: CategorieListItem; products: Produit[] }[]> {
+  const results = await Promise.allSettled(
+    categories.map((cat) =>
+      apiFetch<Produit[]>(
+        `/api/products${buildQuery({ categorieId: cat.id, sort: "recent", limit })}`,
+        { revalidate: REVALIDATE.catalog },
+      ).then((data) => ({
+        categorie: cat,
+        products: Array.isArray(data) ? data : (data as any).products ?? [],
+      })),
+    ),
+  );
+  return results
+    .filter(
+      (r): r is PromiseFulfilledResult<{ categorie: CategorieListItem; products: Produit[] }> =>
+        r.status === "fulfilled" && r.value.products.length > 0,
+    )
+    .map((r) => r.value);
+}
+
 /** Produits en promotion (remise > 0). */
 export function getPromoProducts(): Promise<Produit[]> {
   return apiFetch<Produit[]>("/api/products/promo", {

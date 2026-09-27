@@ -277,10 +277,10 @@ Dans **l'espace client OVH → Domaines → randzmedical.com → Zone DNS** :
 
 | Type | Sous-domaine | Cible | TTL |
 | :--- | :--- | :--- | :---: |
-| A | `@` (racine) | `141.94.31.219` | 3600 |
-| A | `www` | `141.94.31.219` | 3600 |
-| A | `api` | `141.94.31.219` | 3600 |
-| A | `admin` | `141.94.31.219` | 3600 |
+| A | `@` (racine) | `198.245.XXX.XXX` | 3600 |
+| A | `www` | `198.245.XXX.XXX` | 3600 |
+| A | `api` | `198.245.XXX.XXX` | 3600 |
+| A | `admin` | `198.245.XXX.XXX` | 3600 |
 
 > ⏱️ La propagation DNS prend **15 minutes à 24 heures**.  
 > Vérifiez sur [whatsmydns.net](https://www.whatsmydns.net) avant de passer à l'étape suivante.
@@ -807,23 +807,30 @@ sudo fail2ban-client status sshd
 
 ### 10.4 — Protéger PostgreSQL (Ne jamais exposer à Internet)
 
-> [!WARNING]
-> Par défaut, Docker peut contourner UFW. Assurez-vous que PostgreSQL n'est accessible que depuis le réseau interne Docker.
+> [!CAUTION]
+> **Incident réel (Septembre 2026) :** Ne mettez **jamais** de ports publics pour votre base de données. Des hackers scannent ce port en permanence et ont supprimé la base lors du premier déploiement en la remplaçant par `readme_to_recover`.
 
-Dans `docker-compose.prod.yml`, le port DB doit être bindé sur `127.0.0.1` :
+La méthode la plus sûre est de ne **rien exposer du tout**. Dans `docker-compose.prod.yml`, le bloc `ports` doit être complètement retiré pour le service `db` :
 
 ```yaml
-db:
-  ports:
-    - "127.0.0.1:5432:5432"   # ✅ CORRECT — accessible localement uniquement
-    # - "0.0.0.0:5432:5432"   # ❌ DANGEREUX — exposé à Internet
+  db:
+    image: postgres:16
+    container_name: rzmedical_db_prod
+    restart: always
+    # ...
+    # ⛔ Port 5432 intentionnellement non exposé sur internet
+    # Le backend y accède via le réseau Docker interne (hostname: db)
+    # ports:
+    #   - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 ```
 
-Vérifier :
+Vérifier que le port n'est pas exposé :
 
 ```bash
 docker ps --format "table {{.Names}}\t{{.Ports}}"
-# PostgreSQL doit afficher : 127.0.0.1:5432->5432/tcp
+# rzmedical_db_prod ne doit RIEN afficher dans la colonne Ports
 ```
 
 ---
