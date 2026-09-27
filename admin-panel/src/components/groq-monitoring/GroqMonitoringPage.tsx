@@ -354,8 +354,8 @@ export default function GroqMonitoringPage() {
                   color: "#fff",
                   fontSize: 12,
                 }}
-                formatter={(value: number, name: string) => [
-                  value.toLocaleString("fr-FR"),
+                formatter={(value: any, name: any) => [
+                  Number(value).toLocaleString("fr-FR"),
                   name === "tokens" ? "Tokens" : "Requêtes",
                 ]}
               />
@@ -390,8 +390,8 @@ export default function GroqMonitoringPage() {
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip
                 contentStyle={{ background: "#111", border: "none", borderRadius: 8, color: "#fff", fontSize: 12 }}
-                formatter={(value: number, name: string) => [
-                  value.toLocaleString("fr-FR"),
+                formatter={(value: any, name: any) => [
+                  Number(value).toLocaleString("fr-FR"),
                   name === "tokensTotal" ? "Tokens" : "Requêtes",
                 ]}
               />
