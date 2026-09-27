@@ -102,7 +102,15 @@ export function ProductTabs({ product }: { product: Produit }) {
       {product.ficheTechnique && (
         <section>
           <h2 className="mb-4 text-lg font-bold text-navy-900">Fiche technique</h2>
-          <PdfPages src={imageUrl(product.ficheTechnique)} />
+          {product.ficheTechnique.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
+            <img 
+              src={imageUrl(product.ficheTechnique)} 
+              alt={`Fiche technique ${product.nom}`} 
+              className="max-w-full h-auto rounded-xl border border-border" 
+            />
+          ) : (
+            <PdfPages src={imageUrl(product.ficheTechnique)} />
+          )}
           <div className="mt-4">
             <a
               href={imageUrl(product.ficheTechnique)}
@@ -110,7 +118,7 @@ export function ProductTabs({ product }: { product: Produit }) {
               rel="noopener noreferrer"
               className="text-sm font-semibold text-azure-600 transition-colors hover:text-azure-700"
             >
-              Télécharger le PDF
+              Télécharger le document
             </a>
           </div>
         </section>
