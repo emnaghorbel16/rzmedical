@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { getApiUrl } from "@/lib/apiUrl";
+import { getApiUrl } from "@/utils/api";
 import {
   AreaChart,
   Area,
