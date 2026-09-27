@@ -5,7 +5,7 @@ import type { Produit } from "@/lib/types";
 import { ProductCard } from "./ProductCard";
 import { cn } from "@/lib/cn";
 
-const INTERVAL_MS = 2500;
+const INTERVAL_MS = 5000;
 
 export function ProductCarousel({
   products,
