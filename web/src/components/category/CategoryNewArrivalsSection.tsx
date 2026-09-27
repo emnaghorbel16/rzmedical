@@ -3,7 +3,7 @@ import { getPagedProducts } from "@/lib/api";
 import type { CategorieListItem, Produit } from "@/lib/types";
 import { toSlug } from "@/lib/slug";
 import { Container } from "@/components/ui/Container";
-import { ProductRail } from "@/components/catalogue/ProductRail";
+import { ProductCarousel } from "@/components/catalogue/ProductCarousel";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { ArrowRightIcon } from "@/components/ui/icons";
 
@@ -49,7 +49,7 @@ export async function CategoryNewArrivalsSection({
           </Link>
         }
       />
-      <ProductRail
+      <ProductCarousel
         products={products}
         className="[scrollbar-color:theme(colors.azure.500)_transparent]"
       />
