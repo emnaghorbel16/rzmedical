@@ -1,6 +1,6 @@
 import { getNewProducts } from "@/lib/api";
 import { Container } from "@/components/ui/Container";
-import { ProductCarousel } from "@/components/catalogue/ProductCarousel";
+import { ProductRail } from "@/components/catalogue/ProductRail";
 import { SectionHeading } from "./SectionHeading";
 
 /** Derniers produits ajoutés au catalogue. Section non bloquante (Suspense). */
@@ -22,7 +22,7 @@ export async function NewArrivals() {
         description="Les dernières références ajoutées à notre catalogue."
         href="/catalogue?filter=new"
       />
-      <ProductCarousel products={products.slice(0, 10)} className="[scrollbar-color:theme(colors.azure.500)_transparent]" />
+      <ProductRail products={products.slice(0, 10)} className="[scrollbar-color:theme(colors.azure.500)_transparent]" />
     </Container>
   );
 }
