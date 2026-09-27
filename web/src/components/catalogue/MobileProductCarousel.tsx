@@ -38,7 +38,7 @@ export function MobileProductCarousel({ products, subcategoryId }: Props) {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setCurrent((c) => ((c + 1) % count));
-    }, 5000);
+    }, 4000);
   }, [count]);
 
   useEffect(() => {
@@ -81,10 +81,7 @@ export function MobileProductCarousel({ products, subcategoryId }: Props) {
   return (
     <div className="sm:hidden w-full" data-subcategory-id={subcategoryId ?? undefined}>
       {/* Contrôles nav */}
-      <div className="flex items-center justify-between mb-3 px-1">
-        <span className="text-xs text-slate-400 font-medium">
-          {current + 1} / {count}
-        </span>
+      <div className="flex items-center justify-end mb-3 px-1">
         <div className="flex items-center gap-2">
           <button
             onClick={handlePrev}
