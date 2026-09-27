@@ -6,7 +6,7 @@ import { ProductCard } from "./ProductCard";
 
 interface Props {
   products: Produit[];
-  subcategoryId: number;
+  subcategoryId?: number;
 }
 
 /**
@@ -79,7 +79,7 @@ export function MobileProductCarousel({ products, subcategoryId }: Props) {
   const handlePrev = () => { prev(); resetTimer(); };
 
   return (
-    <div className="sm:hidden w-full" data-subcategory-id={subcategoryId}>
+    <div className="sm:hidden w-full" data-subcategory-id={subcategoryId ?? undefined}>
       {/* Contrôles nav */}
       <div className="flex items-center justify-between mb-3 px-1">
         <span className="text-xs text-slate-400 font-medium">

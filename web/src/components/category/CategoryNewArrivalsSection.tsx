@@ -4,6 +4,7 @@ import type { CategorieListItem, Produit } from "@/lib/types";
 import { toSlug } from "@/lib/slug";
 import { Container } from "@/components/ui/Container";
 import { ProductRail } from "@/components/catalogue/ProductRail";
+import { MobileProductCarousel } from "@/components/catalogue/MobileProductCarousel";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { ArrowRightIcon } from "@/components/ui/icons";
 
@@ -49,10 +50,17 @@ export async function CategoryNewArrivalsSection({
           </Link>
         }
       />
-      <ProductRail
-        products={products}
-        className="[scrollbar-color:theme(colors.azure.500)_transparent]"
-      />
+      
+      {/* Mobile : carousel horizontal, 1 produit à la fois */}
+      <MobileProductCarousel products={products} />
+
+      {/* Desktop : rail horizontal */}
+      <div className="hidden sm:block">
+        <ProductRail
+          products={products}
+          className="[scrollbar-color:theme(colors.azure.500)_transparent]"
+        />
+      </div>
     </Container>
   );
 }
