@@ -28,5 +28,38 @@ echo TERMINE !
 echo ==================================================
 echo Vos donnees sont sauvees en securite sur votre Bureau dans :
 echo %BACKUP_DIR%
-echo.
+echo.CANCELED [admin builder 4/4] RUN npm run build                        30.1s
+ => [backend builder 6/7] RUN npx prisma generate --schema=prisma/schema  17.4s
+ => ERROR [backend builder 7/7] RUN npm run build                         11.8s
+------
+ > [backend builder 7/7] RUN npm run build:
+1.752
+1.752 > backend@1.0.0 build
+1.752 > tsc
+1.752
+11.43 src/modules/products/products.controller.ts(86,122): error TS2353: Object literal may only specify known properties, and 'misEnAvantSousCat' does not exist in type '{ nom: string; reference: string; description?: string; expirationDate?: Date; prix: number; prixAchat?: number; tva?: number; remise?: number; stock?: number; images?: string[]; video?: string; motsCles?: string[]; ... 4 more ...; marqueId: number; }'.
+------
+[+] up 0/3
+ ⠙ Image rzmedical-web     Building                                        32.1s
+ ⠙ Image rzmedical-backend Building                                        32.1s
+ ⠙ Image rzmedical-admin   Building                                        32.1s
+Dockerfile:15
+
+--------------------
+
+  13 |     ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
+  14 |     RUN npx prisma generate --schema=prisma/schema.prisma
+
+  15 | >>> RUN npm run build
+
+  16 |
+
+  17 |     # Production image
+
+--------------------
+
+target backend: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 2
+
+ubuntu@vps-b2b92c9
 pause
