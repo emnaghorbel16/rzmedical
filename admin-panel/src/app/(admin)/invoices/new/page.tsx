@@ -489,7 +489,7 @@ function AddFactureForm() {
         const prod = products.find(p => p.id === Number(value));
         if (prod) {
           line.designation = prod.nom;
-          line.tauxTVA = Number(prod.tva) || ;
+          line.tauxTVA = Number(prod.tva) || defaultTva;
           line.prixUnitaireHT = Math.round((Number(prod.prix) / (1 + line.tauxTVA / 100)) * 1000) / 1000;
           line.remise = Number(prod.remise) || 0;
         }
