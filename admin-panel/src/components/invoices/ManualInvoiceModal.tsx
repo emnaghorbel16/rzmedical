@@ -230,6 +230,7 @@ export default function ManualInvoiceModal({
         const prod = products.find((p) => p.id === pId);
         if (prod) {
           updatedObj.designation = prod.nom;
+          if (prod.tva != null) { updatedObj.tauxTVA = Number(prod.tva); }
           // Auto fill HT price based on TTC price in DB
           updatedObj.prixUnitaireHT = round3(Number(prod.prix) / (1 + updatedObj.tauxTVA / 100));
         }

@@ -34,11 +34,11 @@ export function Price({
   className?: string;
 }) {
   const tvaRate = parsePrice(tva);
-  const baseHT = parsePrice(prix);
-  const baseTTC = baseHT * (1 + tvaRate / 100);
+  const baseTTC = parsePrice(prix);
+  const baseHT = baseTTC / (1 + tvaRate / 100);
   
-  const currentHT = clientPrice(prix, remise, remiseClient);
-  const currentTTC = currentHT * (1 + tvaRate / 100);
+  const currentTTC = clientPrice(prix, remise, remiseClient);
+  const currentHT = currentTTC / (1 + tvaRate / 100);
   
   const discounted = baseTTC > 0 && currentTTC < baseTTC - 0.0001;
   const pct = discounted ? Math.round((1 - currentTTC / baseTTC) * 100) : 0;
