@@ -102,8 +102,8 @@ export default function CreateInvoiceModal({ onClose, onSuccess }: CreateInvoice
       if (prod) {
         newLignes[index].designation = prod.nom;
         const remise = Number(prod.remise) || 0;
-        newLignes[index].prixUnitaireHT = Number(prod.prix) * (1 - remise/100);
         newLignes[index].tauxTVA = Number(prod.tva) || 19;
+        newLignes[index].prixUnitaireHT = Math.round(((Number(prod.prix) / (1 + newLignes[index].tauxTVA / 100)) * (1 - remise/100)) * 1000) / 1000;
       }
     } else if (typeFacture === "SERVICE" && field === "serviceId") {
       const sId = Number(value);
