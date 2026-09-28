@@ -210,8 +210,8 @@ export default function DevisFormModal({
         const prod = products.find((p) => p.id === Number(val));
         if (prod) {
           item.designation = prod.nom;
-          item.prixUnitaireHT = Number(prod.prix) || 0;
-          item.tauxTVA = Number(prod.tva) || 19;
+          item.tauxTVA = Number(prod.tva) || ;
+          item.prixUnitaireHT = Math.round((Number(prod.prix) / (1 + item.tauxTVA / 100)) * 1000) / 1000 || 0;
           item.remise = Number(prod.remise) || 0;
         }
       }
