@@ -140,7 +140,7 @@ export function CartDrawer() {
             <ul className="flex-1 overflow-y-auto px-5 divide-y divide-slate-100">
               {items.map((item) => {
                 const unitHT = clientPrice(item.prix, item.remise, isAuthenticated ? user?.remise ?? 0 : 0);
-                const unit = unitHT * (1 + (item.tva ?? 0) / 100);
+                const unit = unitHT;
                 const outOfStock = !item.disponibleALaVente;
                 return (
                   <li key={item.produitId} className="flex gap-3 py-4">

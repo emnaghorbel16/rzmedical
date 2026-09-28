@@ -365,7 +365,7 @@ export function CheckoutView() {
           <ul className="space-y-3">
             {items.map((item) => {
               const unitHT = clientPrice(item.prix, item.remise, remiseClient);
-              const unit = unitHT * (1 + (item.tva ?? 0) / 100);
+              const unit = unitHT;
               return (
                 <li key={item.produitId} className="flex items-center gap-3">
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-white">
@@ -596,7 +596,7 @@ export function CheckoutView() {
             <ul className="mt-4 space-y-3">
               {items.map((item) => {
                 const unitHT = clientPrice(item.prix, item.remise, remiseClient);
-                const unit = unitHT * (1 + (item.tva ?? 0) / 100);
+                const unit = unitHT;
                 return (
                   <li key={item.produitId} className="flex items-center gap-3">
                     <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border bg-white">
