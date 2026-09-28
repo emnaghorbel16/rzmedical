@@ -25,6 +25,7 @@ interface Product {
   nom: string;
   reference: string;
   prix: number; // TTC
+  tva?: number | null;
   stock: number;
 }
 
