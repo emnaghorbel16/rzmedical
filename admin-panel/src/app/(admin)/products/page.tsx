@@ -554,11 +554,15 @@ export default function ProductsPage() {
                       </TableCell>
                       <TableCell className="px-4 py-4 text-xs font-mono text-gray-500">{item.reference}</TableCell>
                       <TableCell className="px-4 py-4 font-medium text-gray-800 dark:text-white/90">{item.nom}</TableCell>
-                      <TableCell className="px-4 py-4 text-center text-xl">
+                      <TableCell className="px-4 py-4 text-center">
                         <span title={item.paysFabrication || ""}>
-                          {item.paysFabrication && countries.getAlpha2Code(item.paysFabrication, "fr")
-                            ? [...countries.getAlpha2Code(item.paysFabrication, "fr")!].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join("")
-                            : "-"}
+                          {item.paysFabrication && countries.getAlpha2Code(item.paysFabrication, "fr") ? (
+                            <img 
+                              src={`https://flagcdn.com/w40/${countries.getAlpha2Code(item.paysFabrication, "fr")!.toLowerCase()}.png`}
+                              alt={item.paysFabrication}
+                              className="inline-block w-6 h-auto"
+                            />
+                          ) : "-"}
                         </span>
                       </TableCell>
                       <TableCell className="px-4 py-4 min-w-[200px]">
@@ -873,9 +877,9 @@ export default function ProductsPage() {
                     ))}
                   </select>
                   {formPays && (
-                    <div className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl border border-gray-200 text-xl">
-                      {countries.getAlpha2Code(formPays, "fr")
-                        ? [...countries.getAlpha2Code(formPays, "fr")!].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join("")
+                    <div className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+                      {countries.getAlpha2Code(formPays, "fr") 
+                        ? <img src={`https://flagcdn.com/w40/${countries.getAlpha2Code(formPays, "fr")!.toLowerCase()}.png`} alt={formPays} className="w-6 h-auto" />
                         : ""}
                     </div>
                   )}

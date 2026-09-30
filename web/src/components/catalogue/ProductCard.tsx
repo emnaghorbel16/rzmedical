@@ -95,15 +95,19 @@ export function ProductCard({
         
         {/* Top-Right: Flag or Wishlist */}
         {(() => {
-          const flag = getCountryFlag(product.paysFabrication);
-          if (flag) {
+          const code = getCountryCode(product.paysFabrication);
+          if (code) {
             return (
               <div
-                className="absolute right-3 top-3 z-20 flex items-center justify-center w-8 h-8 rounded-md bg-white/80 backdrop-blur-sm shadow-sm border border-slate-100/70 text-lg leading-none select-none"
+                className="absolute right-3 top-3 z-20 flex items-center justify-center w-8 h-8 rounded-md bg-white/80 backdrop-blur-sm shadow-sm border border-slate-100/70 select-none overflow-hidden"
                 title={product.paysFabrication ?? ""}
                 aria-label={`Fabriqué en ${product.paysFabrication}`}
               >
-                {flag}
+                <img 
+                  src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+                  alt={code}
+                  className="w-5 h-auto object-contain"
+                />
               </div>
             );
           }
