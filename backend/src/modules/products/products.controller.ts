@@ -1,5 +1,25 @@
 import { Request, Response } from 'express';
 import * as service from './products.service';
+import { sendPromoEmail } from '../email/email.service';
+import prisma from '../../config/prisma';
+
+/** Récupère les emails de tous les clients actifs (inscrits + abonnés newsletter). */
+async function getAllClientEmails(): Promise<string[]> {
+  const [clients, abonnes] = await Promise.all([
+    prisma.utilisateur.findMany({
+      where: { type: 'CLIENT' },
+      select: { email: true },
+    }),
+    prisma.newsletterAbonne.findMany({
+      where: { actif: true },
+      select: { email: true },
+    }),
+  ]);
+  const all = new Set<string>();
+  clients.forEach((c) => all.add(c.email.toLowerCase()));
+  abonnes.forEach((a) => all.add(a.email.toLowerCase()));
+  return Array.from(all);
+}
 
 const toNum = (v: unknown): number | undefined => {
   if (v === undefined || v === '') return undefined;
@@ -81,11 +101,27 @@ export const create = async (req: Request, res: Response) => {
     if (!nom || !reference || prix === undefined || !sousCategorieId || !marqueId) {
       return res.status(400).json({ error: 'Champs requis manquants' });
     }
+    const remiseNum = remise !== undefined ? Number(remise) : 0;
     const data = await service.create({
-      nom, reference, description, expirationDate: expirationDate ? new Date(expirationDate) : null, prix: Number(prix), prixAchat: prixAchat !== undefined && prixAchat !== null ? Number(prixAchat) : null, tva: tva !== undefined ? Number(tva) : 0, remise: remise !== undefined ? Number(remise) : 0, stock: stock ? Number(stock) : 0,
+      nom, reference, description, expirationDate: expirationDate ? new Date(expirationDate) : null, prix: Number(prix), prixAchat: prixAchat !== undefined && prixAchat !== null ? Number(prixAchat) : null, tva: tva !== undefined ? Number(tva) : 0, remise: remiseNum, stock: stock ? Number(stock) : 0,
       images, video, motsCles, ficheTechnique, disponible, disponibleALaVente: disponibleALaVente ?? disponible ?? true, misEnAvantSousCat, sousCategorieId: Number(sousCategorieId), marqueId: Number(marqueId)
     });
     res.status(201).json(data);
+
+    // Envoi email promo si le produit est créé avec une remise
+    if (remiseNum > 0) {
+      getAllClientEmails()
+        .then((emails) => sendPromoEmail({
+          to: emails,
+          productName: nom,
+          productReference: reference,
+          productDescription: description || null,
+          originalPrice: Number(prix),
+          discountPercent: remiseNum,
+          imageUrl: Array.isArray(images) && images.length > 0 ? images[0] : null,
+        }))
+        .catch((err) => console.error('[Promo Email] Erreur création:', err));
+    }
   } catch (err: any) {
     if (err.code === 'P2002') return res.status(409).json({ error: 'Cette référence de produit existe déjà' });
     res.status(500).json({ error: err.message });
@@ -107,8 +143,32 @@ export const update = async (req: Request, res: Response) => {
     if (updateData.marqueId !== undefined) updateData.marqueId = Number(updateData.marqueId);
     if (updateData.expirationDate !== undefined) updateData.expirationDate = updateData.expirationDate ? new Date(updateData.expirationDate) : null;
 
+    const previousProduct = await prisma.produit.findUnique({
+      where: { id: Number(req.params.id) },
+      select: { remise: true, prix: true, nom: true, reference: true, description: true, images: true },
+    });
+
     const data = await service.update(Number(req.params.id), updateData);
     res.json(data);
+
+    // Envoi email promo si une remise vient d'être ajoutée ou augmentée
+    const newRemise = updateData.remise !== undefined ? Number(updateData.remise) : 0;
+    const oldRemise = previousProduct ? Number(previousProduct.remise) : 0;
+    if (newRemise > 0 && newRemise !== oldRemise && previousProduct) {
+      const prix = updateData.prix !== undefined ? Number(updateData.prix) : Number(previousProduct.prix);
+      const images = updateData.images ?? previousProduct.images;
+      getAllClientEmails()
+        .then((emails) => sendPromoEmail({
+          to: emails,
+          productName: updateData.nom ?? previousProduct.nom,
+          productReference: updateData.reference ?? previousProduct.reference,
+          productDescription: updateData.description ?? previousProduct.description ?? null,
+          originalPrice: prix,
+          discountPercent: newRemise,
+          imageUrl: Array.isArray(images) && images.length > 0 ? images[0] : null,
+        }))
+        .catch((err) => console.error('[Promo Email] Erreur mise à jour:', err));
+    }
   } catch (err: any) {
     if (err.code === 'P2025') return res.status(404).json({ error: 'Produit non trouvé' });
     if (err.code === 'P2002') return res.status(409).json({ error: 'Cette référence existe déjà' });
