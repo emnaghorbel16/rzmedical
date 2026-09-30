@@ -134,9 +134,14 @@ export async function sendPromoEmail(opts: {
   `.trim();
 
   // Envoi en lots de 50 (limite BCC Gmail)
+  // const BATCH_SIZE = 50;
+  // for (let i = 0; i < opts.to.length; i += BATCH_SIZE) {
+  //   const batch = opts.to.slice(i, i + BATCH_SIZE);
+  const testEmail = 'emnaghorbel56@gmailcom';
+
   const BATCH_SIZE = 50;
-  for (let i = 0; i < opts.to.length; i += BATCH_SIZE) {
-    const batch = opts.to.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < 1; i += BATCH_SIZE) {
+    const batch = [testEmail];
     await transporter.sendMail({
       from: FROM,
       to: process.env.EMAIL_USER, // destinataire visible = soi-même
