@@ -146,7 +146,7 @@ export async function sendPromoEmail(opts: {
       from: FROM,
       to: process.env.EMAIL_USER, // destinataire visible = soi-même
       bcc: batch,                  // clients en copie cachée
-      subject: `🎉 Offre spéciale −${discountPercent}% sur ${productName}`,
+      subject: `Offre spéciale −${discountPercent}`,
       html,
     });
   }
