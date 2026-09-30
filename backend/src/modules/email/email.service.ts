@@ -76,7 +76,7 @@ export async function sendPromoEmail(opts: {
           ${imageUrl ? `
           <tr>
             <td style="padding:24px 40px 0;text-align:center;">
-              <img src="${imageUrl}" alt="${productName}" style="max-width:280px;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid #e0e0e0;" />
+              <img src="${imageUrl[0]}" alt="${productName}" style="max-width:280px;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid #e0e0e0;" />
             </td>
           </tr>` : ''}
 
@@ -146,7 +146,7 @@ export async function sendPromoEmail(opts: {
       from: FROM,
       to: process.env.EMAIL_USER, // destinataire visible = soi-même
       bcc: batch,                  // clients en copie cachée
-      subject: `Offre spéciale −${discountPercent}`,
+      subject: `Offre spéciale −${discountPercent}% sur ${productReference}`,
       html,
     });
   }
