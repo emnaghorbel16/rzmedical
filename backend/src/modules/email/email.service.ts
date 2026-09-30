@@ -137,7 +137,7 @@ export async function sendPromoEmail(opts: {
   // const BATCH_SIZE = 50;
   // for (let i = 0; i < opts.to.length; i += BATCH_SIZE) {
   //   const batch = opts.to.slice(i, i + BATCH_SIZE);
-  const testEmail = 'emnaghorbel56@gmailcom';
+  const testEmail = 'emnaghorbel56@gmail.com';
 
   const BATCH_SIZE = 50;
   for (let i = 0; i < 1; i += BATCH_SIZE) {
