@@ -7,7 +7,7 @@ import prisma from '../../config/prisma';
 async function getAllClientEmails(): Promise<string[]> {
   const [clients, abonnes] = await Promise.all([
     prisma.utilisateur.findMany({
-      where: { type: 'CLIENT' },
+      where: { typeUtilisateur: 'CLIENT' },
       select: { email: true },
     }),
     prisma.newsletterAbonne.findMany({
