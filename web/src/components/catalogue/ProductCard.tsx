@@ -161,7 +161,7 @@ export function ProductCard({
       <div className="flex flex-1 flex-col p-4">
         {/* Free Shipping Banner */}
         {isFreeShipping && (
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 mb-2 bg-emerald-50 w-fit px-2 py-1 rounded-md">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-red-600 mb-2 bg-red-50 w-fit px-2 py-1 rounded-md">
             <TruckIcon size={14} />
             <span>Livraison gratuite</span>
           </div>
