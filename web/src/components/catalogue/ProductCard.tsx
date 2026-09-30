@@ -8,7 +8,7 @@ import { imageUrl } from "@/lib/api";
 import { hasDiscount, isRecent } from "@/lib/format";
 import { Badge } from "@/components/ui/Badge";
 import { Price } from "@/components/ui/Price";
-import { PackageIcon } from "@/components/ui/icons";
+import { PackageIcon, TruckIcon } from "@/components/ui/icons";
 import { AddToCartButton } from "./AddToCartButton";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCategory } from "@/providers/CategoryProvider";
@@ -50,6 +50,12 @@ export function ProductCard({
   const promo = hasDiscount(product.remise);
   const isNew = !promo && isRecent(product.creeLe);
   const inStock = !outOfStock;
+  
+  const basePrice = parseFloat(product.prix) || 0;
+  const productDiscount = parseFloat(product.remise) || 0;
+  const maxDiscount = Math.max(productDiscount, remiseClient);
+  const finalPrice = basePrice * (1 - maxDiscount / 100);
+  const isFreeShipping = finalPrice >= 200;
 
 
   return (
@@ -153,6 +159,14 @@ export function ProductCard({
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
+        {/* Free Shipping Banner */}
+        {isFreeShipping && (
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 mb-2 bg-emerald-50 w-fit px-2 py-1 rounded-md">
+            <TruckIcon size={14} />
+            <span>Livraison gratuite</span>
+          </div>
+        )}
+
         {/* Brand & Reference */}
         <div className="flex items-center justify-between mb-1.5 gap-2">
           {product.marque?.nom ? (
