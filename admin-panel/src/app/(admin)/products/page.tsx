@@ -554,10 +554,12 @@ export default function ProductsPage() {
                       </TableCell>
                       <TableCell className="px-4 py-4 text-xs font-mono text-gray-500">{item.reference}</TableCell>
                       <TableCell className="px-4 py-4 font-medium text-gray-800 dark:text-white/90">{item.nom}</TableCell>
-                      <TableCell className="px-4 py-4 text-center text-xl" title={item.paysFabrication || ""}>
-                        {item.paysFabrication && countries.getAlpha2Code(item.paysFabrication, "fr")
-                          ? [...countries.getAlpha2Code(item.paysFabrication, "fr")!].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join("")
-                          : "-"}
+                      <TableCell className="px-4 py-4 text-center text-xl">
+                        <span title={item.paysFabrication || ""}>
+                          {item.paysFabrication && countries.getAlpha2Code(item.paysFabrication, "fr")
+                            ? [...countries.getAlpha2Code(item.paysFabrication, "fr")!].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join("")
+                            : "-"}
+                        </span>
                       </TableCell>
                       <TableCell className="px-4 py-4 min-w-[200px]">
                         {isInline ? (
