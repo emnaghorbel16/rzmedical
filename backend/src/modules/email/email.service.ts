@@ -29,7 +29,7 @@ export async function sendPromoEmail(opts: {
   productDescription: string | null;
   originalPrice: number;
   discountPercent: number;
-  imageUrl?: string | null;
+  imageUrl?: string[] | null;
 }): Promise<void> {
   if (!opts.to.length) return;
 
@@ -73,7 +73,7 @@ export async function sendPromoEmail(opts: {
           </tr>
 
           <!-- IMAGE PRODUIT -->
-          ${imageUrl ? `
+          ${imageUrl?.[0] ? ` 
           <tr>
             <td style="padding:24px 40px 0;text-align:center;">
               <img src="${imageUrl[0]}" alt="${productName}" style="max-width:280px;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid #e0e0e0;" />

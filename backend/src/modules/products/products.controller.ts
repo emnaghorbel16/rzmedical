@@ -118,7 +118,7 @@ export const create = async (req: Request, res: Response) => {
           productDescription: description || null,
           originalPrice: Number(prix),
           discountPercent: remiseNum,
-          imageUrl: images[0],
+          imageUrl: Array.isArray(images) && images.length > 0 ? images[0] : null,
         }))
         .catch((err) => console.error('[Promo Email] Erreur création:', err));
     }
