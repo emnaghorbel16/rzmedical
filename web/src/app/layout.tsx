@@ -25,8 +25,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export async function generateMetadata(): Promise<Metadata> {
   const companyInfo = await getCompanyInfo().catch(() => null);
-  const name = companyInfo?.nomSociete || "RZMedical";
-  
+  const name = companyInfo?.nomSociete || "RZMedical" || "randz medical" || "randzmedical";
+
   // Cache busting: on ajoute `?v=timestamp` pour forcer le navigateur à rafraîchir le favicon 
   // si le logo a été mis à jour dans la base de données.
   const version = companyInfo?.misAJourLe ? new Date(companyInfo.misAJourLe).getTime() : Date.now();
@@ -39,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s · ${name}`,
     },
     description:
-      `${name}, votre partenaire de confiance en Tunisie pour l'équipement médical et dentaire : matériel professionnel, consommables et instruments de marques reconnues, au meilleur prix.`,
+      `Randz Medical (RZMedical), votre partenaire de confiance en Tunisie pour l'équipement médical et dentaire : matériel professionnel, consommables et instruments de marques reconnues, au meilleur prix. Retrouvez tout le catalogue de ${name}.`,
     applicationName: name,
     icons: {
       icon: [
@@ -54,6 +54,9 @@ export async function generateMetadata(): Promise<Metadata> {
       "consommables médicaux",
       "instruments dentaires",
       "Tunisie",
+      "rzmedical",
+      "randzmedical",
+      "randz medical",
       name,
     ],
     authors: [{ name }],
