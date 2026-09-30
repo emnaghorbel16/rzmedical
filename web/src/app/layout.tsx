@@ -25,7 +25,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export async function generateMetadata(): Promise<Metadata> {
   const companyInfo = await getCompanyInfo().catch(() => null);
-  const name = companyInfo?.nomSociete || "RZMedical" || "randz medical" || "randzmedical";
+  const name = companyInfo?.nomSociete || "Randz Medical";
 
   // Cache busting: on ajoute `?v=timestamp` pour forcer le navigateur à rafraîchir le favicon 
   // si le logo a été mis à jour dans la base de données.
