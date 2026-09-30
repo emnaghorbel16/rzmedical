@@ -91,6 +91,7 @@ export interface Produit {
   tva: string; // Decimal en string, pourcentage 0-100
   remise: string; // Decimal en string, pourcentage 0-100
   disponible: boolean;
+  paysFabrication: string | null; // Nom du pays de fabrication
   sousCategorieId: number;
   marqueId: number;
   sousCategorie: SousCategorie & { categorie: Categorie };

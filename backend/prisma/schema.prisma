@@ -263,6 +263,7 @@ model Produit {
   remise             Decimal       @default(0) @db.Decimal(10, 2)
   disponible         Boolean       @default(true)
   misEnAvantSousCat  Boolean       @default(false)
+  paysFabrication    String?
   sousCategorieId    Int
   sousCategorie      SousCategorie @relation(fields: [sousCategorieId], references: [id])
   marqueId           Int

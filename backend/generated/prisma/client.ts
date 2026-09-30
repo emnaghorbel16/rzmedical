@@ -264,3 +264,8 @@ export type InventaireCommercial = Prisma.InventaireCommercialModel
  * 
  */
 export type LigneInventaire = Prisma.LigneInventaireModel
+/**
+ * Model GroqUsage
+ * 
+ */
+export type GroqUsage = Prisma.GroqUsageModel

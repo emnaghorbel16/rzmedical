@@ -15,10 +15,10 @@ import path from 'path';
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
-const DRY_RUN       = process.argv.includes('--dry-run');
-const BRANDS_JSON   = path.join(__dirname, 'brands_rzmedical.json');
-const LOGOS_DIR     = path.join(__dirname, 'brands');
-const UPLOADS_DIR   = path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
+const DRY_RUN = process.argv.includes('--dry-run');
+const BRANDS_JSON = path.join(__dirname, 'brands_rzmedical.json');
+const LOGOS_DIR = path.join(__dirname, 'brands');
+const UPLOADS_DIR = path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
 const CATEGORIE_NOM = 'Dentaire';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ async function main() {
     log('   Placez brands_rzmedical.json dans backend/scripts/import/');
     process.exit(1);
   }
-  const raw    = fs.readFileSync(BRANDS_JSON, 'utf-8');
+  const raw = fs.readFileSync(BRANDS_JSON, 'utf-8');
   const brands: BrandEntry[] = JSON.parse(raw);
   log(`✅ ${brands.length} marques trouvées dans le fichier JSON`);
 
@@ -127,14 +127,14 @@ async function main() {
   log("  Début de l'import...");
   log('─────────────────────────────────────────────────');
 
-  let countTotal     = brands.length;
+  let countTotal = brands.length;
   let countExistante = 0;
-  let countCreee     = 0;
-  let countSansLogo  = 0;
-  let countErreur    = 0;
+  let countCreee = 0;
+  let countSansLogo = 0;
+  let countErreur = 0;
 
   for (const entry of brands) {
-    const nom      = entry.nom.trim();
+    const nom = entry.nom.trim();
     const nomLower = nom.toLowerCase();
 
     // Vérification doublon
@@ -150,13 +150,13 @@ async function main() {
     if (entry.logo) {
       // "brands/AARC_DENTAL/logo.jpg" → on retire le préfixe "brands/"
       const logoRelative = entry.logo.replace(/^brands\//, '');
-      const logoSrc      = path.join(LOGOS_DIR, logoRelative);
+      const logoSrc = path.join(LOGOS_DIR, logoRelative);
 
       if (fs.existsSync(logoSrc)) {
-        const ext          = path.extname(logoSrc);
+        const ext = path.extname(logoSrc);
         const destFilename = `brand-${slugify(nom)}-logo${ext}`;
-        const destPath     = path.join(UPLOADS_DIR, destFilename);
-        logoDbPath         = `/uploads/${destFilename}`;
+        const destPath = path.join(UPLOADS_DIR, destFilename);
+        logoDbPath = `/uploads/${destFilename}`;
 
         if (!DRY_RUN) {
           try {

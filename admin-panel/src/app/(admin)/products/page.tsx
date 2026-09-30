@@ -5,6 +5,10 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import Badge from "@/components/ui/badge/Badge";
 import StockRepartitionModal from "./StockRepartitionModal";
+import * as countries from "i18n-iso-countries";
+import frLocale from "i18n-iso-countries/langs/fr.json";
+
+countries.registerLocale(frLocale);
 
 const API_URL = getApiUrl();
 
@@ -37,6 +41,7 @@ interface Produit {
   qteVente?: number;
   disponibleALaVente?: boolean;
   disponible: boolean;
+  paysFabrication?: string | null;
   misEnAvantSousCat?: boolean;
   description?: string;
   expirationDate?: string | null;
@@ -71,6 +76,7 @@ export default function ProductsPage() {
   const [formSubCatId, setFormSubCatId] = useState("");
   const [formBrandId, setFormBrandId] = useState("");
   const [formDispo, setFormDispo] = useState(true);
+  const [formPays, setFormPays] = useState("");
   const [formMisEnAvant, setFormMisEnAvant] = useState(false);
   const [formDesc, setFormDesc] = useState("");
   const [formExpirationDate, setFormExpirationDate] = useState("");
@@ -213,6 +219,7 @@ export default function ProductsPage() {
           remise: Number(formRemise) || 0,
           stock: Number(formStock),
           disponible: formDispo,
+          paysFabrication: formPays || null,
           misEnAvantSousCat: formMisEnAvant,
           description: formDesc.trim() || undefined,
           expirationDate: formExpirationDate || null,
@@ -270,6 +277,7 @@ export default function ProductsPage() {
           remise: remiseNum,
           stock: item.stock,
           disponible: item.disponible,
+          paysFabrication: item.paysFabrication || null,
           description: item.description,
           images: item.images,
           ficheTechnique: item.ficheTechnique,
@@ -434,51 +442,46 @@ export default function ProductsPage() {
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
           <button
             onClick={() => setActiveFilter("all")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
-              activeFilter === "all"
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${activeFilter === "all"
                 ? "bg-brand-500 text-white shadow-sm"
                 : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-            }`}
+              }`}
           >
             Tous ({items.length})
           </button>
           <button
             onClick={() => setActiveFilter("new")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${
-              activeFilter === "new"
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${activeFilter === "new"
                 ? "bg-blue-600 text-white shadow-sm"
                 : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-            }`}
+              }`}
           >
             Nouveautés ({countNew})
           </button>
           <button
             onClick={() => setActiveFilter("promo")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${
-              activeFilter === "promo"
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${activeFilter === "promo"
                 ? "bg-amber-500 text-white shadow-sm"
                 : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-            }`}
+              }`}
           >
             Promotions ({countPromo})
           </button>
           <button
             onClick={() => setActiveFilter("rupture")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${
-              activeFilter === "rupture"
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${activeFilter === "rupture"
                 ? "bg-red-500 text-white shadow-sm"
                 : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-            }`}
+              }`}
           >
             En rupture ({countRupture})
           </button>
           <button
             onClick={() => setActiveFilter("indisponible")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${
-              activeFilter === "indisponible"
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors ${activeFilter === "indisponible"
                 ? "bg-gray-700 text-white shadow-sm"
                 : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-            }`}
+              }`}
           >
             Indisponibles ({countIndispo})
           </button>
@@ -517,6 +520,7 @@ export default function ProductsPage() {
                   <TableCell isHeader className="px-4 py-3 text-start">Image</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Réf</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Nom</TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-center">Pays</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Prix vente / Remise</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Prix achat</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">CUMP</TableCell>
@@ -550,6 +554,11 @@ export default function ProductsPage() {
                       </TableCell>
                       <TableCell className="px-4 py-4 text-xs font-mono text-gray-500">{item.reference}</TableCell>
                       <TableCell className="px-4 py-4 font-medium text-gray-800 dark:text-white/90">{item.nom}</TableCell>
+                      <TableCell className="px-4 py-4 text-center text-xl" title={item.paysFabrication || ""}>
+                        {item.paysFabrication && countries.getAlpha2Code(item.paysFabrication, "fr")
+                          ? [...countries.getAlpha2Code(item.paysFabrication, "fr")!].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join("")
+                          : "-"}
+                      </TableCell>
                       <TableCell className="px-4 py-4 min-w-[200px]">
                         {isInline ? (
                           <div className="flex flex-col gap-1.5 p-2 bg-white dark:bg-gray-800 rounded-xl border border-brand-300 dark:border-brand-700 shadow-sm">
@@ -852,6 +861,24 @@ export default function ProductsPage() {
                   {brands.map(b => <option key={b.id} value={b.id}>{b.nom}</option>)}
                 </select>
               </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Pays de fabrication</label>
+                <div className="flex gap-2">
+                  <select value={formPays} onChange={(e) => setFormPays(e.target.value)} className="flex-1 rounded-xl border border-gray-300 p-2.5 text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    <option value="">Sélectionner un pays</option>
+                    {Object.entries(countries.getNames("fr")).map(([code, name]) => (
+                      <option key={code} value={name}>{name}</option>
+                    ))}
+                  </select>
+                  {formPays && (
+                    <div className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl border border-gray-200 text-xl">
+                      {countries.getAlpha2Code(formPays, "fr")
+                        ? [...countries.getAlpha2Code(formPays, "fr")!].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join("")
+                        : ""}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="mb-4">
@@ -873,9 +900,8 @@ export default function ProductsPage() {
                         <button
                           type="button"
                           onClick={() => setMainImage(i)}
-                          className={`h-full w-full overflow-hidden rounded-lg border-2 ${
-                            i === 0 ? "border-brand-500" : "border-gray-200"
-                          }`}
+                          className={`h-full w-full overflow-hidden rounded-lg border-2 ${i === 0 ? "border-brand-500" : "border-gray-200"
+                            }`}
                           title="Choisir comme image principale (première image)"
                         >
                           <img
@@ -979,9 +1005,9 @@ export default function ProductsPage() {
       )}
 
       {repartitionModalId && (
-        <StockRepartitionModal 
-          produitId={repartitionModalId} 
-          onClose={() => setRepartitionModalId(null)} 
+        <StockRepartitionModal
+          produitId={repartitionModalId}
+          onClose={() => setRepartitionModalId(null)}
         />
       )}
     </div>

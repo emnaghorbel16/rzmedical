@@ -441,7 +441,8 @@ export const ModelName = {
   BonSortie: 'BonSortie',
   LigneBonSortie: 'LigneBonSortie',
   InventaireCommercial: 'InventaireCommercial',
-  LigneInventaire: 'LigneInventaire'
+  LigneInventaire: 'LigneInventaire',
+  GroqUsage: 'GroqUsage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -457,7 +458,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "utilisateur" | "ticketSupport" | "messageSupport" | "categorie" | "sousCategorie" | "marque" | "produit" | "stockMovement" | "purchasePriceHistory" | "commande" | "ligneCommande" | "bonLivraison" | "ligneBonLivraison" | "facture" | "devis" | "ligneDevis" | "factureBonLivraison" | "ligneFacture" | "paiement" | "service" | "alerteSite" | "annonceSite" | "banniereSite" | "videoHero" | "tokenReset" | "newsletterAbonne" | "infoSociete" | "exercice" | "documentSequence" | "fournisseur" | "bonCommande" | "ligneBonCommande" | "bonReception" | "ligneBonReception" | "factureFournisseur" | "chargeGenerale" | "chargeCnss" | "charge9ba4a" | "ligneFactureFournisseur" | "paiementFactureFournisseur" | "stockCommercial" | "bonSortie" | "ligneBonSortie" | "inventaireCommercial" | "ligneInventaire"
+    modelProps: "utilisateur" | "ticketSupport" | "messageSupport" | "categorie" | "sousCategorie" | "marque" | "produit" | "stockMovement" | "purchasePriceHistory" | "commande" | "ligneCommande" | "bonLivraison" | "ligneBonLivraison" | "facture" | "devis" | "ligneDevis" | "factureBonLivraison" | "ligneFacture" | "paiement" | "service" | "alerteSite" | "annonceSite" | "banniereSite" | "videoHero" | "tokenReset" | "newsletterAbonne" | "infoSociete" | "exercice" | "documentSequence" | "fournisseur" | "bonCommande" | "ligneBonCommande" | "bonReception" | "ligneBonReception" | "factureFournisseur" | "chargeGenerale" | "chargeCnss" | "charge9ba4a" | "ligneFactureFournisseur" | "paiementFactureFournisseur" | "stockCommercial" | "bonSortie" | "ligneBonSortie" | "inventaireCommercial" | "ligneInventaire" | "groqUsage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3791,6 +3792,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GroqUsage: {
+      payload: Prisma.$GroqUsagePayload<ExtArgs>
+      fields: Prisma.GroqUsageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GroqUsageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GroqUsageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>
+        }
+        findFirst: {
+          args: Prisma.GroqUsageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GroqUsageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>
+        }
+        findMany: {
+          args: Prisma.GroqUsageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>[]
+        }
+        create: {
+          args: Prisma.GroqUsageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>
+        }
+        createMany: {
+          args: Prisma.GroqUsageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GroqUsageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>[]
+        }
+        delete: {
+          args: Prisma.GroqUsageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>
+        }
+        update: {
+          args: Prisma.GroqUsageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>
+        }
+        deleteMany: {
+          args: Prisma.GroqUsageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GroqUsageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GroqUsageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>[]
+        }
+        upsert: {
+          args: Prisma.GroqUsageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroqUsagePayload>
+        }
+        aggregate: {
+          args: Prisma.GroqUsageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGroqUsage>
+        }
+        groupBy: {
+          args: Prisma.GroqUsageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroqUsageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GroqUsageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroqUsageCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3946,6 +4021,7 @@ export const ProduitScalarFieldEnum = {
   remise: 'remise',
   disponible: 'disponible',
   misEnAvantSousCat: 'misEnAvantSousCat',
+  paysFabrication: 'paysFabrication',
   sousCategorieId: 'sousCategorieId',
   marqueId: 'marqueId',
   creeLe: 'creeLe',
@@ -4634,6 +4710,20 @@ export const LigneInventaireScalarFieldEnum = {
 export type LigneInventaireScalarFieldEnum = (typeof LigneInventaireScalarFieldEnum)[keyof typeof LigneInventaireScalarFieldEnum]
 
 
+export const GroqUsageScalarFieldEnum = {
+  id: 'id',
+  modele: 'modele',
+  tokensPrompt: 'tokensPrompt',
+  tokensCompletion: 'tokensCompletion',
+  tokensTotal: 'tokensTotal',
+  tokensRestants: 'tokensRestants',
+  requetesRestantes: 'requetesRestantes',
+  creeLe: 'creeLe'
+} as const
+
+export type GroqUsageScalarFieldEnum = (typeof GroqUsageScalarFieldEnum)[keyof typeof GroqUsageScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -5258,6 +5348,7 @@ export type GlobalOmitConfig = {
   ligneBonSortie?: Prisma.LigneBonSortieOmit
   inventaireCommercial?: Prisma.InventaireCommercialOmit
   ligneInventaire?: Prisma.LigneInventaireOmit
+  groqUsage?: Prisma.GroqUsageOmit
 }
 
 /* Types for Logging */

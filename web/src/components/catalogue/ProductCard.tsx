@@ -8,11 +8,12 @@ import { imageUrl } from "@/lib/api";
 import { hasDiscount, isRecent } from "@/lib/format";
 import { Badge } from "@/components/ui/Badge";
 import { Price } from "@/components/ui/Price";
-import { PackageIcon, HeartIcon } from "@/components/ui/icons";
+import { PackageIcon } from "@/components/ui/icons";
 import { AddToCartButton } from "./AddToCartButton";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCategory } from "@/providers/CategoryProvider";
 import { useWishlist } from "@/providers/WishlistProvider";
+import { getCountryFlag } from "@/lib/countryFlag";
 import { cn } from "@/lib/cn";
 
 const IMAGE_SIZES =
@@ -92,36 +93,52 @@ export function ProductCard({
           )}
         </div>
         
-        {/* Top-Right Wishlist Icon */}
-        <button
-          className={cn(
-            "absolute right-3 top-3 z-20 p-1.5 transition-all duration-200 bg-white/70 hover:bg-white backdrop-blur-sm rounded-full shadow-sm border",
-            mounted && has(product.id)
-              ? "text-red-500 border-red-200 scale-110"
-              : "text-slate-400 border-slate-100/50 hover:text-red-500 hover:border-red-100 hover:scale-110"
-          )}
-          aria-label={mounted && has(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
-          aria-pressed={mounted && has(product.id)}
-          onClick={(e) => {
-            e.preventDefault();
-            toggle(product.id);
-          }}
-        >
-          <svg
-            width={16}
-            height={16}
-            viewBox="0 0 24 24"
-            fill={mounted && has(product.id) ? "currentColor" : "none"}
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            className="transition-all duration-200"
-          >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-        </button>
+        {/* Top-Right: Flag or Wishlist */}
+        {(() => {
+          const flag = getCountryFlag(product.paysFabrication);
+          if (flag) {
+            return (
+              <div
+                className="absolute right-3 top-3 z-20 flex items-center justify-center w-8 h-8 rounded-md bg-white/80 backdrop-blur-sm shadow-sm border border-slate-100/70 text-lg leading-none select-none"
+                title={product.paysFabrication ?? ""}
+                aria-label={`Fabriqué en ${product.paysFabrication}`}
+              >
+                {flag}
+              </div>
+            );
+          }
+          return (
+            <button
+              className={cn(
+                "absolute right-3 top-3 z-20 p-1.5 transition-all duration-200 bg-white/70 hover:bg-white backdrop-blur-sm rounded-full shadow-sm border",
+                mounted && has(product.id)
+                  ? "text-red-500 border-red-200 scale-110"
+                  : "text-slate-400 border-slate-100/50 hover:text-red-500 hover:border-red-100 hover:scale-110"
+              )}
+              aria-label={mounted && has(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
+              aria-pressed={mounted && has(product.id)}
+              onClick={(e) => {
+                e.preventDefault();
+                toggle(product.id);
+              }}
+            >
+              <svg
+                width={16}
+                height={16}
+                viewBox="0 0 24 24"
+                fill={mounted && has(product.id) ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="transition-all duration-200"
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+            </button>
+          );
+        })()}
 
         {outOfStock && (
           <div className="absolute inset-x-0 bottom-0 bg-slate-900/90 backdrop-blur-sm py-1.5 text-center text-[11px] font-bold text-white tracking-wide z-20">

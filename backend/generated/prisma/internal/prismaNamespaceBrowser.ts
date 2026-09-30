@@ -95,7 +95,8 @@ export const ModelName = {
   BonSortie: 'BonSortie',
   LigneBonSortie: 'LigneBonSortie',
   InventaireCommercial: 'InventaireCommercial',
-  LigneInventaire: 'LigneInventaire'
+  LigneInventaire: 'LigneInventaire',
+  GroqUsage: 'GroqUsage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -230,6 +231,7 @@ export const ProduitScalarFieldEnum = {
   remise: 'remise',
   disponible: 'disponible',
   misEnAvantSousCat: 'misEnAvantSousCat',
+  paysFabrication: 'paysFabrication',
   sousCategorieId: 'sousCategorieId',
   marqueId: 'marqueId',
   creeLe: 'creeLe',
@@ -916,6 +918,20 @@ export const LigneInventaireScalarFieldEnum = {
 } as const
 
 export type LigneInventaireScalarFieldEnum = (typeof LigneInventaireScalarFieldEnum)[keyof typeof LigneInventaireScalarFieldEnum]
+
+
+export const GroqUsageScalarFieldEnum = {
+  id: 'id',
+  modele: 'modele',
+  tokensPrompt: 'tokensPrompt',
+  tokensCompletion: 'tokensCompletion',
+  tokensTotal: 'tokensTotal',
+  tokensRestants: 'tokensRestants',
+  requetesRestantes: 'requetesRestantes',
+  creeLe: 'creeLe'
+} as const
+
+export type GroqUsageScalarFieldEnum = (typeof GroqUsageScalarFieldEnum)[keyof typeof GroqUsageScalarFieldEnum]
 
 
 export const SortOrder = {
