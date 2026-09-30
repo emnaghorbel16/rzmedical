@@ -13,7 +13,7 @@ import { AddToCartButton } from "./AddToCartButton";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCategory } from "@/providers/CategoryProvider";
 import { useWishlist } from "@/providers/WishlistProvider";
-import { getCountryFlag } from "@/lib/countryFlag";
+import { getCountryCode } from "@/lib/countryFlag";
 import { cn } from "@/lib/cn";
 
 const IMAGE_SIZES =
