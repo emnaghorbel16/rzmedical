@@ -560,7 +560,7 @@ export default function ProductsPage() {
                             <img 
                               src={`https://flagcdn.com/w40/${countries.getAlpha2Code(item.paysFabrication, "fr")!.toLowerCase()}.png`}
                               alt={item.paysFabrication}
-                              className="inline-block w-6 h-auto"
+                              className="inline-block w-8 h-auto shadow-sm rounded-sm"
                             />
                           ) : "-"}
                         </span>
@@ -877,9 +877,9 @@ export default function ProductsPage() {
                     ))}
                   </select>
                   {formPays && (
-                    <div className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
                       {countries.getAlpha2Code(formPays, "fr") 
-                        ? <img src={`https://flagcdn.com/w40/${countries.getAlpha2Code(formPays, "fr")!.toLowerCase()}.png`} alt={formPays} className="w-6 h-auto" />
+                        ? <img src={`https://flagcdn.com/w40/${countries.getAlpha2Code(formPays, "fr")!.toLowerCase()}.png`} alt={formPays} className="w-8 h-auto shadow-sm rounded-sm" />
                         : ""}
                     </div>
                   )}

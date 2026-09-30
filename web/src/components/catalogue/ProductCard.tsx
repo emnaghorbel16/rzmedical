@@ -99,14 +99,14 @@ export function ProductCard({
           if (code) {
             return (
               <div
-                className="absolute right-3 top-3 z-20 flex items-center justify-center w-8 h-8 rounded-md bg-white/80 backdrop-blur-sm shadow-sm border border-slate-100/70 select-none overflow-hidden"
+                className="absolute right-3 top-3 z-20 flex items-center justify-center w-10 h-10 rounded-md bg-white/80 backdrop-blur-sm shadow-sm border border-slate-100/70 select-none overflow-hidden"
                 title={product.paysFabrication ?? ""}
                 aria-label={`Fabriqué en ${product.paysFabrication}`}
               >
                 <img 
                   src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
                   alt={code}
-                  className="w-5 h-auto object-contain"
+                  className="w-7 h-auto object-contain shadow-sm rounded-[2px]"
                 />
               </div>
             );
