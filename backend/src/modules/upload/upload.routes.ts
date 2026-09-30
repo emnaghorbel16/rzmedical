@@ -50,7 +50,7 @@ async function processAndSaveFile(file: Express.Multer.File): Promise<string> {
       const svgOverlay = `
         <svg width="${width}" height="${height}">
           <style>
-            .title { fill: rgba(128, 128, 128, 0.7); font-size: ${fontSize}px; font-weight: bold; font-family: Arial, sans-serif; }
+            .title { fill: rgba(128, 128, 128, 0.7); font-size: ${fontSize}px; font-weight: bold; font-family: "DejaVu Sans", sans-serif; }
           </style>
           <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="title">https://randzmedical.com/</text>
         </svg>

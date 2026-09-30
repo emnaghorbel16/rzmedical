@@ -23,6 +23,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev --include=optional
 
+# Install fonts for sharp/librsvg to render SVG text (watermark) correctly
+RUN apk add --no-cache fontconfig ttf-dejavu
+
 # Copy compiled files and Prisma config
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
