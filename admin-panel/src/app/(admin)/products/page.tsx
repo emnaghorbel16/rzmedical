@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import Badge from "@/components/ui/badge/Badge";
+import Select from "react-select";
 import StockRepartitionModal from "./StockRepartitionModal";
 import * as countries from "i18n-iso-countries";
 import frLocale from "i18n-iso-countries/langs/fr.json";
@@ -870,12 +871,36 @@ export default function ProductsPage() {
               <div>
                 <label className="block text-xs font-semibold uppercase text-gray-500 mb-1.5">Pays de fabrication</label>
                 <div className="flex gap-2">
-                  <select value={formPays} onChange={(e) => setFormPays(e.target.value)} className="flex-1 rounded-xl border border-gray-300 p-2.5 text-sm dark:bg-gray-800 dark:border-gray-700 dark:text-white">
-                    <option value="">Sélectionner un pays</option>
-                    {Object.entries(countries.getNames("fr")).map(([code, name]) => (
-                      <option key={code} value={name}>{name}</option>
-                    ))}
-                  </select>
+                  <div className="flex-1">
+                    <Select
+                      instanceId="country-select"
+                      options={Object.entries(countries.getNames("fr")).map(([code, name]) => ({
+                        value: name,
+                        label: name
+                      }))}
+                      value={formPays ? { value: formPays, label: formPays } : null}
+                      onChange={(option) => setFormPays(option?.value || "")}
+                      isClearable
+                      placeholder="Sélectionner un pays"
+                      noOptionsMessage={() => "Aucun pays trouvé"}
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          borderRadius: '0.75rem',
+                          borderColor: state.isFocused ? '#4f46e5' : '#d1d5db',
+                          padding: '0.15rem',
+                          boxShadow: 'none',
+                          backgroundColor: 'var(--tw-bg-opacity)',
+                        })
+                      }}
+                      classNames={{
+                        control: () => "dark:bg-gray-800 dark:border-gray-700 dark:text-white hover:border-gray-400",
+                        menu: () => "dark:bg-gray-800 dark:text-white border dark:border-gray-700",
+                        option: (state) => state.isFocused ? "bg-gray-100 dark:bg-gray-700" : "dark:bg-gray-800",
+                        singleValue: () => "dark:text-white"
+                      }}
+                    />
+                  </div>
                   {formPays && (
                     <div className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
                       {countries.getAlpha2Code(formPays, "fr") 
