@@ -56,16 +56,12 @@ async function saveProductImageWithWatermark(file: Express.Multer.File): Promise
       // Font size ≈ 4% of image width, minimum 14px
       const fontSize = Math.max(14, Math.round(width * 0.04));
 
-      // SVG watermark overlay — semi-transparent, centered
+      // SVG watermark overlay — gris semi-transparent, centré
       const svgOverlay = `
         <svg width="${width}" height="${height}">
           <style>
-            .wm { fill: rgba(255,255,255,0.55); font-size: ${fontSize}px; font-weight: bold; font-family: "DejaVu Sans", sans-serif; }
+            .wm { fill: rgba(128, 128, 128, 0.7); font-size: ${fontSize}px; font-weight: bold; font-family: "DejaVu Sans", sans-serif; }
           </style>
-          <!-- Shadow for contrast on light backgrounds -->
-          <text x="50.5%" y="50.5%" text-anchor="middle" dominant-baseline="middle"
-                style="fill:rgba(0,0,0,0.25);font-size:${fontSize}px;font-weight:bold;font-family:'DejaVu Sans',sans-serif;">https://randzmedical.com/</text>
-          <!-- Main watermark text -->
           <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="wm">https://randzmedical.com/</text>
         </svg>
       `;
