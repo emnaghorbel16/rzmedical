@@ -73,10 +73,10 @@ export async function sendPromoEmail(opts: {
           </tr>
 
           <!-- IMAGE PRODUIT -->
-          ${imageUrl?.[0] ? ` 
+          ${imageUrl?.[0] ? `
           <tr>
             <td style="padding:24px 40px 0;text-align:center;">
-              <img src="${imageUrl[0]}" alt="${productName}" style="max-width:280px;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid #e0e0e0;" />
+              <img src="${imageUrl[0].startsWith('http') ? imageUrl[0] : SITE_URL + imageUrl[0]}" alt="${productName}" style="max-width:280px;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid #e0e0e0;" />
             </td>
           </tr>` : ''}
 

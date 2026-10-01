@@ -118,7 +118,7 @@ export const create = async (req: Request, res: Response) => {
           productDescription: description || null,
           originalPrice: Number(prix),
           discountPercent: remiseNum,
-          imageUrl: Array.isArray(images) && images.length > 0 ? images[0] : null,
+          imageUrl: Array.isArray(images) && images.length > 0 ? [images[0]] : null,
         }))
         .catch((err) => console.error('[Promo Email] Erreur création:', err));
     }
@@ -165,7 +165,7 @@ export const update = async (req: Request, res: Response) => {
           productDescription: updateData.description ?? previousProduct.description ?? null,
           originalPrice: prix,
           discountPercent: newRemise,
-          imageUrl: Array.isArray(images) && images.length > 0 ? images[0] : null,
+          imageUrl: Array.isArray(images) && images.length > 0 ? [images[0]] : null,
         }))
         .catch((err) => console.error('[Promo Email] Erreur mise à jour:', err));
     }
