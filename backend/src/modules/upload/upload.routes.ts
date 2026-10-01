@@ -26,33 +26,47 @@ const upload = multer({
 
 const router = Router();
 
-// Function to process and save a file (with watermark if image)
-async function processAndSaveFile(file: Express.Multer.File): Promise<string> {
+// Save a file as-is (no watermark) — used for logos, PDFs, banners, profile photos, etc.
+async function saveFileAsIs(file: Express.Multer.File): Promise<string> {
   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-  const ext = path.extname(file.originalname) || '.png'; // default to .png if missing
+  const ext = path.extname(file.originalname) || '.bin';
+  const filename = file.fieldname + '-' + uniqueSuffix + ext;
+  const filePath = path.join(uploadPath, filename);
+  await fs.promises.writeFile(filePath, file.buffer);
+  return `/uploads/${filename}`;
+}
+
+// Save a product image with the site watermark "https://randzmedical.com/"
+async function saveProductImageWithWatermark(file: Express.Multer.File): Promise<string> {
+  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+  const ext = path.extname(file.originalname) || '.png';
   const filename = file.fieldname + '-' + uniqueSuffix + ext;
   const filePath = path.join(uploadPath, filename);
 
   const isImage = file.mimetype.startsWith('image/');
-  
+
   if (isImage && file.mimetype !== 'image/svg+xml') {
     try {
       const image = sharp(file.buffer);
       const metadata = await image.metadata();
-      
+
       const width = metadata.width || 800;
       const height = metadata.height || 600;
-      
-      // Calculate font size based on image width (approx 4% of width to fit the URL)
+
+      // Font size ≈ 4% of image width, minimum 14px
       const fontSize = Math.max(14, Math.round(width * 0.04));
-      
-      // Create SVG overlay for the watermark text "https://randzmedical.com/"
+
+      // SVG watermark overlay — semi-transparent, centered
       const svgOverlay = `
         <svg width="${width}" height="${height}">
           <style>
-            .title { fill: rgba(128, 128, 128, 0.7); font-size: ${fontSize}px; font-weight: bold; font-family: "DejaVu Sans", sans-serif; }
+            .wm { fill: rgba(255,255,255,0.55); font-size: ${fontSize}px; font-weight: bold; font-family: "DejaVu Sans", sans-serif; }
           </style>
-          <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="title">https://randzmedical.com/</text>
+          <!-- Shadow for contrast on light backgrounds -->
+          <text x="50.5%" y="50.5%" text-anchor="middle" dominant-baseline="middle"
+                style="fill:rgba(0,0,0,0.25);font-size:${fontSize}px;font-weight:bold;font-family:'DejaVu Sans',sans-serif;">https://randzmedical.com/</text>
+          <!-- Main watermark text -->
+          <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="wm">https://randzmedical.com/</text>
         </svg>
       `;
 
@@ -60,26 +74,26 @@ async function processAndSaveFile(file: Express.Multer.File): Promise<string> {
         .composite([{ input: Buffer.from(svgOverlay), blend: 'over' }])
         .toFile(filePath);
     } catch (err) {
-      console.error("Erreur lors de l'application du watermark :", err);
-      // Fallback: save original without watermark if error
+      console.error("Erreur lors de l'application du watermark produit :", err);
+      // Fallback : sauvegarder l'image originale sans filigrane
       await fs.promises.writeFile(filePath, file.buffer);
     }
   } else {
-    // Save non-images (PDFs, SVGs, etc) as-is
+    // SVGs et autres formats non supportés par sharp : sauvegarder tel quel
     await fs.promises.writeFile(filePath, file.buffer);
   }
 
   return `/uploads/${filename}`;
 }
 
-// Route pour un seul fichier (ex: logo, PDF)
+// Route pour un seul fichier (logo, PDF, bannière, photo de profil…) — SANS filigrane
 router.post('/single', upload.single('file'), async (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Aucun fichier uploadé' });
   }
-  
+
   try {
-    const url = await processAndSaveFile(req.file);
+    const url = await saveFileAsIs(req.file);
     res.json({ url });
   } catch (error) {
     console.error(error);
@@ -87,15 +101,15 @@ router.post('/single', upload.single('file'), async (req: Request, res: Response
   }
 });
 
-// Route pour plusieurs fichiers (ex: images de produit)
+// Route pour plusieurs fichiers — images de produit UNIQUEMENT, avec filigrane randzmedical.com
 router.post('/multiple', upload.array('files', 10), async (req: Request, res: Response) => {
   if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
     return res.status(400).json({ error: 'Aucun fichier uploadé' });
   }
-  
+
   try {
     const files = req.files as Express.Multer.File[];
-    const urls = await Promise.all(files.map(file => processAndSaveFile(file)));
+    const urls = await Promise.all(files.map(file => saveProductImageWithWatermark(file)));
     res.json({ urls });
   } catch (error) {
     console.error(error);
