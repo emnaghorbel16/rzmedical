@@ -42,6 +42,22 @@ app.use(helmet({
   contentSecurityPolicy: false,
 }));
 
+// ─── Sécurité : Bloqueur explicite pour gcdigital.es ─────────────────────────
+app.use((req, res, next) => {
+  const host = req.get('host') || '';
+  const origin = req.get('origin') || '';
+  const referer = req.get('referer') || '';
+  
+  if (
+    host.includes('gcdigital.es') ||
+    origin.includes('gcdigital.es') ||
+    referer.includes('gcdigital.es')
+  ) {
+    return res.status(403).json({ error: 'Accès interdit. Access denied.' });
+  }
+  next();
+});
+
 // ─── CORS : uniquement les domaines autorisés ──────────────────────────────────
 const corsOriginEnv = process.env.CORS_ORIGIN || '';
 const allowedOrigins = corsOriginEnv
