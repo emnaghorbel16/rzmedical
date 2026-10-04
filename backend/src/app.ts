@@ -34,6 +34,9 @@ import groqStatsRoutes from './modules/groq-stats/groq-stats.routes';
 
 const app = express();
 
+// ─── Confiance au proxy Nginx (Important pour le Rate Limiting) ──────────────
+app.set('trust proxy', 1);
+
 // ─── Sécurité : Headers HTTP (CSP, XSS protection, Clickjacking, etc.) ───────
 app.use(helmet({
   // Permet le chargement des images produit depuis le même domaine
