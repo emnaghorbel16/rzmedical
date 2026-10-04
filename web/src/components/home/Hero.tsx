@@ -45,9 +45,9 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
           width: "100vw",
           marginLeft: "calc(50% - 50vw)",
           marginRight: "calc(50% - 50vw)",
-          height: "30vh",
-          maxHeight: "30vh",
-          minHeight: "180px",
+          height: "60vh",
+          maxHeight: "60vh",
+          minHeight: "320px",
           paddingTop: "64px",
         }}
       >
@@ -69,7 +69,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
         <div className="absolute inset-0 bg-gradient-to-b from-navy-960/60 via-navy-950/50 to-navy-960/70 z-10 pointer-events-none" />
 
         {/* Centered content — full width */}
-        <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 py-4 lg:py-8 flex flex-col items-center text-center">
+        <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex flex-col items-center text-center">
           <div className="w-full max-w-4xl mx-auto">
             <HeroContent isTransparent />
           </div>
@@ -240,40 +240,45 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
 function HeroContent({ isTransparent = false }: { isTransparent?: boolean }) {
   return (
     <>
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-4 py-1.5 mb-6 select-none">
-        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/90">
+      {/* Eyebrow pill */}
+      <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 mb-4 select-none">
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/80">
           Matériel médical &amp; dentaire
         </span>
       </div>
 
-      <h1 className="font-display font-black leading-[1.06] tracking-tight text-white drop-shadow-lg mb-6">
+      {/* Headline */}
+      <h1 className="font-display font-black text-2xl sm:text-3xl lg:text-5xl leading-[1.08] tracking-tight text-white drop-shadow-lg mb-4">
         L&apos;équipement médical de référence,{" "}
         <span className="text-azure-300">livré en confiance</span>.
       </h1>
 
-      <p className="text-[16px] sm:text-lg leading-relaxed text-white/80 drop-shadow mb-8 max-w-2xl mx-auto">
+      {/* Description */}
+      <p className="text-sm sm:text-base leading-relaxed text-white/80 drop-shadow mb-6 max-w-xl mx-auto">
         RZmedical accompagne les professionnels de santé en Tunisie avec une
-        sélection d&apos;équipements de pointe.
+        sélection d&apos;équipements certifiés et livrés rapidement.
       </p>
 
-      <div className="flex flex-col gap-3 sm:flex-row justify-center">
-        <Link href="/catalogue" className={buttonVariants({ variant: "accent", size: "xl" })}>
+      {/* CTA Buttons */}
+      <div className="flex flex-col gap-2.5 sm:flex-row justify-center">
+        <Link href="/catalogue" className={buttonVariants({ variant: "accent", size: "lg" })}>
           Explorer le catalogue
-          <ArrowRightIcon size={18} />
+          <ArrowRightIcon size={16} />
         </Link>
         <Link
           href="/catalogue?promo=1"
-          className="inline-flex h-14 items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-8 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white/40"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-6 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white/40"
         >
           Voir les promotions
         </Link>
       </div>
 
-      <ul className="mt-6 flex flex-col gap-2.5 items-center sm:flex-row sm:flex-wrap sm:justify-center">
+      {/* Trust list — visible uniquement si assez de place (md+) */}
+      <ul className="mt-5 hidden md:flex flex-row flex-wrap gap-x-6 gap-y-2 justify-center">
         {TRUST.map((t) => (
-          <li key={t} className="flex items-start gap-3 text-sm font-medium text-white/85">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-azure-500/20 border border-azure-400/30 text-azure-300 mt-0.5">
-              <CheckIcon size={11} strokeWidth={3} />
+          <li key={t} className="flex items-center gap-2 text-[13px] font-medium text-white/80">
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-azure-500/20 border border-azure-400/30 text-azure-300">
+              <CheckIcon size={9} strokeWidth={3} />
             </span>
             {t}
           </li>

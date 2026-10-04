@@ -39,9 +39,9 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
         width: "100vw",
         marginLeft: "calc(50% - 50vw)",
         marginRight: "calc(50% - 50vw)",
-        height: "30vh",
-        maxHeight: "30vh",
-        minHeight: "180px",
+        height: "60vh",
+        maxHeight: "60vh",
+        minHeight: "320px",
         paddingTop: "64px",
       } : undefined}
     >
