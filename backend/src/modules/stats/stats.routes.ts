@@ -1,9 +1,10 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../../config/prisma';
+import { requireAuth } from '../auth/auth.middleware';
 
 const router = Router();
 
-// GET /api/stats/public — Chiffres clés pour la page À propos (sans auth)
+// GET /api/stats/public — Chiffres clés pour la page À propos (sans auth, volontairement public)
 router.get('/public', async (_req: Request, res: Response) => {
   try {
     const [totalProduits, totalClients, totalCommandes] = await Promise.all([
@@ -55,10 +56,10 @@ function buildDateFilter(periode?: string, dateDebut?: string, dateFin?: string,
   }
 }
 
-// GET /api/stats/impayes - Factures clients et fournisseurs non soldées
+// GET /api/stats/impayes - Factures clients et fournisseurs non soldées (admin uniquement)
 // Kept separate from the full dashboard so an unrelated dashboard metric cannot
 // prevent the collection screen from loading.
-router.get('/impayes', async (req: Request, res: Response) => {
+router.get('/impayes', requireAuth, async (req: Request, res: Response) => {
   try {
     const periode = (req.query.periode as string) || 'annee';
     const exerciceAnnee = req.query.exerciceAnnee ? Number(req.query.exerciceAnnee) : undefined;
@@ -134,8 +135,8 @@ router.get('/impayes', async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/stats/dashboard - Dashboard financier dynamique
-router.get('/dashboard', async (req: Request, res: Response) => {
+// GET /api/stats/dashboard - Dashboard financier dynamique (admin uniquement)
+router.get('/dashboard', requireAuth, async (req: Request, res: Response) => {
   try {
     const devise = (req.query.devise as string) || undefined;
     const periode = (req.query.periode as string) || 'annee';
@@ -480,8 +481,8 @@ router.get('/dashboard', async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/stats/overview - Métriques générales du tableau de bord
-router.get('/overview', async (req: Request, res: Response) => {
+// GET /api/stats/overview - Métriques générales du tableau de bord (admin uniquement)
+router.get('/overview', requireAuth, async (req: Request, res: Response) => {
   try {
     const [
       totalProduits,
@@ -515,8 +516,8 @@ router.get('/overview', async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/stats/products-recent - 5 derniers produits ajoutés
-router.get('/products-recent', async (req: Request, res: Response) => {
+// GET /api/stats/products-recent - 5 derniers produits ajoutés (admin uniquement)
+router.get('/products-recent', requireAuth, async (req: Request, res: Response) => {
   try {
     const produits = await prisma.produit.findMany({
       take: 5,
@@ -532,8 +533,8 @@ router.get('/products-recent', async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/stats/stock-alert - Produits avec stock faible (<= 5)
-router.get('/stock-alert', async (req: Request, res: Response) => {
+// GET /api/stats/stock-alert - Produits avec stock faible (<= 5) (admin uniquement)
+router.get('/stock-alert', requireAuth, async (req: Request, res: Response) => {
   try {
     const produits = await prisma.produit.findMany({
       where: { stock: { lte: 5 } },

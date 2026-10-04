@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as ctrl from './achats.controller';
+import { requireAuth } from '../auth/auth.middleware';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
@@ -10,8 +11,6 @@ const ocrUpload = multer({
 	limits: { fileSize: 15 * 1024 * 1024 },
 	fileFilter: (_req, file, cb) => {
 		const accepted = file.mimetype === 'application/pdf' || file.mimetype.startsWith('image/');
-		// Multer's callback type accepts a nullable error; rejected files are
-		// handled by the controller as a regular JSON 400 response.
 		cb(null, accepted);
 	},
 });
@@ -29,49 +28,52 @@ const chargeDocumentUpload = multer({
 
 const router = Router();
 
+// ─── Toutes les routes achats sont réservées aux admins authentifiés ──────────
+
 // ─── Stats ────────────────────────────────────────────────────────────────────
-router.get('/stats', ctrl.getAchatsStats);
+router.get('/stats', requireAuth, ctrl.getAchatsStats);
 
 // ─── Bons de Commande ─────────────────────────────────────────────────────────
-router.get('/bons-commande', ctrl.listBonsCommande);
-router.get('/bons-commande/:id', ctrl.getBonCommande);
-router.get('/bons-commande/:id/pdf', ctrl.downloadBonCommandePdf);
-router.post('/bons-commande', ctrl.createBonCommande);
-router.put('/bons-commande/:id', ctrl.updateBonCommande);
-router.delete('/bons-commande/:id', ctrl.deleteBonCommande);
-router.post('/bons-commande/:id/transformer-br', ctrl.transformerBCenBR);
+router.get('/bons-commande', requireAuth, ctrl.listBonsCommande);
+router.get('/bons-commande/:id', requireAuth, ctrl.getBonCommande);
+router.get('/bons-commande/:id/pdf', requireAuth, ctrl.downloadBonCommandePdf);
+router.post('/bons-commande', requireAuth, ctrl.createBonCommande);
+router.put('/bons-commande/:id', requireAuth, ctrl.updateBonCommande);
+router.delete('/bons-commande/:id', requireAuth, ctrl.deleteBonCommande);
+router.post('/bons-commande/:id/transformer-br', requireAuth, ctrl.transformerBCenBR);
 
 // ─── Bons de Réception ────────────────────────────────────────────────────────
-router.get('/bons-reception', ctrl.listBonsReception);
-router.get('/bons-reception/:id', ctrl.getBonReception);
-router.get('/bons-reception/:id/pdf', ctrl.downloadBonReceptionPdf);
-router.post('/bons-reception', ctrl.createBonReception);
-router.put('/bons-reception/:id', ctrl.updateBonReception);
-router.delete('/bons-reception/:id', ctrl.deleteBonReception);
-router.patch('/bons-reception/:id/valider', ctrl.validerBonReception);
-router.post('/bons-reception/:id/transformer-facture', ctrl.transformerBRenFF);
+router.get('/bons-reception', requireAuth, ctrl.listBonsReception);
+router.get('/bons-reception/:id', requireAuth, ctrl.getBonReception);
+router.get('/bons-reception/:id/pdf', requireAuth, ctrl.downloadBonReceptionPdf);
+router.post('/bons-reception', requireAuth, ctrl.createBonReception);
+router.put('/bons-reception/:id', requireAuth, ctrl.updateBonReception);
+router.delete('/bons-reception/:id', requireAuth, ctrl.deleteBonReception);
+router.patch('/bons-reception/:id/valider', requireAuth, ctrl.validerBonReception);
+router.post('/bons-reception/:id/transformer-facture', requireAuth, ctrl.transformerBRenFF);
 
 // ─── Factures Fournisseurs ────────────────────────────────────────────────────
-router.post('/factures/ocr', ocrUpload.single('file'), ctrl.analyzeFactureFournisseurOCR);
-router.get('/factures', ctrl.listFacturesFournisseurs);
-router.get('/factures/:id', ctrl.getFactureFournisseur);
-router.get('/factures/:id/pdf', ctrl.downloadFactureFournisseurPdf);
-router.post('/factures', ctrl.createFactureFournisseur);
-router.put('/factures/:id', ctrl.updateFactureFournisseur);
-router.post('/factures/:id/envoyer-email', ctrl.sendFactureFournisseurEmail);
-router.delete('/factures/:id', ctrl.deleteFactureFournisseur);
-router.post('/factures/:id/paiements', ctrl.addPaiementFF);
+router.post('/factures/ocr', requireAuth, ocrUpload.single('file'), ctrl.analyzeFactureFournisseurOCR);
+router.get('/factures', requireAuth, ctrl.listFacturesFournisseurs);
+router.get('/factures/:id', requireAuth, ctrl.getFactureFournisseur);
+router.get('/factures/:id/pdf', requireAuth, ctrl.downloadFactureFournisseurPdf);
+router.post('/factures', requireAuth, ctrl.createFactureFournisseur);
+router.put('/factures/:id', requireAuth, ctrl.updateFactureFournisseur);
+router.post('/factures/:id/envoyer-email', requireAuth, ctrl.sendFactureFournisseurEmail);
+router.delete('/factures/:id', requireAuth, ctrl.deleteFactureFournisseur);
+router.post('/factures/:id/paiements', requireAuth, ctrl.addPaiementFF);
 
-// Formulaires de charges spécialisés. Ils conservent leur facture liée.
-router.post('/charges/document', chargeDocumentUpload.single('file'), (req, res) => {
+// Formulaires de charges spécialisés.
+router.post('/charges/document', requireAuth, chargeDocumentUpload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Pièce justificative invalide' });
   res.status(201).json({ url: `/uploads/charges/${req.file.filename}` });
 });
 // Route OCR spécifique CNSS — doit être AVANT /charges/:categorie pour éviter le conflit
-router.post('/charges/cnss/ocr', ocrUpload.single('file'), ctrl.analyzeCnssReceiptOCR);
-router.get('/charges/:categorie', ctrl.listSpecificCharges);
-router.post('/charges/:categorie', ctrl.createCharge);
-router.get('/charges/:categorie/:id', ctrl.getSpecificCharge);
-router.put('/charges/:categorie/:id', ctrl.updateSpecificCharge);
+router.post('/charges/cnss/ocr', requireAuth, ocrUpload.single('file'), ctrl.analyzeCnssReceiptOCR);
+router.get('/charges/:categorie', requireAuth, ctrl.listSpecificCharges);
+router.post('/charges/:categorie', requireAuth, ctrl.createCharge);
+router.get('/charges/:categorie/:id', requireAuth, ctrl.getSpecificCharge);
+router.put('/charges/:categorie/:id', requireAuth, ctrl.updateSpecificCharge);
 
 export default router;
+

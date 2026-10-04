@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import categoriesRoutes from './modules/categories/categories.routes';
 import subcategoriesRoutes from './modules/subcategories/subcategories.routes';
 import brandsRoutes from './modules/brands/brands.routes';
@@ -32,16 +34,81 @@ import groqStatsRoutes from './modules/groq-stats/groq-stats.routes';
 
 const app = express();
 
-// CORS dynamique depuis CORS_ORIGIN (liste séparée par virgules, ou * pour tout autoriser)
-const corsOrigin = process.env.CORS_ORIGIN || '*';
-const corsOptions = corsOrigin === '*'
-  ? {}
-  : { origin: corsOrigin.split(',').map((o: string) => o.trim()), credentials: true };
+// ─── Sécurité : Headers HTTP (CSP, XSS protection, Clickjacking, etc.) ───────
+app.use(helmet({
+  // Permet le chargement des images produit depuis le même domaine
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  // Content Security Policy désactivé car géré côté Next.js
+  contentSecurityPolicy: false,
+}));
+
+// ─── CORS : uniquement les domaines autorisés ──────────────────────────────────
+const corsOriginEnv = process.env.CORS_ORIGIN || '';
+const allowedOrigins = corsOriginEnv
+  ? corsOriginEnv.split(',').map((o: string) => o.trim()).filter(Boolean)
+  : [];
+
+const corsOptions: cors.CorsOptions = allowedOrigins.length === 0
+  // En développement (CORS_ORIGIN non défini) : autoriser tout avec un warning
+  ? (() => {
+      console.warn('[SECURITY] CORS_ORIGIN non défini — toutes les origines autorisées (dev uniquement)');
+      return { origin: true, credentials: true };
+    })()
+  : {
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Autoriser les requêtes sans origin (Nginx, curl, Postman, serveur-à-serveur)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        callback(new Error(`Origine CORS non autorisée: ${origin}`));
+      },
+      credentials: true,
+    };
 
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
-// Dossier d'uploads configurable via UPLOAD_DIR
+// ─── Rate limiting global ─────────────────────────────────────────────────────
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Trop de requêtes. Réessayez dans 15 minutes.' },
+  skip: (req) => req.path.startsWith('/uploads'), // Ne pas limiter les fichiers statiques
+});
+app.use('/api', globalLimiter);
+
+// ─── Rate limiting strict pour les endpoints d'authentification ───────────────
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Trop de tentatives d\'authentification. Réessayez dans 15 minutes.' },
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/verify-otp', authLimiter);
+app.use('/api/client-auth/login', authLimiter);
+app.use('/api/client-auth/register', authLimiter);
+app.use('/api/client-auth/forgot-password', authLimiter);
+
+// ─── Rate limiting sur le tracking public des commandes ──────────────────────
+const trackLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 30,
+  message: { error: 'Trop de requêtes de suivi. Réessayez dans 5 minutes.' },
+});
+app.use('/api/orders/public/track', trackLimiter);
+
+// ─── Rate limiting sur le formulaire de contact ──────────────────────────────
+const supportLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 heure
+  max: 10,
+  message: { error: 'Trop de tickets envoyés. Réessayez dans 1 heure.' },
+});
+app.use('/api/support', supportLimiter);
+
+// ─── Dossier d'uploads (fichiers statiques) ──────────────────────────────────
 const uploadDir = process.env.UPLOAD_DIR || 'uploads';
 app.use('/uploads', express.static(path.join(process.cwd(), uploadDir)));
 
@@ -73,8 +140,8 @@ app.use('/api/stock', stockRoutes);
 app.use('/api/stock-commercial', stockCommercialRoutes);
 app.use('/api/groq-stats', groqStatsRoutes);
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Bienvenue sur l\'API MediSupply' });
+app.get('/', (_req, res) => {
+  res.json({ message: 'API RZMedical' });
 });
 
 export default app;

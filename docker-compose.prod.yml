@@ -26,7 +26,8 @@ services:
       dockerfile: Dockerfile
     container_name: rzmedical_backend_prod
     ports:
-      - "${BACKEND_PORT:-4000}:4000"
+      # ⛔ Lié uniquement sur localhost — accès uniquement via Nginx, jamais depuis Internet
+      - "127.0.0.1:${BACKEND_PORT:-4000}:4000"
     volumes:
       # Uploads persistés entre les redémarrages
       - uploads_prod:/app/uploads

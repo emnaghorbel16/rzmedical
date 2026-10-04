@@ -20,11 +20,12 @@ export interface LigneInput {
 }
 
 // Détail renvoyé pour chaque commande (produit léger pour l'affichage)
+// Note : prixAchat, stock, qteAchat, qteVente intentionnellement exclus (données internes)
 const orderInclude = {
   lignes: {
     include: {
       produit: {
-        select: { id: true, nom: true, reference: true, images: true, prix: true, prixAchat: true, stock: true, qteAchat: true, qteVente: true, disponibleALaVente: true, tva: true, remise: true },
+        select: { id: true, nom: true, reference: true, images: true, prix: true, disponibleALaVente: true, tva: true, remise: true },
       },
     },
   },

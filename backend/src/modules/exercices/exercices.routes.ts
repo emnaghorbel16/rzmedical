@@ -4,9 +4,9 @@ import * as controller from './exercices.controller';
 
 const router = Router();
 
-// Public (lecture seule pour le sélecteur frontend sans auth)
-router.get('/', controller.list);
-router.get('/actif', controller.getActif);
+// Routes protégées (données fiscales internes — admin uniquement)
+router.get('/', requireAuth, controller.list);
+router.get('/actif', requireAuth, controller.getActif);
 router.get('/:id/stats', requireAuth, controller.stats);
 
 // Admin — protégés

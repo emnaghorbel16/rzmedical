@@ -33,13 +33,38 @@ async function getOrCreate() {
   });
 }
 
-// GET /api/company-info — Public
+// GET /api/company-info — Public (données de présentation uniquement, sans données bancaires/fiscales)
 router.get('/', async (_req: Request, res: Response) => {
+  try {
+    const info = await getOrCreate();
+    // Filtrer les champs sensibles : RIB, banque, matriculeFiscale, retenueSurce, timbreFiscal
+    // Ces données ne sont retournées qu'à l'administration authentifiée
+    const publicInfo = {
+      id: info.id,
+      nomSociete: info.nomSociete,
+      logoUrl: info.logoUrl,
+      telephone: info.telephone,
+      fax: info.fax,
+      email: info.email,
+      adresse: info.adresse,
+      siteWeb: info.siteWeb,
+      valeursTva: info.valeursTva,
+      valeursTimbre: info.valeursTimbre,
+    };
+    res.json(publicInfo);
+  } catch (err: unknown) {
+    console.error('GET /api/company-info error:', err);
+    res.status(500).json({ error: 'Erreur lors de la récupération des informations' });
+  }
+});
+
+// GET /api/company-info/admin — Admin : toutes les informations (avec RIB, matricule, etc.)
+router.get('/admin', requireAuth, async (_req: Request, res: Response) => {
   try {
     const info = await getOrCreate();
     res.json(info);
   } catch (err: unknown) {
-    console.error('GET /api/company-info error:', err);
+    console.error('GET /api/company-info/admin error:', err);
     res.status(500).json({ error: 'Erreur lors de la récupération des informations' });
   }
 });

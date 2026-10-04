@@ -2,7 +2,7 @@ import prisma from '../../config/prisma';
 import { StockMovementType } from '../../../generated/prisma/enums';
 import { recordStockMovement } from '../stock/stock.service';
 
-// Include partagé par toutes les requêtes produit (catégorie + sous-catégorie + marque)
+// Include complet pour les routes ADMIN uniquement (contient les données internes)
 const productInclude = {
   sousCategorie: { include: { categorie: true } },
   marque: true,
@@ -12,6 +12,31 @@ const productInclude = {
     take: 1,
     select: { unitPrice: true },
   },
+} as const;
+
+// Select allégé pour les routes publiques (catalogue web) — sans données commerciales internes
+const publicProductSelect = {
+  id: true,
+  nom: true,
+  reference: true,
+  description: true,
+  prix: true,
+  tva: true,
+  remise: true,
+  images: true,
+  video: true,
+  motsCles: true,
+  ficheTechnique: true,
+  disponible: true,
+  disponibleALaVente: true,
+  misEnAvantSousCat: true,
+  expirationDate: true,
+  creeLe: true,
+  misAJourLe: true,
+  sousCategorieId: true,
+  marqueId: true,
+  sousCategorie: { include: { categorie: true } } as any,
+  marque: true as any,
 } as const;
 
 export interface ProductQuery {
@@ -126,7 +151,7 @@ export const getAll = async (query: ProductQuery = {}) => {
       prisma.produit.count({ where: whereClause }),
       prisma.produit.findMany({
         where: whereClause,
-        include: productInclude,
+        select: publicProductSelect,
         orderBy,
         skip,
         take: pageSize,
@@ -146,35 +171,70 @@ export const getAll = async (query: ProductQuery = {}) => {
 
   return prisma.produit.findMany({
     where: whereClause,
-    include: productInclude,
+    select: publicProductSelect,
     orderBy,
     ...(query.limit && query.limit > 0 ? { take: query.limit } : {}),
   });
 };
 
+
+// getNew : version publique sans données internes
 export const getNew = (limit: number = 20) =>
+  prisma.produit.findMany({
+    take: limit,
+    select: publicProductSelect,
+    orderBy: { creeLe: 'desc' },
+  });
+
+// getNew admin : version complète avec mouvements de stock
+export const getNewAdmin = (limit: number = 20) =>
   prisma.produit.findMany({
     take: limit,
     include: productInclude,
     orderBy: { creeLe: 'desc' },
   });
 
+// getPromo : version publique sans données internes
 export const getPromo = () =>
   prisma.produit.findMany({
     where: {
       remise: { gt: 0 },
     },
+    select: publicProductSelect,
+    orderBy: { remise: 'desc' },
+  });
+
+// getPromo admin : version complète
+export const getPromoAdmin = () =>
+  prisma.produit.findMany({
+    where: { remise: { gt: 0 } },
     include: productInclude,
     orderBy: { remise: 'desc' },
   });
 
+// getById : version publique sans données internes
 export const getById = (id: number) =>
+  prisma.produit.findUnique({
+    where: { id },
+    select: publicProductSelect,
+  });
+
+// getById admin : version complète
+export const getByIdAdmin = (id: number) =>
   prisma.produit.findUnique({
     where: { id },
     include: productInclude,
   });
 
+// getByReference : version publique sans données internes
 export const getByReference = (reference: string) =>
+  prisma.produit.findUnique({
+    where: { reference },
+    select: publicProductSelect,
+  });
+
+// getByReference admin : version complète
+export const getByReferenceAdmin = (reference: string) =>
   prisma.produit.findUnique({
     where: { reference },
     include: productInclude,

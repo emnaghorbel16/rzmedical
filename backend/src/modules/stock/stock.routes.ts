@@ -1,10 +1,11 @@
 import { Router, Request, Response } from 'express';
 import { StockMovementType } from '../../../generated/prisma/enums';
 import { listStockMovements, validateInventory } from './stock.service';
+import { requireAuth } from '../auth/auth.middleware';
 
 const router = Router();
 
-router.get('/movements', async (req: Request, res: Response) => {
+router.get('/movements', requireAuth, async (req: Request, res: Response) => {
   try {
     const type = req.query.type as StockMovementType | undefined;
     const validTypes = Object.values(StockMovementType) as string[];
@@ -26,7 +27,7 @@ router.get('/movements', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/inventory', async (req: Request, res: Response) => {
+router.post('/inventory', requireAuth, async (req: Request, res: Response) => {
   try {
     const result = await validateInventory({
       productId: Number(req.body.productId),
@@ -41,3 +42,4 @@ router.post('/inventory', async (req: Request, res: Response) => {
 });
 
 export default router;
+

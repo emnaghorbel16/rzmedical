@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
+import { requireAuth } from '../auth/auth.middleware';
 
 // Configure upload directory
 const uploadDir = process.env.UPLOAD_DIR || 'uploads';
@@ -83,7 +84,8 @@ async function saveProductImageWithWatermark(file: Express.Multer.File): Promise
 }
 
 // Route pour un seul fichier (logo, PDF, bannière, photo de profil…) — SANS filigrane
-router.post('/single', upload.single('file'), async (req: Request, res: Response) => {
+// Protégée : seuls les admins authentifiés peuvent uploader
+router.post('/single', requireAuth, upload.single('file'), async (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Aucun fichier uploadé' });
   }
@@ -98,7 +100,8 @@ router.post('/single', upload.single('file'), async (req: Request, res: Response
 });
 
 // Route pour plusieurs fichiers — images de produit UNIQUEMENT, avec filigrane randzmedical.com
-router.post('/multiple', upload.array('files', 10), async (req: Request, res: Response) => {
+// Protégée : seuls les admins authentifiés peuvent uploader
+router.post('/multiple', requireAuth, upload.array('files', 10), async (req: Request, res: Response) => {
   if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
     return res.status(400).json({ error: 'Aucun fichier uploadé' });
   }
@@ -114,3 +117,4 @@ router.post('/multiple', upload.array('files', 10), async (req: Request, res: Re
 });
 
 export default router;
+
