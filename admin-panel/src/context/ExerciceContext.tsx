@@ -37,7 +37,12 @@ export const ExerciceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const fetchExercices = useCallback(async () => {
     try {
       const apiUrl = getApiUrl();
-      const res = await fetch(`${apiUrl}/exercices`);
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      
+      const res = await fetch(`${apiUrl}/exercices`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      
       if (!res.ok) {
         setLoading(false);
         return;
