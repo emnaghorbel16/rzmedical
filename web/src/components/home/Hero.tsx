@@ -40,11 +40,13 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
   if (showVideo) {
     return (
       <section
-        className="relative overflow-hidden min-h-[50vh] flex items-center pt-16 lg:pt-[76px]"
+        className="relative overflow-hidden flex items-center justify-center"
         style={{
           width: "100vw",
           marginLeft: "calc(50% - 50vw)",
           marginRight: "calc(50% - 50vw)",
+          minHeight: "50vh",
+          paddingTop: "76px",
         }}
       >
         <video
@@ -61,13 +63,15 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
           <source src={imageUrl(videoHero!.videoUrl)} type="video/webm" />
         </video>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-navy-960/70 via-navy-950/50 to-navy-960/80 z-10 pointer-events-none" />
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-960/60 via-navy-950/50 to-navy-960/70 z-10 pointer-events-none" />
 
-        <Container className="relative z-20 pt-16 mb-16 lg:mb-24">
-          <div className="max-w-3xl">
+        {/* Centered content — full width */}
+        <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-16 flex flex-col items-center text-center">
+          <div className="w-full max-w-4xl mx-auto">
             <HeroContent isTransparent />
           </div>
-        </Container>
+        </div>
       </section>
     );
   }
@@ -235,12 +239,8 @@ function HeroContent({ isTransparent = false }: { isTransparent?: boolean }) {
   return (
     <>
       <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-4 py-1.5 mb-6 select-none">
-        {/* <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-azure-400 opacity-75 animate-ping" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-azure-400" />
-        </span> */}
         <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/90">
-          Matériel médical & dentaire
+          Matériel médical &amp; dentaire
         </span>
       </div>
 
@@ -249,12 +249,12 @@ function HeroContent({ isTransparent = false }: { isTransparent?: boolean }) {
         <span className="text-azure-300">livré en confiance</span>.
       </h1>
 
-      <p className="text-[16px] sm:text-lg leading-relaxed text-white/80 drop-shadow mb-8 max-w-xl">
+      <p className="text-[16px] sm:text-lg leading-relaxed text-white/80 drop-shadow mb-8 max-w-2xl mx-auto">
         RZmedical accompagne les professionnels de santé en Tunisie avec une
         sélection d&apos;équipements de pointe.
       </p>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row justify-center">
         <Link href="/catalogue" className={buttonVariants({ variant: "accent", size: "xl" })}>
           Explorer le catalogue
           <ArrowRightIcon size={18} />
@@ -267,7 +267,7 @@ function HeroContent({ isTransparent = false }: { isTransparent?: boolean }) {
         </Link>
       </div>
 
-      <ul className="mt-6 flex flex-col gap-2.5">
+      <ul className="mt-6 flex flex-col gap-2.5 items-center sm:flex-row sm:flex-wrap sm:justify-center">
         {TRUST.map((t) => (
           <li key={t} className="flex items-start gap-3 text-sm font-medium text-white/85">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-azure-500/20 border border-azure-400/30 text-azure-300 mt-0.5">

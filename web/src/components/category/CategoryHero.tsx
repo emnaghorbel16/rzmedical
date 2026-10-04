@@ -30,15 +30,17 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden flex items-end",
+        "relative overflow-hidden flex items-center justify-center",
         showVideo
-          ? "bg-navy-960 min-h-[50vh] pt-16 lg:pt-[76px]"
-          : "bg-gradient-to-br from-navy-950 via-navy-900 to-azure-950 min-h-[55vh] lg:min-h-[70vh]"
+          ? "bg-navy-960"
+          : "bg-gradient-to-br from-navy-950 via-navy-900 to-azure-950 min-h-[55vh] lg:min-h-[70vh] items-end"
       )}
       style={showVideo ? {
         width: "100vw",
         marginLeft: "calc(50% - 50vw)",
         marginRight: "calc(50% - 50vw)",
+        minHeight: "50vh",
+        paddingTop: "76px",
       } : undefined}
     >
       {/* ── Background ─────────────────────────────────────────────── */}
@@ -67,8 +69,15 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-navy-960 via-navy-950/60 to-navy-950/10 z-10 pointer-events-none" />
 
       {/* ── Content ────────────────────────────────────────────────── */}
-      <Container className="relative z-20 pb-14 pt-32 lg:pb-20">
-        <div className="max-w-2xl">
+      <Container
+        className={cn(
+          "relative z-20",
+          showVideo
+            ? "py-12 lg:py-16 flex flex-col items-center text-center"
+            : "pb-14 pt-32 lg:pb-20"
+        )}
+      >
+        <div className={cn(showVideo ? "w-full max-w-4xl mx-auto" : "max-w-2xl")}>
           {/* Eyebrow badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-azure-400/30 bg-azure-500/10 px-4 py-1.5 mb-5">
             <span className="h-px w-4 bg-azure-400/60" />
@@ -82,14 +91,20 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
             {category.nom}
           </h1>
 
-          <p className="text-[16px] sm:text-lg leading-relaxed text-navy-200 mb-8 max-w-xl">
+          <p className={cn(
+            "text-[16px] sm:text-lg leading-relaxed text-navy-200 mb-8",
+            showVideo ? "max-w-2xl mx-auto" : "max-w-xl"
+          )}>
             Découvrez notre sélection complète de produits{" "}
             <span className="text-white font-semibold">{category.nom.toLowerCase()}</span>{" "}
-            — matériel professionnel certifié, livré partout en Tunisie.
+            &mdash; matériel professionnel certifié, livré partout en Tunisie.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className={cn(
+            "flex flex-col gap-3 sm:flex-row",
+            showVideo && "justify-center"
+          )}>
             <Link
               href={`/${slug}/nouveautes`}
               className={cn(
