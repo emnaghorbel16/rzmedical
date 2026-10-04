@@ -45,8 +45,10 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
           width: "100vw",
           marginLeft: "calc(50% - 50vw)",
           marginRight: "calc(50% - 50vw)",
-          minHeight: "30vh",
-          paddingTop: "76px",
+          height: "30vh",
+          maxHeight: "30vh",
+          minHeight: "180px",
+          paddingTop: "64px",
         }}
       >
         <video
@@ -67,7 +69,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
         <div className="absolute inset-0 bg-gradient-to-b from-navy-960/60 via-navy-950/50 to-navy-960/70 z-10 pointer-events-none" />
 
         {/* Centered content — full width */}
-        <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-16 flex flex-col items-center text-center">
+        <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 py-4 lg:py-8 flex flex-col items-center text-center">
           <div className="w-full max-w-4xl mx-auto">
             <HeroContent isTransparent />
           </div>
