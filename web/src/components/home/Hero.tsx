@@ -240,50 +240,19 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
 function HeroContent({ isTransparent = false }: { isTransparent?: boolean }) {
   return (
     <>
-      {/* Eyebrow pill */}
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 mb-4 select-none">
-        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/80">
-          Matériel médical &amp; dentaire
-        </span>
-      </div>
-
-      {/* Headline */}
-      <h1 className="font-display font-black text-2xl sm:text-3xl lg:text-5xl leading-[1.08] tracking-tight text-white drop-shadow-lg mb-4">
-        L&apos;équipement médical de référence,{" "}
+      <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-6xl leading-[1.08] tracking-tight text-white drop-shadow-lg mb-4">
+        Matériel médical,{" "}
         <span className="text-azure-300">livré en confiance</span>.
       </h1>
 
-      {/* Description */}
-      <p className="text-sm sm:text-base leading-relaxed text-white/80 drop-shadow mb-6 max-w-xl mx-auto">
-        RZmedical accompagne les professionnels de santé en Tunisie avec une
-        sélection d&apos;équipements certifiés et livrés rapidement.
+      <p className="text-sm sm:text-base text-white/75 mb-8 max-w-lg mx-auto">
+        Équipements certifiés pour les professionnels de santé en Tunisie.
       </p>
 
-      {/* CTA Buttons */}
-      <div className="flex flex-col gap-2.5 sm:flex-row justify-center">
-        <Link href="/catalogue" className={buttonVariants({ variant: "accent", size: "lg" })}>
-          Explorer le catalogue
-          <ArrowRightIcon size={16} />
-        </Link>
-        <Link
-          href="/catalogue?promo=1"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-6 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white/40"
-        >
-          Voir les promotions
-        </Link>
-      </div>
-
-      {/* Trust list — visible uniquement si assez de place (md+) */}
-      <ul className="mt-5 hidden md:flex flex-row flex-wrap gap-x-6 gap-y-2 justify-center">
-        {TRUST.map((t) => (
-          <li key={t} className="flex items-center gap-2 text-[13px] font-medium text-white/80">
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-azure-500/20 border border-azure-400/30 text-azure-300">
-              <CheckIcon size={9} strokeWidth={3} />
-            </span>
-            {t}
-          </li>
-        ))}
-      </ul>
+      <Link href="/catalogue" className={buttonVariants({ variant: "accent", size: "lg" })}>
+        Voir le catalogue
+        <ArrowRightIcon size={16} />
+      </Link>
     </>
   );
 }

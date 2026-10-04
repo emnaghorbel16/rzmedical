@@ -75,32 +75,30 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
         className={cn(
           "relative z-20",
           showVideo
-            ? "py-12 lg:py-16 flex flex-col items-center text-center"
+            ? "py-10 flex flex-col items-center text-center"
             : "pb-14 pt-32 lg:pb-20"
         )}
       >
-        <div className={cn(showVideo ? "w-full max-w-4xl mx-auto" : "max-w-2xl")}>
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-azure-400/30 bg-azure-500/10 px-4 py-1.5 mb-5">
-            <span className="h-px w-4 bg-azure-400/60" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-azure-300">
-              Catégorie
-            </span>
-          </div>
+        <div className={cn(showVideo ? "w-full max-w-3xl mx-auto" : "max-w-2xl")}>
 
           {/* Category name */}
-          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-white mb-5">
+          <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-6xl leading-[1.05] tracking-tight text-white mb-4">
             {category.nom}
           </h1>
 
-          <p className={cn(
-            "text-[16px] sm:text-lg leading-relaxed text-navy-200 mb-8",
-            showVideo ? "max-w-2xl mx-auto" : "max-w-xl"
-          )}>
-            Découvrez notre sélection complète de produits{" "}
-            <span className="text-white font-semibold">{category.nom.toLowerCase()}</span>{" "}
-            &mdash; matériel professionnel certifié, livré partout en Tunisie.
-          </p>
+          {!showVideo && (
+            <p className="text-base leading-relaxed text-navy-200 mb-8 max-w-xl">
+              Découvrez notre sélection de{" "}
+              <span className="text-white font-semibold">{category.nom.toLowerCase()}</span>{" "}
+              — certifié, livré partout en Tunisie.
+            </p>
+          )}
+
+          {showVideo && (
+            <p className="text-sm sm:text-base text-white/75 mb-8">
+              Matériel certifié, livré partout en Tunisie.
+            </p>
+          )}
 
           {/* CTAs */}
           <div className={cn(
@@ -108,29 +106,24 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
             showVideo && "justify-center"
           )}>
             <Link
-              href={`/${slug}/nouveautes`}
+              href={`/${slug}`}
               className={cn(
                 buttonVariants({ variant: "accent", size: "lg" }),
                 "gap-2"
               )}
             >
-              <SparklesIcon size={18} />
-              Nouveautés
-            </Link>
-            <Link
-              href={`/${slug}/promotions`}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm px-6 text-[14px] font-semibold text-white transition-all duration-200 hover:bg-white/20 hover:border-white/30"
-            >
-              <TagIcon size={16} />
-              Promotions
-            </Link>
-            <Link
-              href={`/${slug}/sous-categories`}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm px-6 text-[14px] font-semibold text-white transition-all duration-200 hover:bg-white/20 hover:border-white/30"
-            >
-              Explorer les rayons
+              Voir les produits
               <ArrowRightIcon size={16} />
             </Link>
+            {!showVideo && (
+              <Link
+                href={`/${slug}/promotions`}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm px-6 text-[14px] font-semibold text-white transition-all duration-200 hover:bg-white/20 hover:border-white/30"
+              >
+                <TagIcon size={16} />
+                Promotions
+              </Link>
+            )}
           </div>
         </div>
       </Container>
