@@ -40,7 +40,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
   if (showVideo) {
     return (
       <section
-        className="relative overflow-hidden min-h-screen flex items-center pt-16 lg:pt-[76px]"
+        className="relative overflow-hidden min-h-[50vh] flex items-center pt-16 lg:pt-[76px]"
         style={{
           width: "100vw",
           marginLeft: "calc(50% - 50vw)",

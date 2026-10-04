@@ -32,7 +32,7 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
       className={cn(
         "relative overflow-hidden flex items-end",
         showVideo
-          ? "bg-navy-960 min-h-screen pt-16 lg:pt-[76px]"
+          ? "bg-navy-960 min-h-[50vh] pt-16 lg:pt-[76px]"
           : "bg-gradient-to-br from-navy-950 via-navy-900 to-azure-950 min-h-[55vh] lg:min-h-[70vh]"
       )}
       style={showVideo ? {
