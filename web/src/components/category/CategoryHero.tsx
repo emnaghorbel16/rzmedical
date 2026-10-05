@@ -29,17 +29,15 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
   if (showVideo) {
     return (
       <section
-        className="relative overflow-hidden flex items-center justify-center bg-navy-960"
+        className="relative overflow-hidden w-full flex items-center justify-center bg-navy-960"
         style={{
-          width: "100vw",
-          marginLeft: "calc(50% - 50vw)",
-          marginRight: "calc(50% - 50vw)",
           height: "60vh",
           maxHeight: "60vh",
           minHeight: "320px",
-          paddingTop: "64px",
         }}
       >
+        {/* Ligne décorative haute */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-500/40 to-transparent z-20" />
         <video
           ref={videoRef}
           autoPlay
