@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { buttonVariants } from "@/components/ui/Button";
-import { ArrowRightIcon, SparklesIcon, TagIcon } from "@/components/ui/icons";
+import { ArrowRightIcon } from "@/components/ui/icons";
 import { imageUrl } from "@/lib/api";
 import type { VideoHero, CategorieListItem } from "@/lib/types";
 import { toSlug } from "@/lib/slug";
@@ -16,37 +16,30 @@ interface CategoryHeroProps {
   videoHero?: VideoHero | null;
 }
 
-/** Hero section pour les pages de catégorie — plein écran avec vidéo si disponible. */
+/** Hero section pour les pages de catégorie. */
 export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
   const [videoFailed, setVideoFailed] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const slug = toSlug(category.nom);
   const showVideo = !!(videoHero && videoHero.actif && !videoFailed);
-
-  // Signal to SiteHeader that this page has an active video hero
   useSetHeroVideo(showVideo);
 
-  return (
-    <section
-      className={cn(
-        "relative overflow-hidden flex items-center justify-center",
-        showVideo
-          ? "bg-navy-960"
-          : "bg-gradient-to-br from-navy-950 via-navy-900 to-azure-950 min-h-[55vh] lg:min-h-[70vh] items-end"
-      )}
-      style={showVideo ? {
-        width: "100vw",
-        marginLeft: "calc(50% - 50vw)",
-        marginRight: "calc(50% - 50vw)",
-        height: "60vh",
-        maxHeight: "60vh",
-        minHeight: "320px",
-        paddingTop: "64px",
-      } : undefined}
-    >
-      {/* ── Background ─────────────────────────────────────────────── */}
-      {showVideo ? (
+  /* ── Variante vidéo ── */
+  if (showVideo) {
+    return (
+      <section
+        className="relative overflow-hidden flex items-center justify-center bg-navy-960"
+        style={{
+          width: "100vw",
+          marginLeft: "calc(50% - 50vw)",
+          marginRight: "calc(50% - 50vw)",
+          height: "60vh",
+          maxHeight: "60vh",
+          minHeight: "320px",
+          paddingTop: "64px",
+        }}
+      >
         <video
           ref={videoRef}
           autoPlay
@@ -60,71 +53,66 @@ export function CategoryHero({ category, videoHero }: CategoryHeroProps) {
           <source src={imageUrl(videoHero!.videoUrl)} type="video/mp4" />
           <source src={imageUrl(videoHero!.videoUrl)} type="video/webm" />
         </video>
-      ) : (
-        <>
-          {/* Subtle texture: light top border highlight */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-white/10 pointer-events-none" />
-        </>
-      )}
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-navy-960 via-navy-950/60 to-navy-950/10 z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-navy-960/55 z-10 pointer-events-none" />
 
-      {/* ── Content ────────────────────────────────────────────────── */}
-      <Container
-        className={cn(
-          "relative z-20",
-          showVideo
-            ? "py-10 flex flex-col items-center text-center"
-            : "pb-14 pt-32 lg:pb-20"
-        )}
-      >
-        <div className={cn(showVideo ? "w-full max-w-3xl mx-auto" : "max-w-2xl")}>
-
-          {/* Category name */}
+        <div className="relative z-20 w-full max-w-3xl mx-auto px-6 lg:px-8 flex flex-col items-center text-center">
           <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-6xl leading-[1.05] tracking-tight text-white mb-4">
             {category.nom}
           </h1>
+          <p className="text-sm sm:text-base text-white/70 mb-8">
+            Matériel certifié, livré partout en Tunisie.
+          </p>
+          <Link
+            href={`/${slug}`}
+            className={buttonVariants({ variant: "accent", size: "lg" })}
+          >
+            Voir les produits
+            <ArrowRightIcon size={16} />
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
-          {!showVideo && (
-            <p className="text-base leading-relaxed text-navy-200 mb-8 max-w-xl">
-              Découvrez notre sélection de{" "}
-              <span className="text-white font-semibold">{category.nom.toLowerCase()}</span>{" "}
-              — certifié, livré partout en Tunisie.
-            </p>
-          )}
+  /* ── Variante sans vidéo ── */
+  return (
+    <section className="relative overflow-hidden bg-navy-960 flex flex-col min-h-[50vh] justify-end pb-16 lg:pb-24 pt-32">
+      {/* Ligne décorative haute */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-500/40 to-transparent" />
 
-          {showVideo && (
-            <p className="text-sm sm:text-base text-white/75 mb-8">
-              Matériel certifié, livré partout en Tunisie.
-            </p>
-          )}
+      {/* Fond — grain subtil */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+        }}
+      />
 
-          {/* CTAs */}
-          <div className={cn(
-            "flex flex-col gap-3 sm:flex-row",
-            showVideo && "justify-center"
-          )}>
-            <Link
-              href={`/${slug}`}
-              className={cn(
-                buttonVariants({ variant: "accent", size: "lg" }),
-                "gap-2"
-              )}
-            >
-              Voir les produits
-              <ArrowRightIcon size={16} />
-            </Link>
-            {!showVideo && (
-              <Link
-                href={`/${slug}/promotions`}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm px-6 text-[14px] font-semibold text-white transition-all duration-200 hover:bg-white/20 hover:border-white/30"
-              >
-                <TagIcon size={16} />
-                Promotions
-              </Link>
-            )}
-          </div>
+      <Container className="relative z-10">
+        <div className="max-w-2xl">
+          <p className="text-azure-400 text-xs font-semibold uppercase tracking-[0.18em] mb-4">
+            Catégorie
+          </p>
+          
+          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-white mb-6">
+            {category.nom}
+          </h1>
+
+          <p className="text-slate-400 text-base leading-relaxed max-w-xl mb-8">
+            Découvrez notre sélection de{" "}
+            <span className="text-white font-semibold">{category.nom.toLowerCase()}</span>{" "}
+            — matériel professionnel certifié, expédié le jour même et livré partout en Tunisie.
+          </p>
+
+          <Link
+            href={`/${slug}`}
+            className={buttonVariants({ variant: "accent", size: "lg" })}
+          >
+            Voir les produits
+            <ArrowRightIcon size={16} />
+          </Link>
         </div>
       </Container>
     </section>
