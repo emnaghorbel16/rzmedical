@@ -182,19 +182,19 @@ export default function ProductsPage() {
 
   const openEdit = (item: Produit) => {
     setEditing(item);
-    setFormNom(item.nom); setFormRef(item.reference); setFormPrix(item.prix.toString());
+    setFormNom(item.nom); setFormRef(item.reference); setFormPrix(item.prix?.toString() || "");
     setFormPrixAchat(item.prixAchat != null ? item.prixAchat.toString() : "");
     setFormTva(item.tva != null ? item.tva.toString() : "0");
     setFormRemise((item.remise ?? 0).toString());
-    setFormStock(item.stock.toString()); setFormDispo(item.disponible); setFormMisEnAvant(item.misEnAvantSousCat ?? false);
+    setFormStock(item.stock?.toString() || "0"); setFormDispo(item.disponible); setFormMisEnAvant(item.misEnAvantSousCat ?? false);
     setFormDesc(item.description || "");
     setFormExpirationDate(item.expirationDate ? item.expirationDate.slice(0, 10) : "");
     setFormImages(item.images || []);
     setFormFicheTechnique(item.ficheTechnique || "");
     setFormVideo(item.video || "");
     setFormMotsCles(""); setFormTags(item.motsCles || []);
-    setFormSubCatId(item.sousCategorieId.toString());
-    setFormBrandId(item.marqueId.toString());
+    setFormSubCatId(item.sousCategorieId?.toString() || "");
+    setFormBrandId(item.marqueId?.toString() || "");
     setFormError(null); setShowModal(true);
   };
 

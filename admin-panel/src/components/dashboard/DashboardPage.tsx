@@ -145,7 +145,7 @@ export default function DashboardPage() {
         }
       }
 
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
       const res = await fetch(`${API_URL}/stats/dashboard?${params.toString()}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });

@@ -55,7 +55,7 @@ export const downloadInvoicePdf = async (factureId: number, numero?: string) => 
 
 export const downloadDevisPdf = async (devisId: number, numero?: string) => {
   const apiUrl = getApiUrl();
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
   const res = await fetch(`${apiUrl}/devis/${devisId}/pdf`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
@@ -73,7 +73,7 @@ export const downloadDevisPdf = async (devisId: number, numero?: string) => {
 
 export const downloadBonCommandePdf = async (bcId: number, code?: string) => {
   const apiUrl = getApiUrl();
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
   const res = await fetch(`${apiUrl}/achats/bons-commande/${bcId}/pdf`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
@@ -91,7 +91,7 @@ export const downloadBonCommandePdf = async (bcId: number, code?: string) => {
 
 export const downloadBonReceptionPdf = async (brId: number, code?: string) => {
   const apiUrl = getApiUrl();
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
   const res = await fetch(`${apiUrl}/achats/bons-reception/${brId}/pdf`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
@@ -109,7 +109,7 @@ export const downloadBonReceptionPdf = async (brId: number, code?: string) => {
 
 export const downloadFactureFournisseurPdf = async (ffId: number, numero?: string) => {
   const apiUrl = getApiUrl();
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
   const res = await fetch(`${apiUrl}/achats/factures/${ffId}/pdf`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
