@@ -145,7 +145,8 @@ export default function ProductsPage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch(`${API_URL}/upload/single`, { method: "POST", body: formData });
+      const t = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/upload/single`, { method: "POST", body: formData, headers: t ? { Authorization: `Bearer ${t}` } : {} });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erreur d'upload");
       setFormFicheTechnique(data.url);
@@ -161,7 +162,8 @@ export default function ProductsPage() {
     try {
       const formData = new FormData();
       Array.from(files).forEach(f => formData.append("files", f));
-      const res = await fetch(`${API_URL}/upload/multiple`, { method: "POST", body: formData });
+      const t = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/upload/multiple`, { method: "POST", body: formData, headers: t ? { Authorization: `Bearer ${t}` } : {} });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erreur d'upload");
       setFormImages(prev => [...prev, ...data.urls]);
@@ -210,7 +212,10 @@ export default function ProductsPage() {
       const url = editing ? `${API_URL}/products/${editing.id}` : `${API_URL}/products`;
       const res = await fetch(url, {
         method: editing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(typeof window !== "undefined" && (localStorage.getItem("rzm_token") || localStorage.getItem("token")) ? { Authorization: `Bearer ${localStorage.getItem("rzm_token") || localStorage.getItem("token")}` } : {})
+        },
         body: JSON.stringify({
           nom: formNom.trim(),
           reference: formRef.trim(),
@@ -270,7 +275,10 @@ export default function ProductsPage() {
     try {
       const res = await fetch(`${API_URL}/products/${item.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(typeof window !== "undefined" && (localStorage.getItem("rzm_token") || localStorage.getItem("token")) ? { Authorization: `Bearer ${localStorage.getItem("rzm_token") || localStorage.getItem("token")}` } : {})
+        },
         body: JSON.stringify({
           nom: item.nom,
           reference: item.reference,
@@ -326,7 +334,10 @@ export default function ProductsPage() {
     try {
       const res = await fetch(`${API_URL}/products/${item.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(typeof window !== "undefined" && (localStorage.getItem("rzm_token") || localStorage.getItem("token")) ? { Authorization: `Bearer ${localStorage.getItem("rzm_token") || localStorage.getItem("token")}` } : {})
+        },
         body: JSON.stringify({
           nom: item.nom,
           reference: item.reference,
@@ -364,7 +375,10 @@ export default function ProductsPage() {
     try {
       const res = await fetch(`${API_URL}/products/${item.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(typeof window !== "undefined" && (localStorage.getItem("rzm_token") || localStorage.getItem("token")) ? { Authorization: `Bearer ${localStorage.getItem("rzm_token") || localStorage.getItem("token")}` } : {})
+        },
         body: JSON.stringify({ disponible: nextValue, disponibleALaVente: nextValue }),
       });
       if (!res.ok) {
@@ -383,7 +397,8 @@ export default function ProductsPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
+      const t = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/products/${id}`, { method: "DELETE", headers: t ? { Authorization: `Bearer ${t}` } : {} });
       if (!res.ok) throw new Error((await res.json()).error || "Erreur de suppression");
       setDeleteId(null); fetchData();
     } catch (err: unknown) {
