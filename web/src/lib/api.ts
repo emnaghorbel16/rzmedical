@@ -29,7 +29,7 @@ export const API_URL =
 
 // Fenêtres de revalidation (secondes)
 const REVALIDATE = {
-  catalog: 300, // produits, catégories, marques
+  catalog: 60, // produits, catégories, marques (réduit à 60s pour plus de réactivité)
   content: 60, // annonces & bannières (plus réactif)
 } as const;
 
