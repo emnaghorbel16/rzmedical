@@ -35,6 +35,7 @@ const publicProductSelect = {
   misAJourLe: true,
   sousCategorieId: true,
   marqueId: true,
+  paysFabrication: true,
   sousCategorie: { include: { categorie: true } } as any,
   marque: true as any,
 } as const;
