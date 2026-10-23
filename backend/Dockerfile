@@ -35,5 +35,5 @@ COPY --from=builder /app/generated ./generated
 
 EXPOSE 4000
 
-# Apply schema (db push handles missing/incomplete migration history)
-CMD sh -c "npx prisma db push --schema=prisma/schema.prisma --accept-data-loss && node dist/src/server.js"
+# Apply migrations safely without dropping existing data
+CMD sh -c "npx prisma migrate deploy --schema=prisma/schema.prisma || npx prisma db push --schema=prisma/schema.prisma && node dist/src/server.js"

@@ -13,6 +13,14 @@ export const getApiUrl = (): string => {
 
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
+    // En production sur le domaine randzmedical.com, toujours cibler l'API HTTPS officielle
+    if (hostname.endsWith("randzmedical.com")) {
+      return "https://api.randzmedical.com/api";
+    }
+    // Si la page est servie en HTTPS, ne jamais faire de requête en HTTP non sécurisé
+    if (window.location.protocol === "https:" && normalized.startsWith("http://")) {
+      return normalized.replace(/^http:\/\//, "https://");
+    }
     if (hostname && hostname !== "localhost" && hostname !== "127.0.0.1") {
       return normalized.replace("localhost", hostname).replace("127.0.0.1", hostname);
     }
