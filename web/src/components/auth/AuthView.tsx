@@ -17,9 +17,9 @@ import { cn } from "@/lib/cn";
 import { getVisibleCategories } from "@/lib/api";
 import type { CategorieListItem } from "@/lib/types";
 
-function safeNext(raw: string | null): string {
+function safeNext(raw: string | null, fallback = "/compte"): string {
   if (raw && raw.startsWith("/") && !raw.startsWith("//")) return raw;
-  return "/compte";
+  return fallback;
 }
 
 
@@ -32,7 +32,14 @@ export function AuthView({ mode }: { mode: "login" | "register" }) {
   const toast = useToast();
 
   const nextRaw = params.get("next") ?? params.get("redirect");
-  const next = safeNext(nextRaw ?? (cartReady && items.length > 0 ? "/commande" : null));
+  const isRegister = mode === "register";
+  const defaultFallback = isRegister ? "/" : "/compte";
+  // En cas d'inscription, si le redirect pointe vers /compte ou n'est pas spécifié, orienter vers l'accueil
+  const resolvedRaw = isRegister && nextRaw === "/compte" ? null : nextRaw;
+  const next = safeNext(
+    resolvedRaw ?? (!isRegister && cartReady && items.length > 0 ? "/commande" : null),
+    defaultFallback,
+  );
 
   const [form, setForm] = useState({
     prenom: "",
@@ -116,9 +123,10 @@ export function AuthView({ mode }: { mode: "login" | "register" }) {
   };
 
   const isLogin = mode === "login";
+  const switchNext = isLogin && nextRaw === "/compte" ? null : nextRaw;
   const switchHref =
     (isLogin ? "/inscription" : "/connexion") +
-    (nextRaw ? `?next=${encodeURIComponent(nextRaw)}` : "");
+    (switchNext ? `?next=${encodeURIComponent(switchNext)}` : "");
 
   return (
     <Container className="py-8 lg:py-16 flex justify-center">

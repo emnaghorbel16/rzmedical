@@ -96,9 +96,12 @@ export default function SubcategoriesPage() {
     setFormError(null);
     try {
       const url = editing ? `${API_URL}/subcategories/${editing.id}` : `${API_URL}/subcategories`;
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
       const res = await fetch(url, {
         method: editing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json", ...((() => { const t = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null; return t ? { Authorization: `Bearer ${t}` } : {}; })()) },
+        headers,
         body: JSON.stringify({ nom: formNom.trim(), description: formDescription.trim() || undefined, image: formImage || undefined, categorieId: formCatId }),
       });
       const data = await res.json();
