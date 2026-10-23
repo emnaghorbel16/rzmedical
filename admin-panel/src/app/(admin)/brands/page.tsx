@@ -87,9 +87,10 @@ export default function BrandsPage() {
     setSaving(true); setFormError(null);
     try {
       const url = editing ? `${API_URL}/brands/${editing.id}` : `${API_URL}/brands`;
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
       const res = await fetch(url, {
         method: editing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({ nom: formNom.trim(), logo: formLogo.trim() || undefined, categorieId: formCatId }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "Erreur d'enregistrement");
@@ -101,7 +102,8 @@ export default function BrandsPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`${API_URL}/brands/${id}`, { method: "DELETE" });
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/brands/${id}`, { method: "DELETE", headers: token ? { Authorization: `Bearer ${token}` } : {} });
       if (!res.ok) throw new Error((await res.json()).error || "Erreur de suppression");
       setDeleteId(null); fetchData();
     } catch (err: unknown) {
