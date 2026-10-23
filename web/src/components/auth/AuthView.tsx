@@ -33,11 +33,12 @@ export function AuthView({ mode }: { mode: "login" | "register" }) {
 
   const nextRaw = params.get("next") ?? params.get("redirect");
   const isRegister = mode === "register";
-  const defaultFallback = isRegister ? "/" : "/compte";
-  // En cas d'inscription, si le redirect pointe vers /compte ou n'est pas spécifié, orienter vers l'accueil
-  const resolvedRaw = isRegister && nextRaw === "/compte" ? null : nextRaw;
+  // Par défaut, les deux modes redirigent vers l'accueil
+  const defaultFallback = "/";
+  // Ne pas transmettre /compte comme destination explicite (pour inscription et connexion)
+  const resolvedRaw = nextRaw === "/compte" ? null : nextRaw;
   const next = safeNext(
-    resolvedRaw ?? (!isRegister && cartReady && items.length > 0 ? "/commande" : null),
+    resolvedRaw ?? (cartReady && items.length > 0 ? "/commande" : null),
     defaultFallback,
   );
 
@@ -123,10 +124,10 @@ export function AuthView({ mode }: { mode: "login" | "register" }) {
   };
 
   const isLogin = mode === "login";
-  const switchNext = isLogin && nextRaw === "/compte" ? null : nextRaw;
+  // resolvedRaw already strips /compte; just forward whatever valid next remains
   const switchHref =
     (isLogin ? "/inscription" : "/connexion") +
-    (switchNext ? `?next=${encodeURIComponent(switchNext)}` : "");
+    (resolvedRaw ? `?next=${encodeURIComponent(resolvedRaw)}` : "");
 
   return (
     <Container className="py-8 lg:py-16 flex justify-center">
