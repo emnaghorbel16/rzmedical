@@ -60,8 +60,12 @@ export default function BrandsPage() {
     setUploading(true); setFormError(null);
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch(`${API_URL}/upload/single`, { method: "POST", body: formData });
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/upload/single`, {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erreur d'upload");
       setFormLogo(data.url);

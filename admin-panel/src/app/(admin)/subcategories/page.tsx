@@ -98,7 +98,7 @@ export default function SubcategoriesPage() {
       const url = editing ? `${API_URL}/subcategories/${editing.id}` : `${API_URL}/subcategories`;
       const res = await fetch(url, {
         method: editing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...((() => { const t = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null; return t ? { Authorization: `Bearer ${t}` } : {}; })()) },
         body: JSON.stringify({ nom: formNom.trim(), description: formDescription.trim() || undefined, image: formImage || undefined, categorieId: formCatId }),
       });
       const data = await res.json();
@@ -114,7 +114,8 @@ export default function SubcategoriesPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`${API_URL}/subcategories/${id}`, { method: "DELETE" });
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/subcategories/${id}`, { method: "DELETE", headers: token ? { Authorization: `Bearer ${token}` } : {} });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Erreur lors de la suppression");

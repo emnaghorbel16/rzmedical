@@ -217,7 +217,7 @@ export default function CustomersPage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch(`${API_URL}/upload/single`, { method: "POST", body: formData });
+      const res = await fetch(`${API_URL}/upload/single`, { method: "POST", body: formData, headers: getToken() ? { Authorization: `Bearer ${getToken()}` } : {} });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erreur upload");
       setFormPhoto(data.url);

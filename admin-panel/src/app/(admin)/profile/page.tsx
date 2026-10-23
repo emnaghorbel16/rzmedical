@@ -76,6 +76,7 @@ export default function ProfilePage() {
       formData.append("file", file);
       const resUpload = await fetch(`${API_URL}/upload/single`, {
         method: "POST",
+        headers: { ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) },
         body: formData,
       });
       const dataUpload = await resUpload.json();

@@ -103,9 +103,10 @@ export default function CategoriesPage() {
         ? `${API_URL}/categories/${editing.id}`
         : `${API_URL}/categories`;
       const method = editing ? "PUT" : "POST";
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({ nom: formNom.trim() }),
       });
       const data = await res.json();
@@ -121,7 +122,8 @@ export default function CategoriesPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`${API_URL}/categories/${id}`, { method: "DELETE" });
+      const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
+      const res = await fetch(`${API_URL}/categories/${id}`, { method: "DELETE", headers: token ? { Authorization: `Bearer ${token}` } : {} });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Erreur lors de la suppression");
