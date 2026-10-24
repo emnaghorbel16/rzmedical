@@ -70,8 +70,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
   /* ── Variante image (sans vidéo) ── */
   return (
     <section
-      className="relative w-full overflow-hidden flex flex-col"
-      style={{ minHeight: "100vh" }}
+      className="relative w-full overflow-hidden flex flex-col min-h-[580px] lg:min-h-[680px]"
     >
       {/* ── Image de fond ── */}
       <Image
@@ -80,15 +79,15 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-[80%_center] lg:object-right"
       />
 
       {/* Ligne décorative haute */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-400/50 to-transparent z-20" />
 
-      {/* ── Contenu principal — remonté vers le haut ── */}
+      {/* ── Contenu principal — calé sur la gauche pour laisser le smartphone visible à droite ── */}
       <Container className="relative z-20 flex flex-col justify-center flex-1 pt-24 pb-16 lg:pt-28 lg:pb-20">
-        <div className="max-w-3xl">
+        <div className="max-w-xl lg:max-w-2xl">
 
           {/* Titre */}
           <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] leading-[1.04] tracking-tight text-white mb-6 drop-shadow-lg">
