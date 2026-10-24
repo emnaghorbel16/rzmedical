@@ -74,7 +74,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
     >
       {/* ── Image de fond ── */}
       <Image
-        src="/images/hero_bg.jpg"
+        src="/images/hero_bg.png"
         alt="RZ Medical – Équipements médicaux et dentaires"
         fill
         priority
