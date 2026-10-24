@@ -230,7 +230,7 @@ export function StorefrontShell({
                   Marques
                 </p>
 
-                <div className="max-h-[420px] overflow-y-auto overflow-x-hidden overscroll-contain pr-1">
+                <div className="pr-1">
                   <ul className="grid grid-cols-4 gap-2">
                     {(marques.some((m) => Boolean(m.logo)) ? marques.filter((m) => Boolean(m.logo)) : marques).map((m) => (
                       <li key={m.id}>

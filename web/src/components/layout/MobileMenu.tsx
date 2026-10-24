@@ -291,7 +291,7 @@ export function MobileMenu({
                 />
               </div>
 
-              <div className="max-h-[400px] overflow-y-auto overscroll-contain pr-1">
+              <div className="pr-1">
                 {filteredMarques.length === 0 ? (
                   <p className="py-5 text-center text-[13px] text-slate-400">
                     Aucune marque trouvée.
