@@ -233,9 +233,9 @@ export default function BrandsPage() {
     setEditingProduct(prod);
     setPNom(prod.nom);
     setPRef(prod.reference);
-    setPPrix(prod.prix.toString());
-    setPPrixAchat(prod.prixAchat != null ? prod.prixAchat.toString() : "");
-    setPStock(prod.stock.toString());
+    setPPrix(Number(prod.prix).toString());
+    setPPrixAchat(prod.prixAchat != null ? Number(prod.prixAchat).toString() : "");
+    setPStock(Number(prod.stock).toString());
     setPSubCatId(prod.sousCategorieId.toString());
     setPPays(prod.paysFabrication || "");
     setPDesc(prod.description || "");
@@ -634,8 +634,8 @@ export default function BrandsPage() {
                               {p.sousCategorie?.nom || "—"}
                             </td>
                             <td className="px-4 py-2.5 font-bold text-gray-900 dark:text-white">
-                              {p.prix.toFixed(2)} DT
-                              {p.remise && p.remise > 0 ? (
+                              {Number(p.prix).toFixed(2)} DT
+                              {Number(p.remise ?? 0) > 0 ? (
                                 <span className="ml-1 text-[10px] text-red-500 font-normal">(-{p.remise}%)</span>
                               ) : null}
                             </td>
