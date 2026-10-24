@@ -23,7 +23,9 @@
     "import:all-dentaire:dev": "tsx src/scripts/import-all-dentaire.ts",
     "import:all-dentaire:slug": "node dist/src/scripts/import-all-dentaire.js",
     "reformuler:descriptions": "node dist/src/scripts/reformuler-descriptions.js",
-    "reformuler:descriptions:dev": "tsx src/scripts/reformuler-descriptions.ts"
+    "reformuler:descriptions:dev": "tsx src/scripts/reformuler-descriptions.ts",
+    "verifier:doublons": "node dist/src/scripts/verifier-doublons-produits.js",
+    "verifier:doublons:dev": "tsx src/scripts/verifier-doublons-produits.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
