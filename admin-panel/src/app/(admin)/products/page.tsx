@@ -60,6 +60,7 @@ export default function ProductsPage() {
   const [items, setItems] = useState<Produit[]>([]);
   const [subcategories, setSubcategories] = useState<SousCategorie[]>([]);
   const [brands, setBrands] = useState<Marque[]>([]);
+  const [showAllBrands, setShowAllBrands] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -442,15 +443,44 @@ export default function ProductsPage() {
       </div>
 
       <div className="mb-6">
-        <p className="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-200">Ajouter un produit par marque</p>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            Ajouter un produit par marque {brands.length > 0 && <span className="text-xs font-normal text-gray-400">({brands.length})</span>}
+          </p>
+        </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {brands.map((brand) => (
+          {(showAllBrands ? brands : brands.slice(0, 10)).map((brand) => (
             <button key={brand.id} type="button" onClick={() => openAdd(brand.id)} className="rounded-xl border border-gray-200 bg-white p-4 text-left shadow-sm transition hover:border-brand-500 hover:shadow-md dark:border-gray-800 dark:bg-white/[0.03]">
               <span className="font-semibold text-gray-800 dark:text-white/90">{brand.nom}</span>
               <span className="mt-1 block text-xs text-gray-500">Cliquer pour ajouter un produit</span>
             </button>
           ))}
         </div>
+        {brands.length > 10 && (
+          <div className="mt-3.5 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAllBrands(!showAllBrands)}
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              {showAllBrands ? (
+                <>
+                  <span>Voir moins</span>
+                  <svg className="h-3.5 w-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  <span>Voir plus ({brands.length - 10} autres marques)</span>
+                  <svg className="h-3.5 w-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Tabs & Search Filter Bar */}

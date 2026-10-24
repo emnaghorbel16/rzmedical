@@ -425,6 +425,78 @@ Answer with ONLY one word: YES or NO.`,
   }
 }
 
+// ─── Groq Text : Reformulation de description ───────────────────────────────
+
+// Petit cache en mémoire pour éviter de reformuler la même description plusieurs fois
+const _descCache = new Map<string, string>();
+
+/**
+ * Envoie la description brute + nom + sous-catégorie à Groq (llama-3.3-70b-versatile)
+ * pour obtenir une description commerciale professionnelle en français.
+ * Retourne la description originale si Groq échoue ou si la clé est absente.
+ */
+async function reformulateDescription(opts: {
+  nom: string;
+  rawDescription: string;
+  sousCategorie: string;
+  marque?: string;
+  paysFabrication?: string;
+}): Promise<string> {
+  if (!GROQ_API_KEY) return opts.rawDescription;
+
+  // Clé de cache basée sur le nom du produit + description brute
+  const cacheKey = `${opts.nom}|${opts.rawDescription}`;
+  if (_descCache.has(cacheKey)) return _descCache.get(cacheKey)!;
+
+  try {
+    const contextParts: string[] = [
+      `Produit : "${opts.nom}"`,
+      `Sous-catégorie dentaire : ${opts.sousCategorie}`,
+    ];
+    if (opts.marque) contextParts.push(`Marque : ${opts.marque}`);
+    if (opts.paysFabrication) contextParts.push(`Pays de fabrication : ${opts.paysFabrication}`);
+    if (opts.rawDescription) contextParts.push(`Description originale : ${opts.rawDescription}`);
+
+    const prompt = `Tu es un expert en matériel dentaire professionnel. 
+Rédige une description commerciale courte (3 à 5 phrases maximum) en français pour ce produit dentaire destiné aux professionnels de santé (dentistes, chirurgiens-dentistes).
+La description doit être claire, professionnelle et mettre en valeur les caractéristiques techniques du produit.
+N'invente pas d'informations non mentionnées. Ne commence pas par "Voici" ou "Cette description".
+Réponds UNIQUEMENT avec le texte de la description, sans titre, sans liste, sans markdown.
+
+${contextParts.join('\n')}`;
+
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 300,
+        temperature: 0.6,
+      }),
+    });
+
+    if (!groqRes.ok) {
+      console.warn(`[Groq Text] Erreur API (${groqRes.status})`);
+      return opts.rawDescription;
+    }
+
+    const data = (await groqRes.json()) as any;
+    const reformulated = data?.choices?.[0]?.message?.content?.trim() ?? '';
+
+    if (reformulated.length < 20) return opts.rawDescription;
+
+    _descCache.set(cacheKey, reformulated);
+    return reformulated;
+  } catch (err: any) {
+    console.warn(`[Groq Text] Erreur reformulation "${opts.nom}":`, err.message);
+    return opts.rawDescription;
+  }
+}
+
 // ─── Watermark (Sharp) ────────────────────────────────────────────────────────
 
 async function downloadProductImageLocally(remoteUrl: string, remoteId: string, prefix: string): Promise<string | null> {
@@ -609,6 +681,15 @@ async function importSousCategorie(
       const details = await fetchProductDetails(p.url);
       const marqueNomFinal = details.marqueNom || p.marqueNom;
 
+      // ── 2b. Reformuler la description avec Groq ───────────────────────────
+      const descriptionFinale = await reformulateDescription({
+        nom: p.nom,
+        rawDescription: details.description,
+        sousCategorie: sousCatConfig.nom,
+        marque: marqueNomFinal,
+        paysFabrication: details.paysFabrication,
+      });
+
       // ── 3. Résoudre la marque ─────────────────────────────────────────────
       let marqueId: number = marqueParDefaut.id;
       if (marqueNomFinal) {
@@ -648,7 +729,7 @@ async function importSousCategorie(
           data: {
             nom: p.nom,
             prix: p.prix,
-            description: details.description || existant.description,
+            description: descriptionFinale || existant.description,
             disponible: p.inStock,
             disponibleALaVente: p.inStock,
             images: imagesArray.length > 0 ? imagesArray : existant.images,
@@ -674,7 +755,7 @@ async function importSousCategorie(
             stock: p.inStock ? 10 : 0,
             disponible: p.inStock,
             disponibleALaVente: p.inStock,
-            description: details.description || `${sousCatConfig.nom} : ${p.nom}`,
+            description: descriptionFinale || `${sousCatConfig.nom} : ${p.nom}`,
             images: imagesArray,
             motsCles: [],
             sousCategorieId: sousCategorie.id,

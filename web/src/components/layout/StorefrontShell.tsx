@@ -54,9 +54,12 @@ export function StorefrontShell({
   }, [mobileMenuOpen]);
 
   const filteredMarques = useMemo(() => {
-    if (!brandSearch.trim()) return marques;
+    const withLogo = marques.some((m) => Boolean(m.logo))
+      ? marques.filter((m) => Boolean(m.logo))
+      : marques;
+    if (!brandSearch.trim()) return withLogo;
     const q = brandSearch.toLowerCase();
-    return marques.filter((m) => m.nom.toLowerCase().includes(q));
+    return withLogo.filter((m) => m.nom.toLowerCase().includes(q));
   }, [marques, brandSearch]);
 
   // Si une catégorie est sélectionnée, on cible ses sous-catégories.
@@ -230,12 +233,10 @@ export function StorefrontShell({
 
                 <div className="max-h-[420px] overflow-y-auto overscroll-contain pr-1">
                   <ul className="grid grid-cols-4 gap-2">
-                    {marques.map((m) => (
+                    {(marques.some((m) => Boolean(m.logo)) ? marques.filter((m) => Boolean(m.logo)) : marques).map((m) => (
                       <li key={m.id}>
-                        <Link
-                          href={`/catalogue?marqueId=${m.id}`}
-                          onClick={closeMobileMenu}
-                          className="group flex flex-col items-center gap-1.5 rounded-xl border border-slate-200/70 bg-white p-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-azure-200 hover:shadow-[0_4px_12px_rgba(14,165,233,0.1)]"
+                        <div
+                          className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-200/70 bg-white p-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
                         >
                           {m.logo ? (
                             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">
@@ -253,10 +254,10 @@ export function StorefrontShell({
                               {m.nom.charAt(0).toUpperCase()}
                             </div>
                           )}
-                          <span className="w-full truncate text-center text-[10px] font-bold uppercase tracking-wide text-navy-700 group-hover:text-azure-600">
+                          <span className="w-full truncate text-center text-[10px] font-bold uppercase tracking-wide text-navy-700">
                             {m.nom}
                           </span>
-                        </Link>
+                        </div>
                       </li>
                     ))}
                   </ul>

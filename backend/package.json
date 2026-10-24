@@ -21,7 +21,9 @@
     "import:instrumentation:dev": "tsx src/scripts/import-instrumentation.ts",
     "import:all-dentaire": "node dist/src/scripts/import-all-dentaire.js",
     "import:all-dentaire:dev": "tsx src/scripts/import-all-dentaire.ts",
-    "import:all-dentaire:slug": "node dist/src/scripts/import-all-dentaire.js"
+    "import:all-dentaire:slug": "node dist/src/scripts/import-all-dentaire.js",
+    "reformuler:descriptions": "node dist/src/scripts/reformuler-descriptions.js",
+    "reformuler:descriptions:dev": "tsx src/scripts/reformuler-descriptions.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

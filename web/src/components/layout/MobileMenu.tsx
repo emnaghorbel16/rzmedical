@@ -62,9 +62,12 @@ export function MobileMenu({
   }, [mobileMenuOpen]);
 
   const filteredMarques = useMemo(() => {
-    if (!brandSearch.trim()) return marques;
+    const withLogo = marques.some((m) => Boolean(m.logo))
+      ? marques.filter((m) => Boolean(m.logo))
+      : marques;
+    if (!brandSearch.trim()) return withLogo;
     const q = brandSearch.toLowerCase();
-    return marques.filter((m) => m.nom.toLowerCase().includes(q));
+    return withLogo.filter((m) => m.nom.toLowerCase().includes(q));
   }, [marques, brandSearch]);
 
   const activeCat = selectedCategory
@@ -298,10 +301,8 @@ export function MobileMenu({
                   <ul className="grid grid-cols-4 gap-2">
                     {filteredMarques.map((m) => (
                       <li key={m.id}>
-                        <Link
-                          href={`/catalogue?marqueId=${m.id}`}
-                          onClick={closeMobileMenu}
-                          className="group flex flex-col items-center gap-1.5 border border-slate-150 p-2 transition-colors hover:border-azure-300 active:scale-[0.97]"
+                        <div
+                          className="flex flex-col items-center gap-1.5 border border-slate-150 bg-white p-2 rounded-lg"
                         >
                           {m.logo ? (
                             <div className="relative h-11 w-11 shrink-0">
@@ -319,10 +320,10 @@ export function MobileMenu({
                               {m.nom.charAt(0).toUpperCase()}
                             </div>
                           )}
-                          <span className="w-full truncate text-center text-[9.5px] font-semibold uppercase tracking-wide text-slate-500 group-hover:text-azure-600">
+                          <span className="w-full truncate text-center text-[9.5px] font-medium uppercase tracking-wide text-slate-600">
                             {m.nom}
                           </span>
-                        </Link>
+                        </div>
                       </li>
                     ))}
                   </ul>
