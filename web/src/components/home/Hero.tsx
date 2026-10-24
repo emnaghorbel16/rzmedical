@@ -83,20 +83,20 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
       />
 
       {/* Ligne décorative haute */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-400/50 to-transparent z-20" />
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-500/20 to-transparent z-20" />
 
       {/* ── Contenu principal — calé sur la gauche pour laisser le smartphone visible à droite ── */}
       <Container className="relative z-20 flex flex-col justify-center flex-1 pt-24 pb-16 lg:pt-28 lg:pb-20">
         <div className="max-w-xl lg:max-w-2xl">
 
           {/* Titre */}
-          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] leading-[1.04] tracking-tight text-white mb-6 drop-shadow-lg">
+          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] leading-[1.04] tracking-tight text-navy-950 mb-6 drop-shadow-sm">
             L&apos;excellence médicale,{" "}
             <br className="hidden sm:block" />
             <span
               className="bg-clip-text text-transparent"
               style={{
-                backgroundImage: "linear-gradient(90deg, #60b8ff 0%, #a8d4ff 50%, #7ec8ff 100%)",
+                backgroundImage: "linear-gradient(90deg, #0369a1 0%, #0284c7 50%, #0ea5e9 100%)",
               }}
             >
               à portée de votre cabinet.
@@ -104,7 +104,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
           </h1>
 
           {/* Description */}
-          <p className="text-white/70 text-base sm:text-lg leading-relaxed max-w-xl mb-10">
+          <p className="text-slate-700 font-medium text-base sm:text-lg leading-relaxed max-w-xl mb-10">
             R&amp;Z Medical distribue du matériel médical et dentaire certifié aux professionnels
             de santé partout en Tunisie. Commandez aujourd&apos;hui, recevez sous 24-48h.
           </p>
@@ -120,7 +120,7 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
             </Link>
             <a
               href="tel:+21628113131"
-              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-8 text-sm font-semibold text-white transition-all hover:bg-white/20 hover:border-white/30 shadow-lg"
+              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-xl border border-slate-300 bg-white/80 backdrop-blur-md px-8 text-sm font-bold text-navy-900 transition-all hover:bg-white hover:border-azure-400 hover:shadow-md shadow-sm"
             >
               <PhoneIcon size={16} />
               +216 28 113 131
@@ -130,9 +130,9 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
       </Container>
 
       {/* ── Flèche de scroll ── */}
-      <div className="absolute bottom-8 right-8 z-20 hidden lg:flex flex-col items-center gap-2 opacity-40">
-        <div className="h-12 w-px bg-gradient-to-b from-white/0 to-white/60" />
-        <span className="text-[9px] font-semibold uppercase tracking-widest text-white rotate-90 origin-center mt-1">Défiler</span>
+      <div className="absolute bottom-8 right-8 z-20 hidden lg:flex flex-col items-center gap-2 opacity-50">
+        <div className="h-12 w-px bg-gradient-to-b from-navy-900/0 to-navy-900/70" />
+        <span className="text-[9px] font-bold uppercase tracking-widest text-navy-900 rotate-90 origin-center mt-1">Défiler</span>
       </div>
     </section>
   );

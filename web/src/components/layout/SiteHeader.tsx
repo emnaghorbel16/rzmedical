@@ -84,7 +84,8 @@ export function SiteHeader({
           categories={categories}
           marques={marques}
           isTransparent={isInitialVideoState}
-          hideLogo={isInitialVideoState}
+          hideLogo={hasHeroVideo && !scrolled}
+          darkText={hasHeroImage && !hasHeroVideo}
         />
       </div>
     </div>
