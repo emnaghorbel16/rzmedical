@@ -83,14 +83,11 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
         className="object-cover object-center"
       />
 
-      {/* ── Overlay très sombre ── */}
-      <div className="absolute inset-0 bg-[#050d1a]/90 z-10 pointer-events-none" />
-
       {/* Ligne décorative haute */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-400/50 to-transparent z-20" />
 
       {/* ── Contenu principal — remonté vers le haut ── */}
-      <Container className="relative z-20 flex flex-col justify-center flex-1 pt-36 pb-24 lg:pt-40 lg:pb-28">
+      <Container className="relative z-20 flex flex-col justify-center flex-1 pt-24 pb-16 lg:pt-28 lg:pb-20">
         <div className="max-w-3xl">
 
           {/* Titre */}
