@@ -106,6 +106,18 @@ export default function BrandsPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
+  // Bloquer le scroll d'arrière-plan quand le formulaire de produit est ouvert
+  useEffect(() => {
+    if (showProductModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showProductModal]);
+
   // Récupérer les produits liés à une marque
   const fetchBrandProducts = useCallback(async (brandId: number) => {
     setLoadingProducts(true);
@@ -506,7 +518,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) closeBrandProducts();
           }}
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200"
+          className="fixed inset-0 z-[9990] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -750,8 +762,17 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) closeProductModal();
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-150"
         >
+          {/* Masquer complètement le menu latéral (aside) pour libérer tout l'écran */}
+          <style>{`
+            aside {
+              display: none !important;
+              visibility: hidden !important;
+              opacity: 0 !important;
+              pointer-events: none !important;
+            }
+          `}</style>
           <div
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-xl rounded-3xl bg-white dark:bg-gray-900 shadow-2xl p-6 border border-gray-200 dark:border-gray-800 animate-in zoom-in-95 duration-150 relative max-h-[92vh] overflow-y-auto"
@@ -965,7 +986,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) setProductDeleteId(null);
           }}
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -999,7 +1020,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) closeModal();
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[9995] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -1071,7 +1092,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) setDeleteId(null);
           }}
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
