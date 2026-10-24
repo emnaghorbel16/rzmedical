@@ -7,7 +7,7 @@ import { DiscountBar } from "./DiscountBar";
 import { Header } from "./Header";
 import type { CategorieListItem, MarqueListItem, AnnonceSite } from "@/lib/types";
 import { cn } from "@/lib/cn";
-import { useHasHeroVideo } from "@/providers/HeroVideoProvider";
+import { useHasHeroVideo, useHasHeroImage } from "@/providers/HeroVideoProvider";
 
 export function SiteHeader({
   annonces = [],
@@ -30,6 +30,10 @@ export function SiteHeader({
   // we can assume true during SSR, preventing the banner from flashing.
   const contextHasVideo = useHasHeroVideo();
   const hasHeroVideo = contextHasVideo || (isHome && hasGlobalVideoHero);
+  const hasHeroImage = useHasHeroImage();
+
+  // Either video or full-bleed image triggers the transparent header
+  const hasFullBleedHero = hasHeroVideo || hasHeroImage;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -38,16 +42,16 @@ export function SiteHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // When a video hero is active and the user hasn't scrolled yet,
-  // the header floats over the video in transparent/glass mode.
-  const isInitialVideoState = hasHeroVideo && !scrolled;
+  // When a hero (video or image) is active and the user hasn't scrolled yet,
+  // the header floats in transparent/glass mode.
+  const isInitialVideoState = hasFullBleedHero && !scrolled;
 
   return (
     <div
       className={cn(
         "w-full z-50 flex flex-col",
-        // Float over the video; otherwise anchor above content
-        hasHeroVideo ? "fixed top-0 left-0 right-0" : "sticky top-0"
+        // Float over the hero (video or image); otherwise anchor above content
+        hasFullBleedHero ? "fixed top-0 left-0 right-0" : "sticky top-0"
       )}
     >
       {/* Announcement bar — hidden while floating over video */}

@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { buttonVariants } from "@/components/ui/Button";
-import { ArrowRightIcon } from "@/components/ui/icons";
+import { ArrowRightIcon, PhoneIcon } from "@/components/ui/icons";
 import { imageUrl } from "@/lib/api";
 import type { VideoHero } from "@/lib/types";
-import { useSetHeroVideo } from "@/providers/HeroVideoProvider";
+import { useSetHeroVideo, useSetHeroImage } from "@/providers/HeroVideoProvider";
 
 const STATS = [
   { value: "500+", label: "références en stock" },
@@ -22,7 +22,10 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const showVideo = !!(videoHero && videoHero.actif && !videoFailed);
+
+  // Signal the header which mode we're in
   useSetHeroVideo(showVideo);
+  useSetHeroImage(!showVideo);
 
   /* ── Variante vidéo ── */
   if (showVideo) {
@@ -70,98 +73,106 @@ export function Hero({ videoHero }: { videoHero?: VideoHero | null }) {
     );
   }
 
-  /* ── Variante sans vidéo ── */
+  /* ── Variante image (sans vidéo) ── */
   return (
-    <section className="relative overflow-hidden bg-navy-960 flex flex-col">
+    <section
+      className="relative w-full overflow-hidden flex flex-col"
+      style={{ minHeight: "100vh" }}
+    >
+      {/* ── Image de fond ── */}
+      <Image
+        src="/images/hero_bg.jpg"
+        alt="RZ Medical – Équipements médicaux et dentaires"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
+      />
 
-      {/* Ligne décorative haute */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-500/40 to-transparent" />
-
-      {/* Fond — grain subtil */}
+      {/* ── Couches d'overlay ── */}
+      {/* Dégradé foncé principal pour la lisibilité du texte */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/85 via-[#0e2456]/70 to-[#0d3a8c]/50 z-10 pointer-events-none" />
+      {/* Bruit de texture subtil */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 z-10 opacity-[0.025] pointer-events-none"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
         }}
       />
+      {/* Ligne décorative haute */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-azure-400/50 to-transparent z-20" />
 
-      <Container className="relative z-10 pt-28 pb-16 lg:pt-36 lg:pb-20 flex-1">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      {/* ── Contenu principal ── */}
+      <Container className="relative z-20 flex flex-col justify-center flex-1 pt-48 pb-20 lg:pt-52 lg:pb-24">
+        <div className="max-w-3xl">
 
-          {/* Gauche — texte */}
-          <div>
-            <p className="text-azure-400 text-xs font-semibold uppercase tracking-[0.18em] mb-5">
-              Sfax · Tunisie
-            </p>
-
-            <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-white mb-6">
-              Tout ce dont votre cabinet a besoin,{" "}
-              <span className="text-azure-400">livré sans attente.</span>
-            </h1>
-
-            <p className="text-slate-400 text-base leading-relaxed max-w-md mb-10">
-              R&amp;Z Medical équipe les dentistes, médecins et laboratoires
-              avec du matériel certifié — expédié le jour même, facturé à la livraison.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/catalogue"
-                className={buttonVariants({ variant: "accent", size: "xl" })}
-              >
-                Voir tout le matériel
-                <ArrowRightIcon size={18} />
-              </Link>
-              <Link
-                href="/catalogue?promo=1"
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-8 text-sm font-semibold text-white/80 transition-all hover:bg-white/10 hover:text-white hover:border-white/20"
-              >
-                Promos en cours
-              </Link>
-            </div>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-2 mb-8 shadow-lg">
+            <span className="flex h-2 w-2 rounded-full bg-azure-400 animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/90">
+              Sfax · Tunisie — Livraison nationale
+            </span>
           </div>
 
-          {/* Droite — image */}
-          <div className="relative hidden lg:block">
-            <div className="relative rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
-              <div className="relative aspect-[4/3] w-full">
-                <Image
-                  src="/images/medical_hero.jpg"
-                  alt="Cabinet médical équipé par RZmedical"
-                  fill
-                  priority
-                  sizes="50vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-960/60 via-transparent to-transparent" />
-              </div>
-            </div>
+          {/* Titre */}
+          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] leading-[1.04] tracking-tight text-white mb-6 drop-shadow-lg">
+            L&apos;excellence médicale,{" "}
+            <br className="hidden sm:block" />
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage: "linear-gradient(90deg, #60b8ff 0%, #a8d4ff 50%, #7ec8ff 100%)",
+              }}
+            >
+              à portée de votre cabinet.
+            </span>
+          </h1>
 
-            {/* Badge flottant */}
-            <div className="absolute -bottom-5 -left-5 rounded-xl border border-white/10 bg-navy-900/95 backdrop-blur-xl px-5 py-4 shadow-xl ring-1 ring-white/5">
-              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">Disponible maintenant</p>
-              <p className="font-display text-2xl font-black text-white">
-                500<span className="text-azure-400">+</span>
-              </p>
-              <p className="text-xs text-slate-400 mt-0.5">références en stock</p>
-            </div>
+          {/* Description */}
+          <p className="text-white/70 text-base sm:text-lg leading-relaxed max-w-xl mb-10">
+            R&amp;Z Medical distribue du matériel médical et dentaire certifié aux professionnels
+            de santé partout en Tunisie. Commandez aujourd&apos;hui, recevez sous 24-48h.
+          </p>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href="/catalogue"
+              className={buttonVariants({ variant: "accent", size: "xl" })}
+            >
+              Explorer le catalogue
+              <ArrowRightIcon size={18} />
+            </Link>
+            <a
+              href="tel:+21628113131"
+              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-8 text-sm font-semibold text-white transition-all hover:bg-white/20 hover:border-white/30 shadow-lg"
+            >
+              <PhoneIcon size={16} />
+              +216 28 113 131
+            </a>
           </div>
         </div>
       </Container>
 
-      {/* Barre de stats */}
-      <div className="relative z-10 border-t border-white/[0.06]">
+      {/* ── Barre de stats ── */}
+      <div className="relative z-20 border-t border-white/10 bg-black/25 backdrop-blur-sm">
         <Container>
-          <div className="grid grid-cols-3 divide-x divide-white/[0.06] py-6">
+          <div className="grid grid-cols-3 divide-x divide-white/10 py-5">
             {STATS.map(({ value, label }) => (
-              <div key={label} className="px-6 first:pl-0 last:pr-0">
-                <p className="font-display text-xl font-black text-white">{value}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+              <div key={label} className="px-6 first:pl-0 last:pr-0 text-center sm:text-left">
+                <p className="font-display text-xl sm:text-2xl font-black text-white">{value}</p>
+                <p className="text-[11px] sm:text-xs text-white/50 mt-0.5 leading-tight">{label}</p>
               </div>
             ))}
           </div>
         </Container>
+      </div>
+
+      {/* ── Flèche de scroll ── */}
+      <div className="absolute bottom-20 right-8 z-20 hidden lg:flex flex-col items-center gap-2 opacity-50">
+        <div className="h-12 w-px bg-gradient-to-b from-white/0 to-white/60" />
+        <span className="text-[9px] font-semibold uppercase tracking-widest text-white rotate-90 origin-center mt-1">Défiler</span>
       </div>
     </section>
   );
