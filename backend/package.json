@@ -8,7 +8,11 @@
     "dev": "nodemon --exec tsx src/server.ts",
     "build": "tsc",
     "db:seed": "prisma db seed",
-    "seed:admin": "node dist/src/seed-admin.js"
+    "seed:admin": "node dist/src/seed-admin.js",
+    "import:accessoires": "node dist/src/scripts/import-accessoires-dentaire.js",
+    "import:accessoires:dev": "tsx src/scripts/import-accessoires-dentaire.ts",
+    "import:marques": "node dist/src/scripts/import-marques-dentaire.js",
+    "import:marques:dev": "tsx src/scripts/import-marques-dentaire.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
