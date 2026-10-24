@@ -53,7 +53,7 @@ async function checkDuplicates() {
       reference: true,
       prix: true,
       stock: true,
-      image: true,
+      images: true,
       disponible: true,
       creeLe: true,
       marque: {
@@ -79,7 +79,7 @@ async function checkDuplicates() {
     reference: p.reference,
     prix: p.prix.toString(),
     stock: p.stock,
-    image: p.image,
+    image: Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : null,
     disponible: p.disponible,
     creeLe: p.creeLe,
     marque: p.marque?.nom || 'Sans marque',
