@@ -18,7 +18,10 @@
     "import:endodontie": "node dist/src/scripts/import-endodontie-accessoires.js",
     "import:endodontie:dev": "tsx src/scripts/import-endodontie-accessoires.ts",
     "import:instrumentation": "node dist/src/scripts/import-instrumentation.js",
-    "import:instrumentation:dev": "tsx src/scripts/import-instrumentation.ts"
+    "import:instrumentation:dev": "tsx src/scripts/import-instrumentation.ts",
+    "import:all-dentaire": "node dist/src/scripts/import-all-dentaire.js",
+    "import:all-dentaire:dev": "tsx src/scripts/import-all-dentaire.ts",
+    "import:all-dentaire:slug": "node dist/src/scripts/import-all-dentaire.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
