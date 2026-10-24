@@ -105,6 +105,47 @@ async function fetchPage(url: string): Promise<string> {
   return await res.text();
 }
 
+const PAYS_MAP: Record<string, string> = {
+  turkey: 'Turquie',
+  turquie: 'Turquie',
+  france: 'France',
+  germany: 'Allemagne',
+  allemagne: 'Allemagne',
+  italy: 'Italie',
+  italie: 'Italie',
+  china: 'Chine',
+  chine: 'Chine',
+  switzerland: 'Suisse',
+  suisse: 'Suisse',
+  usa: 'États-Unis',
+  'united states': 'États-Unis',
+  'etats-unis': 'États-Unis',
+  japan: 'Japon',
+  japon: 'Japon',
+  korea: 'Corée du Sud',
+  'south korea': 'Corée du Sud',
+  spain: 'Espagne',
+  espagne: 'Espagne',
+  brazil: 'Brésil',
+  bresil: 'Brésil',
+  india: 'Inde',
+  inde: 'Inde',
+  pakistan: 'Pakistan',
+  tunisia: 'Tunisie',
+  tunisie: 'Tunisie',
+  egypt: 'Égypte',
+  egypte: 'Égypte',
+  uk: 'Royaume-Uni',
+  'united kingdom': 'Royaume-Uni',
+};
+
+function normalizeCountry(raw?: string): string | undefined {
+  if (!raw) return undefined;
+  const clean = raw.trim().toLowerCase();
+  if (PAYS_MAP[clean]) return PAYS_MAP[clean];
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
+
 async function fetchProductDetails(productUrl: string): Promise<{ description: string; paysFabrication?: string }> {
   try {
     const html = await fetchPage(productUrl);
@@ -120,9 +161,9 @@ async function fetchProductDetails(productUrl: string): Promise<{ description: s
       );
     }
     let paysFabrication: string | undefined = undefined;
-    const countryMatch = html.match(/title="Made in ([^"]+)"/i);
+    const countryMatch = html.match(/title="Made in ([^"]+)"/i) || html.match(/Made in\s+([^"<,\.\n]+)/i);
     if (countryMatch && countryMatch[1]) {
-      paysFabrication = countryMatch[1].trim();
+      paysFabrication = normalizeCountry(countryMatch[1]);
     }
     return { description, paysFabrication };
   } catch {
@@ -236,29 +277,57 @@ export async function runImportAccessoires() {
     console.log(`✅ Marque par défaut trouvée : "${marqueParDefaut.nom}" (ID: ${marqueParDefaut.id})\n`);
   }
 
-  // 3. Télécharger les pages 1 et 2
-  const pages = [
-    'https://www.lecomptoirdentaire.tn/products/accessoires',
-    'https://www.lecomptoirdentaire.tn/products/accessoires/?pageSize=&page=2',
-  ];
-
+  // 4. Parcourir dynamiquement TOUTES les pages d'accessoires jusqu'à la fin
   const allProducts: ScrapedProduct[] = [];
+  const seenRemoteIds = new Set<string>();
+  let currentPage = 1;
+  let hasMorePages = true;
 
-  for (let i = 0; i < pages.length; i++) {
-    const pageUrl = pages[i];
-    console.log(`📥 Récupération des produits depuis la page ${i + 1}/${pages.length}...`);
+  console.log('🔍 Détection et téléchargement de TOUTES les pages d\'accessoires...');
+
+  while (hasMorePages) {
+    const pageUrl = `https://www.lecomptoirdentaire.tn/products/accessoires/?pageSize=&page=${currentPage}`;
+    console.log(`📥 Chargement de la page ${currentPage}...`);
+
     try {
       const html = await fetchPage(pageUrl);
       const parsed = parseProductsFromListHtml(html);
-      console.log(`   ➔ ${parsed.length} produits détectés sur cette page.`);
-      allProducts.push(...parsed);
+
+      if (parsed.length === 0) {
+        console.log(`   🏁 Page ${currentPage} vide : fin de la pagination atteinte.`);
+        hasMorePages = false;
+        break;
+      }
+
+      // Filtrer les doublons éventuels
+      let newCount = 0;
+      for (const prod of parsed) {
+        if (!seenRemoteIds.has(prod.remoteId)) {
+          seenRemoteIds.add(prod.remoteId);
+          allProducts.push(prod);
+          newCount++;
+        }
+      }
+
+      console.log(`   ➔ ${parsed.length} produits trouvés (${newCount} nouveaux). Total cumulé : ${allProducts.length}`);
+
+      // Si aucun nouveau produit n'a été ajouté sur cette page, on arrête pour éviter toute boucle infinie
+      if (newCount === 0) {
+        console.log(`   🏁 Plus de nouveaux produits détectés.`);
+        hasMorePages = false;
+        break;
+      }
+
+      currentPage++;
     } catch (err: any) {
-      console.error(`❌ Erreur sur la page ${i + 1}:`, err.message);
+      console.error(`❌ Erreur sur la page ${currentPage}:`, err.message);
+      hasMorePages = false;
+      break;
     }
   }
 
-  console.log(`\n📦 Total de produits à traiter : ${allProducts.length}`);
-  console.log('⏳ Début de l\'insertion en base de données...\n');
+  console.log(`\n📦 Total de TOUS les produits détectés : ${allProducts.length}`);
+  console.log('⏳ Début du téléchargement des images locales et de l\'insertion en base...\n');
 
   let ajoutes = 0;
   let maj = 0;
