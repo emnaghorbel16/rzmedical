@@ -37,9 +37,9 @@ export const update = async (req: Request, res: Response) => {
   try {
     const { nom, categorieId, logo } = req.body;
     const data = await service.update(Number(req.params.id), {
-      nom,
-      ...(categorieId ? { categorieId: Number(categorieId) } : {}),
-      logo
+      ...(nom !== undefined ? { nom: nom.trim() } : {}),
+      ...(categorieId !== undefined ? { categorieId: Number(categorieId) } : {}),
+      ...(logo !== undefined ? { logo: logo ? logo.trim() : null } : {})
     });
     res.json(data);
   } catch (err: any) {

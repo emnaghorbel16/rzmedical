@@ -72,6 +72,7 @@ export default function BrandsPage() {
   const [pPrix, setPPrix] = useState("");
   const [pPrixAchat, setPPrixAchat] = useState("");
   const [pStock, setPStock] = useState("10");
+  const [pMarqueId, setPMarqueId] = useState("");
   const [pSubCatId, setPSubCatId] = useState("");
   const [pPays, setPPays] = useState("");
   const [pDesc, setPDesc] = useState("");
@@ -179,10 +180,30 @@ export default function BrandsPage() {
       const res = await fetch(url, {
         method: editing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ nom: formNom.trim(), logo: formLogo.trim() || undefined, categorieId: formCatId }),
+        body: JSON.stringify({
+          nom: formNom.trim(),
+          logo: formLogo.trim() ? formLogo.trim() : null,
+          categorieId: Number(formCatId)
+        }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "Erreur d'enregistrement");
-      closeModal(); fetchData();
+      closeModal();
+      await fetchData();
+
+      // Mettre à jour l'en-tête du panneau si cette marque est actuellement ouverte
+      if (editing && selectedBrand && selectedBrand.id === editing.id) {
+        setSelectedBrand(prev => {
+          if (!prev) return null;
+          const foundCat = categories.find(c => c.id === Number(formCatId));
+          return {
+            ...prev,
+            nom: formNom.trim(),
+            logo: formLogo.trim() || undefined,
+            categorieId: Number(formCatId),
+            categorie: foundCat || prev.categorie,
+          };
+        });
+      }
     } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : "Erreur");
     } finally { setSaving(false); }
@@ -216,6 +237,9 @@ export default function BrandsPage() {
     setPImages([]);
     setPError(null);
 
+    // Pré-sélectionner la marque
+    setPMarqueId(selectedBrand.id.toString());
+
     // Pré-sélectionner la première sous-catégorie correspondant à la catégorie de la marque
     const availableSubs = subcategories.filter(s => s.categorieId === selectedBrand.categorieId);
     if (availableSubs.length > 0) {
@@ -236,6 +260,7 @@ export default function BrandsPage() {
     setPPrix(Number(prod.prix).toString());
     setPPrixAchat(prod.prixAchat != null ? Number(prod.prixAchat).toString() : "");
     setPStock(Number(prod.stock).toString());
+    setPMarqueId((prod.marqueId || selectedBrand?.id || "").toString());
     setPSubCatId(prod.sousCategorieId.toString());
     setPPays(prod.paysFabrication || "");
     setPDesc(prod.description || "");
@@ -283,6 +308,7 @@ export default function BrandsPage() {
     try {
       const token = typeof window !== "undefined" ? (localStorage.getItem("rzm_token") || localStorage.getItem("token")) : null;
       const url = editingProduct ? `${API_URL}/products/${editingProduct.id}` : `${API_URL}/products`;
+      const targetMarqueId = Number(pMarqueId || selectedBrand.id);
       const res = await fetch(url, {
         method: editingProduct ? "PUT" : "POST",
         headers: {
@@ -296,7 +322,7 @@ export default function BrandsPage() {
           prixAchat: pPrixAchat !== "" ? Number(pPrixAchat) : null,
           stock: Number(pStock) || 0,
           sousCategorieId: Number(pSubCatId),
-          marqueId: selectedBrand.id,
+          marqueId: targetMarqueId,
           disponible: pDispo,
           disponibleALaVente: pDispo,
           paysFabrication: pPays.trim() || null,
@@ -480,7 +506,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) closeBrandProducts();
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200"
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -506,6 +532,15 @@ export default function BrandsPage() {
                       {selectedBrand.nom}
                     </h3>
                     <Badge color="primary" size="sm">{selectedBrand.categorie?.nom}</Badge>
+                    <button
+                      type="button"
+                      onClick={() => openEdit(selectedBrand)}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 text-xs text-gray-500 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-md transition-colors cursor-pointer"
+                      title="Modifier cette marque"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                      Modifier
+                    </button>
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5">
                     {brandProducts.length} produit{brandProducts.length > 1 ? "s" : ""} associé{brandProducts.length > 1 ? "s" : ""} à cette marque
@@ -513,7 +548,20 @@ export default function BrandsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
+                {/* BOUTON MODIFIER LA MARQUE */}
+                <button
+                  type="button"
+                  onClick={() => openEdit(selectedBrand)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/60 text-gray-700 dark:text-gray-200 px-3.5 py-2.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer"
+                  title="Modifier le nom, le logo ou la catégorie de cette marque"
+                >
+                  <svg className="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Modifier la marque
+                </button>
+
                 {/* BOUTON D'AJOUT D'UN NOUVEAU PRODUIT */}
                 <button
                   type="button"
@@ -740,17 +788,19 @@ export default function BrandsPage() {
                 />
               </div>
 
-              {/* Référence et Sous-catégorie */}
+              {/* Marque & Sous-catégorie */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Référence *</label>
-                  <input
-                    type="text"
-                    value={pRef}
-                    onChange={(e) => setPRef(e.target.value)}
-                    placeholder="Ex: CD-102938"
-                    className="w-full rounded-xl border border-gray-300 p-2.5 text-xs dark:bg-gray-800 dark:border-gray-700 dark:text-white font-mono uppercase"
-                  />
+                  <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Marque *</label>
+                  <select
+                    value={pMarqueId}
+                    onChange={(e) => setPMarqueId(e.target.value)}
+                    className="w-full rounded-xl border border-gray-300 p-2.5 text-xs dark:bg-gray-800 dark:border-gray-700 dark:text-white font-medium"
+                  >
+                    {items.map((m) => (
+                      <option key={m.id} value={m.id}>{m.nom} ({m.categorie?.nom || "Sans catégorie"})</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Sous-catégorie *</label>
@@ -765,6 +815,18 @@ export default function BrandsPage() {
                     ))}
                   </select>
                 </div>
+              </div>
+
+              {/* Référence */}
+              <div>
+                <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">Référence *</label>
+                <input
+                  type="text"
+                  value={pRef}
+                  onChange={(e) => setPRef(e.target.value)}
+                  placeholder="Ex: CD-102938"
+                  className="w-full rounded-xl border border-gray-300 p-2.5 text-xs dark:bg-gray-800 dark:border-gray-700 dark:text-white font-mono uppercase"
+                />
               </div>
 
               {/* Prix de vente, Prix d'achat, Stock */}
@@ -903,7 +965,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) setProductDeleteId(null);
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -945,7 +1007,7 @@ export default function BrandsPage() {
           >
             <div className="flex items-center justify-between mb-5">
               <h4 className="text-lg font-bold text-gray-800 dark:text-white">
-                {editing ? "Modifier la marque" : "Nouvelle Marque"}
+                {editing ? `Modifier la marque : ${editing.nom}` : "Nouvelle Marque"}
               </h4>
               <button
                 type="button"
@@ -1009,7 +1071,7 @@ export default function BrandsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) setDeleteId(null);
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
