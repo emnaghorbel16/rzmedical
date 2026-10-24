@@ -12,7 +12,9 @@
     "import:accessoires": "node dist/src/scripts/import-accessoires-dentaire.js",
     "import:accessoires:dev": "tsx src/scripts/import-accessoires-dentaire.ts",
     "import:marques": "node dist/src/scripts/import-marques-dentaire.js",
-    "import:marques:dev": "tsx src/scripts/import-marques-dentaire.ts"
+    "import:marques:dev": "tsx src/scripts/import-marques-dentaire.ts",
+    "watermark:accessoires": "node dist/src/scripts/watermark-accessoires.js",
+    "watermark:accessoires:dev": "tsx src/scripts/watermark-accessoires.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

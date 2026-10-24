@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 import prisma from '../config/prisma';
 
 // Configurer le répertoire de stockage local des uploads
@@ -50,6 +51,34 @@ async function downloadProductImageLocally(remoteUrl: string, remoteId: string):
 
     const filename = `product-${remoteId}-${Date.now()}${ext}`;
     const destination = path.join(uploadPath, filename);
+
+    // Appliquer le filigrane "https://randzmedical.com/" directement avec sharp
+    if (ext !== '.svg' && ext !== '.gif') {
+      try {
+        const image = sharp(buffer);
+        const metadata = await image.metadata();
+        const width = metadata.width || 800;
+        const height = metadata.height || 600;
+        const fontSize = Math.max(14, Math.round(width * 0.04));
+
+        const svgOverlay = `
+          <svg width="${width}" height="${height}">
+            <style>
+              .wm { fill: rgba(128, 128, 128, 0.7); font-size: ${fontSize}px; font-weight: bold; font-family: "DejaVu Sans", sans-serif; }
+            </style>
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="wm">https://randzmedical.com/</text>
+          </svg>
+        `;
+
+        await image
+          .composite([{ input: Buffer.from(svgOverlay), blend: 'over' }])
+          .toFile(destination);
+
+        return `/uploads/${filename}`;
+      } catch (sharpErr) {
+        console.warn(`[Watermark] Erreur application watermark pour ${remoteId}, fallback original:`, sharpErr);
+      }
+    }
 
     await fs.promises.writeFile(destination, buffer);
     return `/uploads/${filename}`;
