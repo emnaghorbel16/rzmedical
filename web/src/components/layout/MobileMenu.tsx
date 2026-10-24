@@ -183,7 +183,6 @@ export function MobileMenu({
                   { href: `/${categorySlug}/nouveautes`, label: "Nouveautés", icon: SparklesIcon },
                   { href: `/${categorySlug}/promotions`, label: "Promotions", icon: TagIcon },
                   { href: `/${categorySlug}/sous-categories`, label: "Rayons", icon: PackageIcon },
-                  { href: `/${categorySlug}/marques`, label: "Marques", icon: PackageIcon },
                 ].map(({ href, label, icon: Icon }) => (
                   <li key={href}>
                     <Link
@@ -302,7 +301,7 @@ export function MobileMenu({
                     {filteredMarques.map((m) => (
                       <li key={m.id}>
                         <div
-                          className="flex flex-col items-center gap-1.5 border border-slate-150 bg-white p-2 rounded-lg"
+                          className="flex flex-col items-center gap-1.5 border border-slate-150 bg-white p-2 rounded-lg cursor-default select-none pointer-events-none"
                         >
                           {m.logo ? (
                             <div className="relative h-11 w-11 shrink-0">
