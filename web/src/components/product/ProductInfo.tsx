@@ -18,7 +18,6 @@ import {
   ClockIcon,
   PackageIcon,
   AwardIcon,
-  SparklesIcon,
   FileTextIcon,
 } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
@@ -58,8 +57,7 @@ export function ProductInfo({ product }: { product: Produit }) {
       {/* ── Bloc Caractéristiques (au-dessus du prix) ──────────── */}
       <div className="mt-5 mb-5 rounded-xl border border-slate-200/80 bg-gradient-to-br from-slate-50/90 via-slate-50/40 to-azure-50/30 p-4">
         <div className="mb-3 flex items-center justify-between border-b border-slate-200/60 pb-2">
-          <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">
-            <SparklesIcon size={13} className="text-azure-600" />
+          <span className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">
             Caractéristiques du produit
           </span>
           <span className="text-[10px] font-bold text-azure-600 bg-azure-50 border border-azure-100 px-2 py-0.5 rounded-full">
