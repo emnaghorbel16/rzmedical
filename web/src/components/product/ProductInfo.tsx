@@ -43,59 +43,6 @@ export function ProductInfo({ product }: { product: Produit }) {
 
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
-      {/* ── En-tête : Marque (avec logo) & Pays d'origine ───────── */}
-      {(product.marque || product.paysFabrication) && (
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
-          {/* Logo & nom de la marque */}
-          {product.marque && (
-            <Link
-              href={`/catalogue?marqueId=${product.marqueId}`}
-              className="group flex items-center gap-2.5 transition-opacity hover:opacity-85"
-              title={`Voir tous les produits de ${product.marque.nom}`}
-            >
-              {product.marque.logo ? (
-                <div className="relative h-11 w-28 shrink-0 overflow-hidden rounded-lg border border-slate-200/80 bg-white p-1.5 shadow-2xs">
-                  <Image
-                    src={imageUrl(product.marque.logo)}
-                    alt={product.marque.nom}
-                    fill
-                    sizes="112px"
-                    unoptimized
-                    className="object-contain transition-transform duration-200 group-hover:scale-105"
-                  />
-                </div>
-              ) : (
-                <div className="flex h-10 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-slate-50 px-3 text-azure-700 shadow-2xs font-bold text-xs uppercase tracking-wider">
-                  <AwardIcon size={16} />
-                  <span>{product.marque.nom}</span>
-                </div>
-              )}
-            </Link>
-          )}
-
-          {/* Pays de fabrication avec drapeau */}
-          {product.paysFabrication && (
-            <div
-              className="flex items-center gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-1.5 shadow-2xs"
-              title={`Fabriqué en ${product.paysFabrication}`}
-            >
-              {countryCode ? (
-                <img
-                  src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
-                  alt={product.paysFabrication}
-                  className="h-auto w-6 rounded-[2px] shadow-2xs"
-                />
-              ) : (
-                <span className="text-base">🌍</span>
-              )}
-              <span className="text-[12px] font-bold text-navy-900">
-                {product.paysFabrication}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* ── Badges supérieurs & Réf ───────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1.5">
@@ -148,23 +95,20 @@ export function ProductInfo({ product }: { product: Produit }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {/* Marque */}
+          {/* Marque (avec logo à la place de l'icône générique) */}
           {product.marque?.nom && (
             <div className="flex items-center gap-2.5 rounded-lg border border-slate-200/70 bg-white p-2.5 shadow-2xs transition-all hover:border-azure-300">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-azure-50 text-azure-600">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white border border-slate-200/80 p-0.5 overflow-hidden shadow-2xs">
                 {product.marque.logo ? (
-                  <div className="relative h-6 w-6">
-                    <Image
-                      src={imageUrl(product.marque.logo)}
-                      alt={product.marque.nom}
-                      fill
-                      sizes="24px"
-                      unoptimized
-                      className="object-contain"
-                    />
-                  </div>
+                  <img
+                    src={imageUrl(product.marque.logo)}
+                    alt={product.marque.nom}
+                    className="max-h-full max-w-full object-contain"
+                  />
                 ) : (
-                  <AwardIcon size={16} />
+                  <span className="text-[11px] font-black text-azure-600">
+                    {product.marque.nom.slice(0, 2).toUpperCase()}
+                  </span>
                 )}
               </div>
               <div className="min-w-0 flex-1">
@@ -177,6 +121,31 @@ export function ProductInfo({ product }: { product: Produit }) {
                 >
                   {product.marque.nom}
                 </Link>
+              </div>
+            </div>
+          )}
+
+          {/* Pays (drapeau comme icône + nom du pays) */}
+          {product.paysFabrication && (
+            <div className="flex items-center gap-2.5 rounded-lg border border-slate-200/70 bg-white p-2.5 shadow-2xs">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-slate-50 border border-slate-200/80 p-0.5 overflow-hidden shadow-2xs">
+                {countryCode ? (
+                  <img
+                    src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
+                    alt={product.paysFabrication}
+                    className="h-auto w-5 object-contain rounded-[2px]"
+                  />
+                ) : (
+                  <span className="text-sm">🌍</span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Pays
+                </span>
+                <span className="truncate text-[13px] font-bold text-navy-900 block">
+                  {product.paysFabrication}
+                </span>
               </div>
             </div>
           )}
@@ -197,31 +166,6 @@ export function ProductInfo({ product }: { product: Produit }) {
                 >
                   {product.sousCategorie.nom}
                 </Link>
-              </div>
-            </div>
-          )}
-
-          {/* Origine / Pays de fabrication */}
-          {product.paysFabrication && (
-            <div className="flex items-center gap-2.5 rounded-lg border border-slate-200/70 bg-white p-2.5 shadow-2xs">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-slate-50 border border-slate-200/60 overflow-hidden">
-                {countryCode ? (
-                  <img
-                    src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
-                    alt={product.paysFabrication}
-                    className="w-5 h-auto rounded-[2px]"
-                  />
-                ) : (
-                  <span className="text-sm">🌍</span>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Pays d&apos;origine
-                </span>
-                <span className="truncate text-[13px] font-bold text-navy-900 block">
-                  {product.paysFabrication}
-                </span>
               </div>
             </div>
           )}
