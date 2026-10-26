@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Produit } from "@/lib/types";
 import { useAuth } from "@/providers/AuthProvider";
-import { formatDate, isExpired, hasDiscount, isRecent } from "@/lib/format";
+import { formatDate, isExpired, hasDiscount } from "@/lib/format";
 import { getCountryCode } from "@/lib/countryFlag";
 import { imageUrl } from "@/lib/api";
 import { Price } from "@/components/ui/Price";
@@ -18,7 +18,6 @@ import {
   ClockIcon,
   PackageIcon,
   AwardIcon,
-  TagIcon,
   SparklesIcon,
   FileTextIcon,
 } from "@/components/ui/icons";
@@ -39,46 +38,20 @@ export function ProductInfo({ product }: { product: Produit }) {
   const expired = isExpired(product.expirationDate);
   const countryCode = getCountryCode(product.paysFabrication);
   const promo = hasDiscount(product.remise);
-  const isNew = !promo && isRecent(product.creeLe);
 
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
-      {/* ── Badges supérieurs & Réf ───────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {promo && (
-            <Badge variant="promo" size="sm" className="font-bold uppercase tracking-wider">
-              Promo -{Math.round(parseFloat(product.remise))}%
-            </Badge>
-          )}
-          {isNew && (
-            <Badge variant="new" size="sm" className="font-bold uppercase tracking-wider">
-              Nouveau
-            </Badge>
-          )}
-          {outOfStock ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold text-rose-600 border border-rose-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-              Rupture
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 border border-emerald-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              En stock
-            </span>
-          )}
+      {/* ── Badge Promo (si promotion active) ────────────────── */}
+      {promo && (
+        <div className="mb-2.5">
+          <Badge variant="promo" size="sm" className="font-bold uppercase tracking-wider">
+            Promo -{Math.round(parseFloat(product.remise))}%
+          </Badge>
         </div>
-
-        {product.reference && (
-          <span className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-slate-500 bg-slate-100/80 border border-slate-200/70 px-2.5 py-1 rounded-md">
-            <TagIcon size={12} className="text-azure-600" />
-            RÉF: <strong className="text-navy-900">{product.reference}</strong>
-          </span>
-        )}
-      </div>
+      )}
 
       {/* ── Nom du produit ───────────────────────────────────── */}
-      <h1 className="mt-3 text-2xl font-extrabold leading-tight text-navy-900 sm:text-3xl">
+      <h1 className="text-2xl font-extrabold leading-tight text-navy-900 sm:text-3xl">
         {product.nom}
       </h1>
 
