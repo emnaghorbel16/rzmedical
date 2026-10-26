@@ -25,6 +25,7 @@ import {
   MailIcon,
   SearchIcon,
   XIcon,
+  AwardIcon,
 } from "@/components/ui/icons";
 
 export function MobileMenu({
@@ -168,6 +169,16 @@ export function MobileMenu({
                 Catalogue complet
               </Link>
             </li>
+            <li>
+              <Link
+                href="/marques"
+                onClick={closeMobileMenu}
+                className="flex items-center gap-3 py-2.5 text-[15px] font-medium text-navy-900 hover:text-violet-600 transition-colors"
+              >
+                <AwardIcon size={16} strokeWidth={1.75} className="text-violet-400 shrink-0" />
+                Marques
+              </Link>
+            </li>
           </ul>
 
           {/* Bloc catégorie active — repère de contexte, pas une carte */}
@@ -300,8 +311,11 @@ export function MobileMenu({
                   <ul className="grid grid-cols-4 gap-2">
                     {filteredMarques.map((m) => (
                       <li key={m.id}>
-                        <div
-                          className="flex flex-col items-center gap-1.5 border border-slate-150 bg-white p-2 rounded-lg cursor-default select-none pointer-events-none"
+                        <Link
+                          href={`/catalogue?marqueId=${m.id}`}
+                          onClick={closeMobileMenu}
+                          className="group flex flex-col items-center gap-1.5 border border-slate-150 bg-white p-2 rounded-lg transition-all duration-200 hover:border-azure-300 hover:shadow-sm hover:bg-azure-50/40 active:scale-95"
+                          title={m.nom}
                         >
                           {m.logo ? (
                             <div className="relative h-11 w-11 shrink-0">
@@ -311,18 +325,18 @@ export function MobileMenu({
                                 fill
                                 sizes="44px"
                                 unoptimized
-                                className="object-contain"
+                                className="object-contain transition-transform duration-200 group-hover:scale-105"
                               />
                             </div>
                           ) : (
-                            <div className="flex h-11 w-11 shrink-0 items-center justify-center bg-slate-50 text-[15px] font-semibold text-slate-400">
+                            <div className="flex h-11 w-11 shrink-0 items-center justify-center bg-slate-50 text-[15px] font-semibold text-slate-400 group-hover:bg-azure-100 group-hover:text-azure-600 transition-colors duration-200">
                               {m.nom.charAt(0).toUpperCase()}
                             </div>
                           )}
-                          <span className="w-full truncate text-center text-[9.5px] font-medium uppercase tracking-wide text-slate-600">
+                          <span className="w-full truncate text-center text-[9.5px] font-medium uppercase tracking-wide text-slate-600 group-hover:text-azure-600 transition-colors duration-200">
                             {m.nom}
                           </span>
-                        </div>
+                        </Link>
                       </li>
                     ))}
                   </ul>

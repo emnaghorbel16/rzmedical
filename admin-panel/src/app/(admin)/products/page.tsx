@@ -113,6 +113,21 @@ export default function ProductsPage() {
   const [activeFilter, setActiveFilter] = useState<"all" | "new" | "promo" | "rupture" | "indisponible">("all");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Sorting
+  type SortField = "nom" | "reference" | "prix" | "stock" | "marque" | "sousCategorie" | "remise" | "prixAchat";
+  type SortDir = "asc" | "desc";
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+
   const fetchData = useCallback(async () => {
     setLoading(true); setError(null);
     try {
@@ -429,6 +444,38 @@ export default function ProductsPage() {
     return true;
   });
 
+  const sortedItems = sortField
+    ? [...filteredItems].sort((a, b) => {
+        let valA: string | number = "";
+        let valB: string | number = "";
+        switch (sortField) {
+          case "nom": valA = a.nom.toLowerCase(); valB = b.nom.toLowerCase(); break;
+          case "reference": valA = a.reference.toLowerCase(); valB = b.reference.toLowerCase(); break;
+          case "prix": valA = Number(a.prix); valB = Number(b.prix); break;
+          case "prixAchat": valA = Number(a.prixAchat ?? 0); valB = Number(b.prixAchat ?? 0); break;
+          case "remise": valA = Number(a.remise ?? 0); valB = Number(b.remise ?? 0); break;
+          case "stock": valA = a.stock; valB = b.stock; break;
+          case "marque": valA = a.marque?.nom?.toLowerCase() ?? ""; valB = b.marque?.nom?.toLowerCase() ?? ""; break;
+          case "sousCategorie": valA = a.sousCategorie?.nom?.toLowerCase() ?? ""; valB = b.sousCategorie?.nom?.toLowerCase() ?? ""; break;
+        }
+        if (valA < valB) return sortDir === "asc" ? -1 : 1;
+        if (valA > valB) return sortDir === "asc" ? 1 : -1;
+        return 0;
+      })
+    : filteredItems;
+
+  // Helper: sort header button
+  const SortIcon = ({ field }: { field: SortField }) => (
+    <span className="inline-flex flex-col ml-1 -mb-0.5">
+      <svg className={`h-2.5 w-2.5 ${sortField === field && sortDir === "asc" ? "text-brand-500" : "text-gray-300 dark:text-gray-600"}`} viewBox="0 0 10 6" fill="currentColor">
+        <path d="M5 0L10 6H0L5 0z" />
+      </svg>
+      <svg className={`h-2.5 w-2.5 ${sortField === field && sortDir === "desc" ? "text-brand-500" : "text-gray-300 dark:text-gray-600"}`} viewBox="0 0 10 6" fill="currentColor">
+        <path d="M5 6L0 0H10L5 6z" />
+      </svg>
+    </span>
+  );
+
   return (
     <div>
       <PageBreadcrumb pageTitle="Produits" />
@@ -564,24 +611,52 @@ export default function ProductsPage() {
               <TableHeader className="border-gray-100 dark:border-gray-800 border-y">
                 <TableRow>
                   <TableCell isHeader className="px-4 py-3 text-start">Image</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Réf</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Nom</TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("reference")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Réf <SortIcon field="reference" />
+                    </button>
+                  </TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("nom")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Nom <SortIcon field="nom" />
+                    </button>
+                  </TableCell>
                   <TableCell isHeader className="px-4 py-3 text-center">Pays</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Prix vente / Remise</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Prix achat</TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("prix")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Prix vente / Remise <SortIcon field="prix" />
+                    </button>
+                  </TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("prixAchat")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Prix achat <SortIcon field="prixAchat" />
+                    </button>
+                  </TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">CUMP</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Stock</TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("stock")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Stock <SortIcon field="stock" />
+                    </button>
+                  </TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Qté achat</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Qté vente</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Marge</TableCell>
                   <TableCell isHeader className="px-4 py-3 text-start">Disponible</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Sous-Catégorie</TableCell>
-                  <TableCell isHeader className="px-4 py-3 text-start">Marque</TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("sousCategorie")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Sous-Catégorie <SortIcon field="sousCategorie" />
+                    </button>
+                  </TableCell>
+                  <TableCell isHeader className="px-4 py-3 text-start">
+                    <button onClick={() => handleSort("marque")} className="inline-flex items-center gap-1 hover:text-brand-500 transition-colors font-semibold whitespace-nowrap">
+                      Marque <SortIcon field="marque" />
+                    </button>
+                  </TableCell>
                   <TableCell isHeader className="px-4 py-3 text-end">Actions</TableCell>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-                {filteredItems.map((item) => {
+                {sortedItems.map((item) => {
                   const isInline = inlineEditId === item.id;
                   const previewPrix = parseFloat(inlinePrix);
                   const previewRemise = parseFloat(inlineRemise) || 0;

@@ -23,6 +23,7 @@ import {
   MailIcon,
   SearchIcon,
   XIcon,
+  AwardIcon,
 } from "@/components/ui/icons";
 
 const SIDEBAR_W = 340;
@@ -119,6 +120,7 @@ export function StorefrontShell({
                 { href: "/catalogue?promo=1", label: "Promotions", Icon: TagIcon, color: "error" },
                 { href: "/catalogue?filter=new", label: "Nouveautés", Icon: SparklesIcon, color: "amber" },
                 { href: "/catalogue", label: "Catalogue", Icon: PackageIcon, color: "navy" },
+                { href: "/marques", label: "Marques", Icon: AwardIcon, color: "purple" },
               ].map(({ href, label, Icon, color }) => (
                 <li key={label}>
                   <Link
@@ -131,7 +133,8 @@ export function StorefrontShell({
                       color === "azure" && "text-azure-500 group-hover:text-azure-600",
                       color === "error" && "text-red-500 group-hover:text-red-600",
                       color === "amber" && "text-amber-500 group-hover:text-amber-600",
-                      color === "navy" && "text-slate-400 group-hover:text-navy-900"
+                      color === "navy" && "text-slate-400 group-hover:text-navy-900",
+                      color === "purple" && "text-violet-500 group-hover:text-violet-600"
                     )} />
                     {label}
                   </Link>
@@ -234,8 +237,11 @@ export function StorefrontShell({
                   <ul className="grid grid-cols-4 gap-2">
                     {(marques.some((m) => Boolean(m.logo)) ? marques.filter((m) => Boolean(m.logo)) : marques).map((m) => (
                       <li key={m.id}>
-                        <div
-                          className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-200/70 bg-white p-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] cursor-default select-none pointer-events-none"
+                        <Link
+                          href={`/catalogue?marqueId=${m.id}`}
+                          onClick={closeMobileMenu}
+                          className="group flex flex-col items-center gap-1.5 rounded-xl border border-slate-200/70 bg-white p-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 hover:border-azure-300 hover:shadow-[0_4px_12px_rgba(14,165,233,0.12)] hover:bg-azure-50/30 active:scale-95"
+                          title={m.nom}
                         >
                           {m.logo ? (
                             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">
@@ -245,18 +251,18 @@ export function StorefrontShell({
                                 fill
                                 sizes="48px"
                                 unoptimized
-                                className="object-contain p-0.5"
+                                className="object-contain p-0.5 transition-transform duration-200 group-hover:scale-105"
                               />
                             </div>
                           ) : (
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-[16px] font-bold text-slate-400">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-[16px] font-bold text-slate-400 transition-colors duration-200 group-hover:bg-azure-100 group-hover:text-azure-600">
                               {m.nom.charAt(0).toUpperCase()}
                             </div>
                           )}
-                          <span className="w-full truncate text-center text-[10px] font-bold uppercase tracking-wide text-navy-700">
+                          <span className="w-full truncate text-center text-[10px] font-bold uppercase tracking-wide text-navy-700 transition-colors duration-200 group-hover:text-azure-600">
                             {m.nom}
                           </span>
-                        </div>
+                        </Link>
                       </li>
                     ))}
                   </ul>
