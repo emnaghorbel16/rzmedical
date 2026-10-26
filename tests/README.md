@@ -26,7 +26,7 @@ La suite dédiée doit créer ses propres données via les endpoints documentés
 
 ## Couverture actuelle
 
-- Authentification admin en deux étapes, erreurs, routes protégées et ouverture du tableau de bord.
+- Authentification admin, gestion des erreurs, routes protégées et ouverture du tableau de bord.
 - Produits : rendu des données API, recherche et validation des champs requis.
 - Stock et bon de sortie : affichage des référentiels/quantités sans données préexistantes.
 - Le schéma Prisma identifie aussi les parcours à ajouter sur base de test : `StockCommercial`, `BonSortie`, `BonLivraison`, `InventaireCommercial`, `Facture`, `Fournisseur`, `InfoSociete` et leurs lignes.

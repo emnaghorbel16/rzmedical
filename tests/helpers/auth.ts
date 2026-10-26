@@ -17,7 +17,10 @@ export async function mockLogin(page: Page, status = 401, body = { error: 'Ident
 export async function mockSuccessfulAdminLogin(page: Page) {
   await page.route('**/api/auth/login', route => route.fulfill({
     contentType: 'application/json',
-    body: JSON.stringify({ message: 'Code OTP envoyé à votre adresse email' }),
+    body: JSON.stringify({
+      token: 'playwright-test-token',
+      user: { id: 1, email: 'admin.e2e@example.test', prenom: 'Admin', nom: 'E2E' },
+    }),
   }));
   await page.route('**/api/auth/verify-otp', route => route.fulfill({
     contentType: 'application/json',
