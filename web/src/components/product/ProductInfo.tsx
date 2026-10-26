@@ -16,8 +16,6 @@ import {
   CheckCircleIcon,
   AlertCircleIcon,
   ClockIcon,
-  TruckIcon,
-  ShieldCheckIcon,
   PackageIcon,
   AwardIcon,
   TagIcon,
@@ -45,6 +43,59 @@ export function ProductInfo({ product }: { product: Produit }) {
 
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+      {/* ── En-tête : Marque (avec logo) & Pays d'origine ───────── */}
+      {(product.marque || product.paysFabrication) && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          {/* Logo & nom de la marque */}
+          {product.marque && (
+            <Link
+              href={`/catalogue?marqueId=${product.marqueId}`}
+              className="group flex items-center gap-2.5 transition-opacity hover:opacity-85"
+              title={`Voir tous les produits de ${product.marque.nom}`}
+            >
+              {product.marque.logo ? (
+                <div className="relative h-11 w-28 shrink-0 overflow-hidden rounded-lg border border-slate-200/80 bg-white p-1.5 shadow-2xs">
+                  <Image
+                    src={imageUrl(product.marque.logo)}
+                    alt={product.marque.nom}
+                    fill
+                    sizes="112px"
+                    unoptimized
+                    className="object-contain transition-transform duration-200 group-hover:scale-105"
+                  />
+                </div>
+              ) : (
+                <div className="flex h-10 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-slate-50 px-3 text-azure-700 shadow-2xs font-bold text-xs uppercase tracking-wider">
+                  <AwardIcon size={16} />
+                  <span>{product.marque.nom}</span>
+                </div>
+              )}
+            </Link>
+          )}
+
+          {/* Pays de fabrication avec drapeau */}
+          {product.paysFabrication && (
+            <div
+              className="flex items-center gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-1.5 shadow-2xs"
+              title={`Fabriqué en ${product.paysFabrication}`}
+            >
+              {countryCode ? (
+                <img
+                  src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
+                  alt={product.paysFabrication}
+                  className="h-auto w-6 rounded-[2px] shadow-2xs"
+                />
+              ) : (
+                <span className="text-base">🌍</span>
+              )}
+              <span className="text-[12px] font-bold text-navy-900">
+                {product.paysFabrication}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── Badges supérieurs & Réf ───────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1.5">
@@ -295,35 +346,6 @@ export function ProductInfo({ product }: { product: Produit }) {
           />
         </div>
       </div>
-
-      {/* ── Réassurance ──────────────────────────────────────── */}
-      <ul className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:flex-wrap">
-        <Reassurance icon={TruckIcon} title="Livraison 24-48h" text="On expédie depuis Sfax dès validation." />
-        <Reassurance icon={ShieldCheckIcon} title="Certifié & Traçable" text="Certificat de conformité CE." />
-        <Reassurance icon={PackageIcon} title="Emballage sécurisé" text="Colis médical renforcé." />
-      </ul>
     </div>
-  );
-}
-
-function Reassurance({
-  icon: Icon,
-  title,
-  text,
-}: {
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  title: string;
-  text: string;
-}) {
-  return (
-    <li className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-azure-600">
-        <Icon size={18} />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[13px] font-semibold text-navy-900">{title}</span>
-        <span className="block text-xs text-muted">{text}</span>
-      </span>
-    </li>
   );
 }

@@ -1,6 +1,4 @@
 import type { Produit } from "@/lib/types";
-import { Badge } from "@/components/ui/Badge";
-import { formatDate } from "@/lib/format";
 import { imageUrl } from "@/lib/api";
 import { PdfPages } from "./PdfPages";
 
@@ -49,28 +47,6 @@ export function ProductTabs({ product }: { product: Produit }) {
             Contactez-nous pour toute information complémentaire.
           </p>
         )}
-      </section>
-
-      <section>
-        <h2 className="mb-4 text-lg font-bold text-navy-900">Caractéristiques</h2>
-        <dl className="max-w-2xl divide-y divide-border">
-          {product.marque?.nom && <Row label="Marque" value={product.marque.nom} />}
-          {product.sousCategorie?.categorie?.nom && (
-            <Row label="Catégorie" value={product.sousCategorie.categorie.nom} />
-          )}
-          {product.sousCategorie?.nom && (
-            <Row label="Sous-catégorie" value={product.sousCategorie.nom} />
-          )}
-          <Row
-            label="Disponibilité"
-            value={
-              product.disponibleALaVente ? "Disponible à la vente" : "Indisponible"
-            }
-          />
-          {product.expirationDate && (
-            <Row label="Date de péremption" value={formatDate(product.expirationDate)} />
-          )}
-        </dl>
       </section>
 
       {product.video && (
@@ -123,15 +99,6 @@ export function ProductTabs({ product }: { product: Produit }) {
           </div>
         </section>
       )}
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-6">
-      <dt className="w-full text-sm text-muted sm:w-48 sm:shrink-0">{label}</dt>
-      <dd className="text-sm font-medium text-navy-900">{value}</dd>
     </div>
   );
 }

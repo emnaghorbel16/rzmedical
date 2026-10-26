@@ -11,6 +11,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { SubcategoryBanner } from "@/components/catalogue/SubcategoryBanner";
 import { Gallery } from "@/components/product/Gallery";
 import { ProductInfo } from "@/components/product/ProductInfo";
+import { ProductReassuranceBar } from "@/components/product/ProductReassuranceBar";
 import { ProductTabs } from "@/components/product/ProductTabs";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { ProductGridSkeleton } from "@/components/catalogue/ProductGrid";
@@ -102,6 +103,9 @@ export default async function ProductPage({ params }: { params: Params }) {
           <ProductInfo product={product} />
         </div>
       </div>
+
+      {/* Réassurance horizontale au-dessous de l'image et de la card */}
+      <ProductReassuranceBar />
 
       {/* Onglets */}
       <div className="mt-12 lg:mt-16">
