@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { getBrands } from "@/lib/api";
 import { BrandStrip } from "@/components/catalogue/BrandStrip";
 import { Container } from "@/components/ui/Container";
@@ -9,8 +9,15 @@ export const metadata: Metadata = {
     "Decouvrez toutes les marques partenaires de RZMedical. Materiel medical et dentaire des references reconnues du secteur.",
 };
 
+export const revalidate = 3600;
+
 export default async function MarquesPage() {
-  const brands = await getBrands();
+  let brands: Awaited<ReturnType<typeof getBrands>> = [];
+  try {
+    brands = await getBrands();
+  } catch (err) {
+    console.error("Erreur chargement marques:", err);
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">

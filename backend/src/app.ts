@@ -89,11 +89,16 @@ app.use(express.json({ limit: '10mb' }));
 // ─── Rate limiting global ─────────────────────────────────────────────────────
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300,
+  max: 3000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Trop de requêtes. Réessayez dans 15 minutes.' },
-  skip: (req) => req.path.startsWith('/uploads'), // Ne pas limiter les fichiers statiques
+  skip: (req) =>
+    req.path.startsWith('/uploads') ||
+    req.ip === '127.0.0.1' ||
+    req.ip === '::1' ||
+    req.ip?.startsWith('172.') || // Docker internal network
+    req.ip?.startsWith('10.'),
 });
 app.use('/api', globalLimiter);
 
