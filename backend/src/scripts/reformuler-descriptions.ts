@@ -12,12 +12,16 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 const FORCE_GROQ = process.argv.includes('--groq') || process.env.AI_PROVIDER === 'groq';
 let IS_OPENAI = Boolean(OPENAI_API_KEY) && !FORCE_GROQ;
 let API_KEY = IS_OPENAI ? OPENAI_API_KEY : GROQ_API_KEY;
+const cliModelArg = process.argv.find((a) => a.startsWith('--model='))?.split('=')[1];
+
 let API_URL = IS_OPENAI
   ? 'https://api.openai.com/v1/chat/completions'
   : 'https://api.groq.com/openai/v1/chat/completions';
-let MODEL = IS_OPENAI
-  ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
-  : (process.env.GROQ_MODEL || 'llama-3.3-70b-versatile');
+let MODEL = cliModelArg
+  ? cliModelArg
+  : IS_OPENAI
+    ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
+    : (process.env.GROQ_MODEL || 'openai/gpt-oss-120b');
 
 // Taille du lot traité en parallèle
 const BATCH_SIZE = 5;
@@ -185,7 +189,7 @@ async function runReformulateAllProducts() {
     process.exit(1);
   }
 
-  if (!IS_OPENAI && GROQ_API_KEY) {
+  if (!IS_OPENAI && GROQ_API_KEY && !cliModelArg && !process.env.GROQ_MODEL) {
     MODEL = await resolveGroqModel(GROQ_API_KEY);
   }
 
