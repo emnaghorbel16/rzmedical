@@ -23,11 +23,11 @@ let MODEL = cliModelArg
     ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
     : (process.env.GROQ_MODEL || 'openai/gpt-oss-120b');
 
-// Taille du lot traité en parallèle
-const BATCH_SIZE = 5;
+// Taille du lot traité en parallèle (1 pour rester sous les 8 000 TPM de Groq)
+const BATCH_SIZE = parseInt(process.env.BATCH_SIZE || '1', 10);
 
-// Délai entre les lots (ms)
-const DELAY_BETWEEN_BATCHES_MS = 800;
+// Délai entre les requêtes (ms) pour respecter les quotas Groq
+const DELAY_BETWEEN_BATCHES_MS = parseInt(process.env.BATCH_DELAY_MS || '2500', 10);
 
 // Fichier de rapport final
 const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
@@ -134,49 +134,57 @@ RÈGLES IMPÉRATIVES :
 2. Commence directement par le corps du texte — JAMAIS par "Voici", "Découvrez", "Fiche produit :" ou des listes de métadonnées brutes.
 3. Réponds UNIQUEMENT avec le texte final de la fiche produit prêt à être affiché, rien d'autre.`;
 
-  let res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 1500,
-      temperature: 0.5,
-    }),
-  });
+  // Appel API avec gestion automatique du Rate Limit 429 (Groq) et basculement OpenAI
+  let data: any = null;
+  const maxRetries = 6;
 
-  // Si OpenAI échoue faute de crédit, basculer sur Groq automatiquement
-  if (!res.ok && IS_OPENAI && GROQ_API_KEY) {
-    const errText = await res.text();
-    if (errText.includes('insufficient_quota') || errText.includes('credit_balance_exhausted')) {
-      await switchToGroq();
-      res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 1500,
-          temperature: 0.5,
-        }),
-      });
-    } else {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    let res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 500, // Réduit la réservation TPM de Groq tout en laissant largement la place pour 180 mots
+        temperature: 0.5,
+      }),
+    });
+
+    // Si OpenAI échoue faute de crédit, basculer sur Groq automatiquement
+    if (!res.ok && IS_OPENAI && GROQ_API_KEY) {
+      const errText = await res.text();
+      if (errText.includes('insufficient_quota') || errText.includes('credit_balance_exhausted')) {
+        await switchToGroq();
+        continue;
+      }
       throw new Error(`OpenAI API ${res.status}: ${errText.slice(0, 300)}`);
     }
+
+    // Gestion intelligente du Rate Limit 429 de Groq
+    if (res.status === 429) {
+      const errText = await res.text();
+      const match = errText.match(/try again in ([0-9.]+)s/i);
+      const waitSeconds = match ? Math.ceil(parseFloat(match[1])) + 2 : Math.min(25, 6 * attempt);
+      console.warn(`   ⏳ Limite Groq (429 TPM) atteinte. Pause de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
+      await sleep(waitSeconds * 1000);
+      continue;
+    }
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`${IS_OPENAI ? 'OpenAI' : 'Groq'} API ${res.status}: ${errText.slice(0, 300)}`);
+    }
+
+    data = (await res.json()) as any;
+    break;
   }
 
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`${IS_OPENAI ? 'OpenAI' : 'Groq'} API ${res.status}: ${errText.slice(0, 300)}`);
+  if (!data) {
+    throw new Error('Échec de la requête après plusieurs tentatives de temporisation (Rate Limit).');
   }
-
-  const data = (await res.json()) as any;
   const choice = data?.choices?.[0];
   let reformulated = (choice?.message?.content ?? '').trim();
 
