@@ -64,12 +64,15 @@ export default function MouvementsStockPage() {
     setLoading(true);
     setError(null);
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("rzm_token") : null;
       const query = new URLSearchParams({ page: String(page), limit: "25" });
       if (search.trim()) query.set("search", search.trim());
       if (type) query.set("type", type);
       if (dateFrom) query.set("dateFrom", dateFrom);
       if (dateTo) query.set("dateTo", dateTo);
-      const response = await fetch(`${API_URL}/stock/movements?${query}`);
+      const response = await fetch(`${API_URL}/stock/movements?${query}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (!response.ok) throw new Error("Impossible de charger les mouvements");
       setResult(await response.json());
     } catch (cause) {

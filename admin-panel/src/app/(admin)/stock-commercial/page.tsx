@@ -21,7 +21,10 @@ export default function StockCommercialDashboard() {
   const load = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/stock-commercial`);
+      const token = typeof window !== "undefined" ? localStorage.getItem("rzm_token") : null;
+      const response = await fetch(`${API_URL}/stock-commercial`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (response.ok) {
         setStocks(await response.json());
       }

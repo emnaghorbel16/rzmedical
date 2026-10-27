@@ -24,7 +24,10 @@ export default function BonsLivraisonCommercialPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/stock-commercial/bons-livraison`);
+      const token = typeof window !== "undefined" ? localStorage.getItem("rzm_token") : null;
+      const response = await fetch(`${API_URL}/stock-commercial/bons-livraison`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (response.ok) setBons(await response.json());
     } catch (e) {}
     setLoading(false);
@@ -35,7 +38,11 @@ export default function BonsLivraisonCommercialPage() {
   const valider = async (id: number) => {
     if (!confirm("Valider cette livraison ? Le stock du commercial sera diminué.")) return;
     try {
-      const response = await fetch(`${API_URL}/stock-commercial/bons-livraison/${id}/valider`, { method: "PATCH" });
+      const token = typeof window !== "undefined" ? localStorage.getItem("rzm_token") : null;
+      const response = await fetch(`${API_URL}/stock-commercial/bons-livraison/${id}/valider`, {
+        method: "PATCH",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (!response.ok) throw new Error((await response.json()).error || "Erreur");
       alert("Livraison validée avec succès");
       load();
