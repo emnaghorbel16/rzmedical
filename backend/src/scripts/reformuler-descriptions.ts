@@ -8,27 +8,40 @@ import prisma from '../config/prisma';
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 
-// Fournisseur IA : OpenAI prioritaire si configuré, sinon Groq
-const IS_OPENAI = Boolean(OPENAI_API_KEY);
-const API_KEY = OPENAI_API_KEY || GROQ_API_KEY;
-const API_URL = IS_OPENAI
+// Fournisseur IA : OpenAI ou Groq (avec basculement automatique si OpenAI est épuisé)
+const FORCE_GROQ = process.argv.includes('--groq') || process.env.AI_PROVIDER === 'groq';
+let IS_OPENAI = Boolean(OPENAI_API_KEY) && !FORCE_GROQ;
+let API_KEY = IS_OPENAI ? OPENAI_API_KEY : GROQ_API_KEY;
+let API_URL = IS_OPENAI
   ? 'https://api.openai.com/v1/chat/completions'
   : 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL = IS_OPENAI
+let MODEL = IS_OPENAI
   ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
   : (process.env.GROQ_MODEL || 'llama-3.3-70b-versatile');
 
 // Taille du lot traité en parallèle
-const BATCH_SIZE = IS_OPENAI ? 5 : 5;
+const BATCH_SIZE = 5;
 
 // Délai entre les lots (ms)
-const DELAY_BETWEEN_BATCHES_MS = IS_OPENAI ? 500 : 1000;
+const DELAY_BETWEEN_BATCHES_MS = 800;
 
 // Fichier de rapport final
 const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
 
 // ─── Cache mémoire (évite les doublons dans le même run) ─────────────────────
 const _descCache = new Map<string, string>();
+
+// ─── Basculement vers Groq ──────────────────────────────────────────────────
+function switchToGroq() {
+  if (!GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY n\'est pas défini dans le fichier .env');
+  }
+  IS_OPENAI = false;
+  API_KEY = GROQ_API_KEY;
+  API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+  MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+  console.log('🔄 Basculement automatique vers Groq (Llama 3.3 70B - Gratuit)...');
+}
 
 // ─── Génération IA : Reformulation & Optimisation SEO ───────────────────────
 
@@ -65,7 +78,7 @@ async function reformulateDescription(opts: {
     `5. Réponds UNIQUEMENT avec le paragraphe de description, sans titre, sans puces, sans markdown.\n\n` +
     contextParts.join('\n');
 
-  const res = await fetch(API_URL, {
+  let res = await fetch(API_URL, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${API_KEY}`,
@@ -78,6 +91,29 @@ async function reformulateDescription(opts: {
       temperature: 0.5,
     }),
   });
+
+  // Si OpenAI échoue faute de crédit, basculer sur Groq automatiquement
+  if (!res.ok && IS_OPENAI && GROQ_API_KEY) {
+    const errText = await res.text();
+    if (errText.includes('insufficient_quota') || errText.includes('credit_balance_exhausted')) {
+      switchToGroq();
+      res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 400,
+          temperature: 0.5,
+        }),
+      });
+    } else {
+      throw new Error(`OpenAI API ${res.status}: ${errText.slice(0, 300)}`);
+    }
+  }
 
   if (!res.ok) {
     const errText = await res.text();
