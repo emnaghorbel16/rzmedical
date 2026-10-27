@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import {
   getProductByReference,
-  getProducts,
   getSubcategories,
   imageUrl,
 } from "@/lib/api";
@@ -21,24 +20,9 @@ type Params = Promise<{ reference: string }>;
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://randzmedical.com";
 
-// ── ISR : revalide les pages produit toutes les heures ───────────────────────
+// ── ISR : revalide et met en cache chaque page produit pendant 1 heure ───────
 export const revalidate = 3600;
-
-// ── Pré-génère toutes les pages produit au build (SSG) ───────────────────────
-// Évite le rendu à la demande : Google trouve des pages statiques, rapides
-// et immédiatement crawlables.
-export async function generateStaticParams() {
-  try {
-    const result = await getProducts({ limit: 2000 });
-    const products = Array.isArray(result) ? result : result.products;
-    return products.map((p) => ({
-      reference: encodeURIComponent(p.reference),
-    }));
-  } catch {
-    // En cas d'erreur au build, on génère à la demande
-    return [];
-  }
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
