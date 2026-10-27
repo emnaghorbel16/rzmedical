@@ -102,31 +102,26 @@ async function reformulateDescription(opts: {
   const prompt =
     `Tu es un expert copywriter senior spécialisé en équipement médico-dentaire, SEO e-commerce et rédaction commerciale pour professionnels de santé (dentistes, orthodontistes, chirurgiens, cliniques dentaires).
 
-Ta mission : rédiger une description produit EXCEPTIONNELLE, formatée et optimisée SEO, pour une fiche produit sur un site e-commerce médical tunisien. La description sera affichée en HTML via un moteur de rendu personnalisé.
+Ta mission : rédiger une description produit EXCEPTIONNELLE, naturelle et optimisée SEO, pour une fiche produit sur un site e-commerce médical tunisien.
 
-FORMAT DE TEXTE OBLIGATOIRE — Utilise UNIQUEMENT ces balises pour enrichir le texte :
-- *mot ou groupe de mots* → affiché en GRAS (pour les caractéristiques clés, les avantages majeurs, les mots-clés SEO importants)
-- _mot ou groupe de mots_ → affiché en ITALIQUE (pour les termes techniques spécifiques, les noms de normes ou de procédés)
-- [red]texte[/red] → texte en ROUGE (pour les avertissements, les points de sécurité critiques ou les indications essentielles)
-- [blue]texte[/blue] → texte en BLEU (pour les avantages produit clés, les bénéfices praticien, les caractéristiques premium)
-- [green]texte[/green] → texte en VERT (pour la compatibilité, la certification, la conformité aux normes, la disponibilité)
+FORMAT DE TEXTE — Tu peux utiliser ces balises avec MODÉRATION :
+- *mot ou groupe de mots* → GRAS : réservé aux 2 ou 3 caractéristiques vraiment clés du produit, pas plus.
+- _mot ou groupe de mots_ → ITALIQUE : pour les termes techniques spécifiques ou noms de normes.
+- [red]texte[/red], [blue]texte[/blue], [green]texte[/green] → COULEUR : à utiliser avec une GRANDE sobriété. Maximum 1 balise couleur par description, et SEULEMENT si c'est vraiment utile (ex: [red] pour un avertissement de sécurité critique, [green] pour une certification officielle importante). Si aucune couleur n'est nécessaire, n'en mets aucune.
 
-STRUCTURE DE LA DESCRIPTION :
-Rédige 2 paragraphes séparés par une ligne vide (\\n\\n) :
+STYLE : La description doit être naturelle et fluide. Favorise un texte agréable à lire avec juste quelques mots en gras pour guider l'œil. Pas de surformatage.
 
-Paragraphe 1 — Présentation technique et bénéfices (2-3 phrases, ~50-70 mots) :
-Décris les caractéristiques techniques clés du produit avec les mots-clés SEO intégrés naturellement. Mets en *gras* les caractéristiques essentielles, en _italique_ les termes techniques spécifiques, en [blue]bleu[/blue] les avantages praticien majeurs.
-
-Paragraphe 2 — Indications, compatibilité et qualité (2-3 phrases, ~40-60 mots) :
-Précise les indications cliniques, la compatibilité, les certifications ou la conformité aux normes. Utilise [green]vert[/green] pour les certifications/normes, [red]rouge[/red] pour les indications médicales importantes ou précautions d'emploi si pertinent.
+STRUCTURE :
+Rédige 2 paragraphes séparés par une ligne vide :
+- Paragraphe 1 (2-3 phrases, ~50-70 mots) : caractéristiques techniques et bénéfices principaux, mots-clés SEO intégrés naturellement.
+- Paragraphe 2 (2-3 phrases, ~40-60 mots) : indications cliniques, compatibilité, certifications ou informations complémentaires utiles au praticien.
 
 RÈGLES IMPÉRATIVES :
-1. JAMAIS de Markdown (pas de #, **, -, etc.) en dehors du format spécifié ci-dessus.
-2. N'invente AUCUNE donnée technique non mentionnée dans les informations fournies.
-3. Intègre naturellement des mots-clés Google : noms du produit, catégorie médicale, marque, pays d'origine, usages cliniques.
-4. Commence directement par le contenu — JAMAIS par "Voici", "Ce produit", "Découvrez", "Cette description".
-5. Réponds UNIQUEMENT avec les 2 paragraphes de description formatée, rien d'autre.
-6. Si les informations sont insuffisantes pour le paragraphe 2, fusionne en 1 seul paragraphe de 4-5 phrases.
+1. N'invente AUCUNE donnée technique non mentionnée dans les informations fournies.
+2. Intègre naturellement des mots-clés Google : nom du produit, catégorie médicale, marque, pays d'origine, usages cliniques.
+3. Commence directement par le contenu — JAMAIS par "Voici", "Ce produit", "Découvrez", "Cette description".
+4. Réponds UNIQUEMENT avec les paragraphes de description, rien d'autre.
+5. Si les informations sont insuffisantes pour 2 paragraphes, écris 1 seul paragraphe de 4-5 phrases.
 
 INFORMATIONS DU PRODUIT :
 ${contextParts.join('\n')}`;
