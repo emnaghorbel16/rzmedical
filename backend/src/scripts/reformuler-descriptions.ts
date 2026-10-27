@@ -138,6 +138,9 @@ RÈGLES IMPÉRATIVES :
   let data: any = null;
   const maxRetries = 6;
 
+  // Paramètres optimisés selon le modèle (ex: raisonnement allégé pour gpt-oss-120b)
+  const isReasoningModel = !IS_OPENAI && (MODEL.includes('oss') || MODEL.includes('r1') || MODEL.includes('reasoning'));
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     let res = await fetch(API_URL, {
       method: 'POST',
@@ -148,8 +151,11 @@ RÈGLES IMPÉRATIVES :
       body: JSON.stringify({
         model: MODEL,
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 500, // Réduit la réservation TPM de Groq tout en laissant largement la place pour 180 mots
+        max_tokens: 1000, // Suffisant pour que le modèle ne soit jamais coupé
         temperature: 0.5,
+        ...(isReasoningModel
+          ? { reasoning_effort: 'low', reasoning_format: 'parsed' }
+          : {}),
       }),
     });
 
@@ -167,7 +173,7 @@ RÈGLES IMPÉRATIVES :
     if (res.status === 429) {
       const errText = await res.text();
       const match = errText.match(/try again in ([0-9.]+)s/i);
-      const waitSeconds = match ? Math.ceil(parseFloat(match[1])) + 2 : Math.min(25, 6 * attempt);
+      const waitSeconds = match ? Math.ceil(parseFloat(match[1])) + 2 : Math.min(30, 6 * attempt);
       console.warn(`   ⏳ Limite Groq (429 TPM) atteinte. Pause de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
       await sleep(waitSeconds * 1000);
       continue;
@@ -185,12 +191,13 @@ RÈGLES IMPÉRATIVES :
   if (!data) {
     throw new Error('Échec de la requête après plusieurs tentatives de temporisation (Rate Limit).');
   }
+
   const choice = data?.choices?.[0];
   let reformulated = (choice?.message?.content ?? '').trim();
 
-  // Si le modèle a loggé sa réponse dans reasoning_content
-  if (!reformulated && choice?.message?.reasoning_content) {
-    reformulated = choice.message.reasoning_content.trim();
+  // Si content est vide (ex: modèle ayant tout mis dans reasoning)
+  if (!reformulated && (choice?.message?.reasoning || choice?.message?.reasoning_content)) {
+    reformulated = (choice.message.reasoning || choice.message.reasoning_content).trim();
   }
 
   // Nettoyage et normalisation du rendu
