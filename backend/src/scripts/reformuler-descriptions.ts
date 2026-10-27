@@ -5,13 +5,24 @@ import prisma from '../config/prisma';
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 
-// Taille du lot traité en parallèle (évite de surcharger l'API)
-const BATCH_SIZE = 5;
+// Fournisseur IA : OpenAI prioritaire si configuré, sinon Groq
+const IS_OPENAI = Boolean(OPENAI_API_KEY);
+const API_KEY = OPENAI_API_KEY || GROQ_API_KEY;
+const API_URL = IS_OPENAI
+  ? 'https://api.openai.com/v1/chat/completions'
+  : 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL = IS_OPENAI
+  ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
+  : (process.env.GROQ_MODEL || 'llama-3.3-70b-versatile');
 
-// Délai entre les lots (ms) — Groq est rapide mais a des rate limits
-const DELAY_BETWEEN_BATCHES_MS = 1000;
+// Taille du lot traité en parallèle
+const BATCH_SIZE = IS_OPENAI ? 5 : 5;
+
+// Délai entre les lots (ms)
+const DELAY_BETWEEN_BATCHES_MS = IS_OPENAI ? 500 : 1000;
 
 // Fichier de rapport final
 const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
@@ -19,7 +30,7 @@ const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
 // ─── Cache mémoire (évite les doublons dans le même run) ─────────────────────
 const _descCache = new Map<string, string>();
 
-// ─── Groq Text : Reformulation ───────────────────────────────────────────────
+// ─── Génération IA : Reformulation & Optimisation SEO ───────────────────────
 
 async function reformulateDescription(opts: {
   nom: string;
@@ -28,49 +39,52 @@ async function reformulateDescription(opts: {
   marque?: string;
   paysFabrication?: string;
 }): Promise<string> {
-  if (!GROQ_API_KEY) {
-    throw new Error('GROQ_API_KEY non défini dans le fichier .env');
+  if (!API_KEY) {
+    throw new Error('Ni OPENAI_API_KEY ni GROQ_API_KEY ne sont définis dans le fichier .env');
   }
 
   const cacheKey = `${opts.nom}|${opts.rawDescription}`;
   if (_descCache.has(cacheKey)) return _descCache.get(cacheKey)!;
 
   const contextParts: string[] = [`Produit : "${opts.nom}"`];
-  if (opts.sousCategorie) contextParts.push(`Sous-catégorie dentaire : ${opts.sousCategorie}`);
+  if (opts.sousCategorie) contextParts.push(`Sous-catégorie médico-dentaire : ${opts.sousCategorie}`);
   if (opts.marque) contextParts.push(`Marque : ${opts.marque}`);
   if (opts.paysFabrication) contextParts.push(`Pays de fabrication : ${opts.paysFabrication}`);
   if (opts.rawDescription && opts.rawDescription.trim()) {
-    contextParts.push(`Description originale : ${opts.rawDescription}`);
+    contextParts.push(`Informations existantes : ${opts.rawDescription}`);
   }
 
   const prompt =
-    `Tu es un expert en matériel dentaire professionnel.\n` +
-    `Rédige une description commerciale courte (3 à 5 phrases) en français pour ce produit dentaire destiné aux dentistes et chirurgiens-dentistes.\n` +
-    `La description doit être professionnelle, précise et mettre en valeur les avantages et caractéristiques techniques.\n` +
-    `N'invente aucune information non mentionnée. Ne commence pas par "Voici" ou "Cette description".\n` +
-    `Réponds UNIQUEMENT avec le texte de la description, sans titre, sans liste à puces, sans markdown.\n\n` +
+    `Tu es un copywriter expert en équipement médico-dentaire et SEO e-commerce pour professionnels de santé (dentistes, orthodontistes, cliniques).\n` +
+    `Rédige une description commerciale et technique percutante (3 à 5 phrases, environ 60 à 90 mots) en français soigné pour ce produit.\n` +
+    `Consignes impératives :\n` +
+    `1. Intègre naturellement les termes techniques et mots-clés recherchés sur Google (ex: ergonomie, précision, normes médicales, stérilisation autoclave si pertinent, durabilité).\n` +
+    `2. Reste factuel : n'invente pas de caractéristiques techniques non mentionnées ou incohérentes.\n` +
+    `3. Style fluide, professionnel et vendeur, orienté vers la pratique quotidienne du praticien.\n` +
+    `4. Ne commence JAMAIS par "Voici", "Ce produit", "Cette description" ou "Découvrez".\n` +
+    `5. Réponds UNIQUEMENT avec le paragraphe de description, sans titre, sans puces, sans markdown.\n\n` +
     contextParts.join('\n');
 
-  const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${GROQ_API_KEY}`,
+      Authorization: `Bearer ${API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: MODEL,
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 350,
-      temperature: 0.6,
+      max_tokens: 400,
+      temperature: 0.5,
     }),
   });
 
-  if (!groqRes.ok) {
-    const errText = await groqRes.text();
-    throw new Error(`Groq API ${groqRes.status}: ${errText.slice(0, 300)}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`${IS_OPENAI ? 'OpenAI' : 'Groq'} API ${res.status}: ${errText.slice(0, 300)}`);
   }
 
-  const data = (await groqRes.json()) as any;
+  const data = (await res.json()) as any;
   const reformulated = (data?.choices?.[0]?.message?.content ?? '').trim();
 
   if (reformulated.length < 20) {
@@ -102,10 +116,13 @@ async function runReformulateAllProducts() {
   console.log('✍️  REFORMULATION DESCRIPTIONS — Tous les produits en base');
   console.log('═══════════════════════════════════════════════════════════════════\n');
 
-  if (!GROQ_API_KEY) {
-    console.error('❌ GROQ_API_KEY non défini dans le .env — arrêt.');
+  if (!API_KEY) {
+    console.error('❌ Aucune clé API trouvée. Définissez OPENAI_API_KEY ou GROQ_API_KEY dans backend/.env — arrêt.');
     process.exit(1);
   }
+
+  console.log(`🤖 Moteur IA      : ${IS_OPENAI ? 'OpenAI GPT' : 'Groq'}`);
+  console.log(`🧠 Modèle         : ${MODEL}\n`);
 
   // ── Lire l'argument optionnel --only-empty (reformuler seulement les descriptions vides/courtes)
   const onlyEmpty = process.argv.includes('--only-empty');
