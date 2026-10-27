@@ -31,16 +31,44 @@ const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
 // ─── Cache mémoire (évite les doublons dans le même run) ─────────────────────
 const _descCache = new Map<string, string>();
 
+// ─── Détection dynamique du modèle Groq disponible ───────────────────────────
+async function resolveGroqModel(apiKey: string): Promise<string> {
+  if (process.env.GROQ_MODEL) return process.env.GROQ_MODEL;
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/models', {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (res.ok) {
+      const data = (await res.json()) as any;
+      const ids: string[] = (data.data || []).map((m: any) => m.id);
+      const preferred = [
+        'llama-3.3-70b-versatile',
+        'llama-3.1-70b-versatile',
+        'llama-3.1-8b-instant',
+        'llama3-70b-8192',
+        'llama3-8b-8192',
+        'gemma2-9b-it',
+        'mixtral-8x7b-32768',
+      ];
+      for (const p of preferred) {
+        if (ids.includes(p)) return p;
+      }
+      if (ids.length > 0) return ids[0];
+    }
+  } catch {}
+  return 'llama-3.1-8b-instant';
+}
+
 // ─── Basculement vers Groq ──────────────────────────────────────────────────
-function switchToGroq() {
+async function switchToGroq() {
   if (!GROQ_API_KEY) {
     throw new Error('GROQ_API_KEY n\'est pas défini dans le fichier .env');
   }
   IS_OPENAI = false;
   API_KEY = GROQ_API_KEY;
   API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-  MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
-  console.log('🔄 Basculement automatique vers Groq (Llama 3.3 70B - Gratuit)...');
+  MODEL = await resolveGroqModel(GROQ_API_KEY);
+  console.log(`🔄 Basculement vers Groq (Modèle actif : ${MODEL} - Gratuit)...`);
 }
 
 // ─── Génération IA : Reformulation & Optimisation SEO ───────────────────────
@@ -96,7 +124,7 @@ async function reformulateDescription(opts: {
   if (!res.ok && IS_OPENAI && GROQ_API_KEY) {
     const errText = await res.text();
     if (errText.includes('insufficient_quota') || errText.includes('credit_balance_exhausted')) {
-      switchToGroq();
+      await switchToGroq();
       res = await fetch(API_URL, {
         method: 'POST',
         headers: {
@@ -155,6 +183,10 @@ async function runReformulateAllProducts() {
   if (!API_KEY) {
     console.error('❌ Aucune clé API trouvée. Définissez OPENAI_API_KEY ou GROQ_API_KEY dans backend/.env — arrêt.');
     process.exit(1);
+  }
+
+  if (!IS_OPENAI && GROQ_API_KEY) {
+    MODEL = await resolveGroqModel(GROQ_API_KEY);
   }
 
   console.log(`🤖 Moteur IA      : ${IS_OPENAI ? 'OpenAI GPT' : 'Groq'}`);
