@@ -119,7 +119,7 @@ async function reformulateDescription(opts: {
     body: JSON.stringify({
       model: MODEL,
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 400,
+      max_tokens: 1500,
       temperature: 0.5,
     }),
   });
@@ -138,7 +138,7 @@ async function reformulateDescription(opts: {
         body: JSON.stringify({
           model: MODEL,
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: 400,
+          max_tokens: 1500,
           temperature: 0.5,
         }),
       });
@@ -153,9 +153,16 @@ async function reformulateDescription(opts: {
   }
 
   const data = (await res.json()) as any;
-  const reformulated = (data?.choices?.[0]?.message?.content ?? '').trim();
+  const choice = data?.choices?.[0];
+  let reformulated = (choice?.message?.content ?? '').trim();
+
+  // Si le modèle a loggé sa réponse dans reasoning_content
+  if (!reformulated && choice?.message?.reasoning_content) {
+    reformulated = choice.message.reasoning_content.trim();
+  }
 
   if (reformulated.length < 20) {
+    console.error('⚠️ Réponse brute de l\'IA :', JSON.stringify(choice?.message ?? data, null, 2));
     throw new Error(`Réponse trop courte (${reformulated.length} chars) : "${reformulated}"`);
   }
 
