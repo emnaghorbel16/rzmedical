@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import {
   getProductByReference,
+  getProducts,
   getSubcategories,
   imageUrl,
 } from "@/lib/api";
@@ -18,6 +19,27 @@ import { ProductGridSkeleton } from "@/components/catalogue/ProductGrid";
 
 type Params = Promise<{ reference: string }>;
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://randzmedical.com";
+
+// ── ISR : revalide les pages produit toutes les heures ───────────────────────
+export const revalidate = 3600;
+
+// ── Pré-génère toutes les pages produit au build (SSG) ───────────────────────
+// Évite le rendu à la demande : Google trouve des pages statiques, rapides
+// et immédiatement crawlables.
+export async function generateStaticParams() {
+  try {
+    const result = await getProducts({ limit: 2000 });
+    const products = Array.isArray(result) ? result : result.products;
+    return products.map((p) => ({
+      reference: encodeURIComponent(p.reference),
+    }));
+  } catch {
+    // En cas d'erreur au build, on génère à la demande
+    return [];
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -30,19 +52,55 @@ export async function generateMetadata({
     return { title: "Produit introuvable" };
   }
 
+  // Description unique : description produit sinon fallback enrichi
   const description =
-    product.description?.slice(0, 160) ||
-    `${product.nom} — ${product.marque?.nom ?? "matériel médical"} disponible chez RZmedical.`;
+    product.description?.replace(/<[^>]*>/g, "").trim().slice(0, 160) ||
+    `${product.nom}${product.marque?.nom ? ` — ${product.marque.nom}` : ""}. Disponible chez Randz Medical, votre spécialiste en équipement médico-dentaire en Tunisie.`;
+
   const image = product.images?.[0] ? imageUrl(product.images[0]) : undefined;
+  const productUrl = `${siteUrl}/produit/${encodeURIComponent(product.reference)}`;
+
+  // Mots-clés enrichis avec le nom du produit et la marque
+  const keywords = [
+    product.nom,
+    product.marque?.nom,
+    product.sousCategorie?.nom,
+    product.sousCategorie?.categorie?.nom,
+    ...( product.motsCles ?? []),
+    "Tunisie",
+    "rzmedical",
+  ].filter(Boolean) as string[];
 
   return {
     title: product.nom,
     description,
+    keywords,
     openGraph: {
       title: product.nom,
       description,
       type: "website",
-      images: image ? [{ url: image }] : undefined,
+      url: productUrl,
+      siteName: "Randz Medical",
+      locale: "fr_TN",
+      images: image
+        ? [
+            {
+              url: image,
+              alt: product.nom,
+              width: 800,
+              height: 800,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.nom,
+      description,
+      images: image ? [image] : undefined,
+    },
+    alternates: {
+      canonical: productUrl,
     },
   };
 }
@@ -82,8 +140,46 @@ export default async function ProductPage({ params }: { params: Params }) {
   }
   breadcrumbItems.push({ label: product.nom });
 
+  // ── JSON-LD Schema.org Product (Rich Snippets Google) ─────────────────────
+  const productUrl = `${siteUrl}/produit/${encodeURIComponent(product.reference)}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.nom,
+    description:
+      product.description?.replace(/<[^>]*>/g, "").trim() ||
+      `${product.nom} disponible chez Randz Medical.`,
+    image: product.images?.map(imageUrl).filter(Boolean),
+    sku: product.reference,
+    ...(product.marque?.nom && {
+      brand: { "@type": "Brand", name: product.marque.nom },
+    }),
+    ...(product.sousCategorie?.nom && {
+      category: product.sousCategorie.nom,
+    }),
+    offers: {
+      "@type": "Offer",
+      url: productUrl,
+      price: parseFloat(product.prix).toFixed(3),
+      priceCurrency: "TND",
+      availability: product.disponibleALaVente
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      seller: {
+        "@type": "Organization",
+        name: "Randz Medical",
+      },
+    },
+  };
+
   return (
     <>
+      {/* Données structurées JSON-LD pour Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {subcategory ? (
         <SubcategoryBanner
           name={subcategory.nom}
@@ -125,3 +221,4 @@ export default async function ProductPage({ params }: { params: Params }) {
     </>
   );
 }
+

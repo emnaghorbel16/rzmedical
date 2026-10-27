@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getVisibleCategories, getProducts } from "@/lib/api";
+import { getVisibleCategories, getSubcategories, getProducts } from "@/lib/api";
 import { toSlug } from "@/lib/slug";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -20,16 +20,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/marques`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/a-propos`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/support`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.6,
+      priority: 0.5,
     },
   ];
 
@@ -41,27 +47,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${baseUrl}/${toSlug(cat.nom)}`,
         lastModified: cat.misAJourLe ? new Date(cat.misAJourLe) : new Date(),
         changeFrequency: "weekly",
-        priority: 0.8,
+        priority: 0.85,
       });
     });
 
-    // 2. Pages de produits (ex: /produit/REF-123)
-    // On récupère jusqu'à 2000 produits pour le sitemap
+    // 2. Pages de sous-catégories (ex: /catalogue?sousCategorieId=5)
+    // Ces pages existent et sont crawlées mais n'étaient pas dans le sitemap
+    const subcategories = await getSubcategories();
+    subcategories.forEach((sub) => {
+      routes.push({
+        url: `${baseUrl}/catalogue?sousCategorieId=${sub.id}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.75,
+      });
+    });
+
+    // 3. Pages de produits — on inclut TOUS les produits (même en rupture)
+    // Les produits en rupture restent indexés → pas de perte de ranking quand
+    // ils reviennent en stock.
     const paginatedProducts = await getProducts({ page: 1, limit: 2000 });
     const productsList = Array.isArray(paginatedProducts)
       ? paginatedProducts
       : paginatedProducts.products;
 
     productsList.forEach((prod) => {
-      // On n'indexe que les produits disponibles à la vente (facultatif mais recommandé)
-      if (prod.disponibleALaVente) {
-        routes.push({
-          url: `${baseUrl}/produit/${encodeURIComponent(prod.reference)}`,
-          lastModified: prod.misAJourLe ? new Date(prod.misAJourLe) : new Date(),
-          changeFrequency: "weekly",
-          priority: 0.8,
-        });
-      }
+      routes.push({
+        url: `${baseUrl}/produit/${encodeURIComponent(prod.reference)}`,
+        lastModified: prod.misAJourLe ? new Date(prod.misAJourLe) : new Date(),
+        changeFrequency: "weekly",
+        // Priorité réduite pour les produits indisponibles
+        priority: prod.disponibleALaVente ? 0.8 : 0.4,
+      });
     });
   } catch (err) {
     console.error("Erreur lors de la génération du sitemap:", err);
