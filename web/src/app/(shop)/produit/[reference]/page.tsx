@@ -36,9 +36,18 @@ export async function generateMetadata({
     return { title: "Produit introuvable" };
   }
 
-  // Description unique : description produit sinon fallback enrichi
+  // Description SEO propre sans balises de style (*, _, [color])
+  const cleanDescription = product.description
+    ? product.description
+        .replace(/\[\/?(?:red|blue|green)\]/g, "")
+        .replace(/[*_]/g, "")
+        .replace(/<[^>]*>/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+    : "";
+
   const description =
-    product.description?.replace(/<[^>]*>/g, "").trim().slice(0, 160) ||
+    cleanDescription.slice(0, 160) ||
     `${product.nom}${product.marque?.nom ? ` — ${product.marque.nom}` : ""}. Disponible chez Randz Medical, votre spécialiste en équipement médico-dentaire en Tunisie.`;
 
   const image = product.images?.[0] ? imageUrl(product.images[0]) : undefined;
@@ -131,8 +140,14 @@ export default async function ProductPage({ params }: { params: Params }) {
     "@type": "Product",
     name: product.nom,
     description:
-      product.description?.replace(/<[^>]*>/g, "").trim() ||
-      `${product.nom} disponible chez Randz Medical.`,
+      (product.description
+        ? product.description
+            .replace(/\[\/?(?:red|blue|green)\]/g, "")
+            .replace(/[*_]/g, "")
+            .replace(/<[^>]*>/g, "")
+            .replace(/\s+/g, " ")
+            .trim()
+        : "") || `${product.nom} disponible chez Randz Medical.`,
     image: product.images?.map(imageUrl).filter(Boolean),
     sku: product.reference,
     ...(product.marque?.nom && {
