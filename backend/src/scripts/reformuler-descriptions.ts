@@ -100,15 +100,36 @@ async function reformulateDescription(opts: {
   }
 
   const prompt =
-    `Tu es un copywriter expert en équipement médico-dentaire et SEO e-commerce pour professionnels de santé (dentistes, orthodontistes, cliniques).\n` +
-    `Rédige une description commerciale et technique percutante (3 à 5 phrases, environ 60 à 90 mots) en français soigné pour ce produit.\n` +
-    `Consignes impératives :\n` +
-    `1. Intègre naturellement les termes techniques et mots-clés recherchés sur Google (ex: ergonomie, précision, normes médicales, stérilisation autoclave si pertinent, durabilité).\n` +
-    `2. Reste factuel : n'invente pas de caractéristiques techniques non mentionnées ou incohérentes.\n` +
-    `3. Style fluide, professionnel et vendeur, orienté vers la pratique quotidienne du praticien.\n` +
-    `4. Ne commence JAMAIS par "Voici", "Ce produit", "Cette description" ou "Découvrez".\n` +
-    `5. Réponds UNIQUEMENT avec le paragraphe de description, sans titre, sans puces, sans markdown.\n\n` +
-    contextParts.join('\n');
+    `Tu es un expert copywriter senior spécialisé en équipement médico-dentaire, SEO e-commerce et rédaction commerciale pour professionnels de santé (dentistes, orthodontistes, chirurgiens, cliniques dentaires).
+
+Ta mission : rédiger une description produit EXCEPTIONNELLE, formatée et optimisée SEO, pour une fiche produit sur un site e-commerce médical tunisien. La description sera affichée en HTML via un moteur de rendu personnalisé.
+
+FORMAT DE TEXTE OBLIGATOIRE — Utilise UNIQUEMENT ces balises pour enrichir le texte :
+- *mot ou groupe de mots* → affiché en GRAS (pour les caractéristiques clés, les avantages majeurs, les mots-clés SEO importants)
+- _mot ou groupe de mots_ → affiché en ITALIQUE (pour les termes techniques spécifiques, les noms de normes ou de procédés)
+- [red]texte[/red] → texte en ROUGE (pour les avertissements, les points de sécurité critiques ou les indications essentielles)
+- [blue]texte[/blue] → texte en BLEU (pour les avantages produit clés, les bénéfices praticien, les caractéristiques premium)
+- [green]texte[/green] → texte en VERT (pour la compatibilité, la certification, la conformité aux normes, la disponibilité)
+
+STRUCTURE DE LA DESCRIPTION :
+Rédige 2 paragraphes séparés par une ligne vide (\\n\\n) :
+
+Paragraphe 1 — Présentation technique et bénéfices (2-3 phrases, ~50-70 mots) :
+Décris les caractéristiques techniques clés du produit avec les mots-clés SEO intégrés naturellement. Mets en *gras* les caractéristiques essentielles, en _italique_ les termes techniques spécifiques, en [blue]bleu[/blue] les avantages praticien majeurs.
+
+Paragraphe 2 — Indications, compatibilité et qualité (2-3 phrases, ~40-60 mots) :
+Précise les indications cliniques, la compatibilité, les certifications ou la conformité aux normes. Utilise [green]vert[/green] pour les certifications/normes, [red]rouge[/red] pour les indications médicales importantes ou précautions d'emploi si pertinent.
+
+RÈGLES IMPÉRATIVES :
+1. JAMAIS de Markdown (pas de #, **, -, etc.) en dehors du format spécifié ci-dessus.
+2. N'invente AUCUNE donnée technique non mentionnée dans les informations fournies.
+3. Intègre naturellement des mots-clés Google : noms du produit, catégorie médicale, marque, pays d'origine, usages cliniques.
+4. Commence directement par le contenu — JAMAIS par "Voici", "Ce produit", "Découvrez", "Cette description".
+5. Réponds UNIQUEMENT avec les 2 paragraphes de description formatée, rien d'autre.
+6. Si les informations sont insuffisantes pour le paragraphe 2, fusionne en 1 seul paragraphe de 4-5 phrases.
+
+INFORMATIONS DU PRODUIT :
+${contextParts.join('\n')}`;
 
   let res = await fetch(API_URL, {
     method: 'POST',
