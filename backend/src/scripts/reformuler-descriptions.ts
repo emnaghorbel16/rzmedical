@@ -79,7 +79,9 @@ async function switchToGroq() {
 
 async function reformulateDescription(opts: {
   nom: string;
+  reference?: string;
   rawDescription: string;
+  categorie?: string;
   sousCategorie?: string;
   marque?: string;
   paysFabrication?: string;
@@ -91,40 +93,46 @@ async function reformulateDescription(opts: {
   const cacheKey = `${opts.nom}|${opts.rawDescription}`;
   if (_descCache.has(cacheKey)) return _descCache.get(cacheKey)!;
 
-  const contextParts: string[] = [`Produit : "${opts.nom}"`];
-  if (opts.sousCategorie) contextParts.push(`Sous-catégorie médico-dentaire : ${opts.sousCategorie}`);
-  if (opts.marque) contextParts.push(`Marque : ${opts.marque}`);
-  if (opts.paysFabrication) contextParts.push(`Pays de fabrication : ${opts.paysFabrication}`);
-  if (opts.rawDescription && opts.rawDescription.trim()) {
-    contextParts.push(`Informations existantes : ${opts.rawDescription}`);
-  }
+  const contextParts: string[] = [
+    `- Nom du produit : ${opts.nom}`,
+    opts.reference ? `- Référence : ${opts.reference}` : '',
+    opts.marque ? `- Marque / Fabricant : ${opts.marque}` : '- Marque / Fabricant : Non spécifiée',
+    opts.categorie || opts.sousCategorie
+      ? `- Gamme / Catégorie : ${[opts.categorie, opts.sousCategorie].filter(Boolean).join(' > ')}`
+      : '- Gamme / Catégorie : Dispositif médical / dentaire',
+    opts.paysFabrication ? `- Pays de fabrication : ${opts.paysFabrication}` : '',
+    opts.rawDescription && opts.rawDescription.trim()
+      ? `- Fiche technique & données existantes : ${opts.rawDescription.trim()}`
+      : '- Données existantes : Aucune description préalable disponible',
+  ].filter(Boolean);
 
   const prompt =
-    `Tu es un expert copywriter senior spécialisé en équipement médico-dentaire, SEO e-commerce et rédaction commerciale pour professionnels de santé (dentistes, orthodontistes, chirurgiens, cliniques dentaires).
+    `Tu es un rédacteur spécialisé en dispositifs médicaux et dentaires, avec une solide maîtrise de la réglementation (marquage CE, normes ISO applicables, DPM en Tunisie) et de la communication technique pour les professionnels de santé.
 
-Ta mission : rédiger une description produit EXCEPTIONNELLE, naturelle et optimisée SEO, pour une fiche produit sur un site e-commerce médical tunisien.
+Rédige une fiche produit d'excellence pour le dispositif suivant :
 
-FORMAT DE TEXTE — Tu peux utiliser ces balises avec MODÉRATION :
-- *mot ou groupe de mots* → GRAS : réservé aux 2 ou 3 caractéristiques vraiment clés du produit, pas plus.
-- _mot ou groupe de mots_ → ITALIQUE : pour les termes techniques spécifiques ou noms de normes.
-- [red]texte[/red], [blue]texte[/blue], [green]texte[/green] → COULEUR : à utiliser avec une GRANDE sobriété. Maximum 1 balise couleur par description, et SEULEMENT si c'est vraiment utile (ex: [red] pour un avertissement de sécurité critique, [green] pour une certification officielle importante). Si aucune couleur n'est nécessaire, n'en mets aucune.
+${contextParts.join('\n')}
 
-STYLE : La description doit être naturelle et fluide. Favorise un texte agréable à lire avec juste quelques mots en gras pour guider l'œil. Pas de surformatage.
+DESTINATION : Boutique en ligne médicale et dentaire (RZ Medical Tunisie - vente aux chirurgiens-dentistes, cliniques et professionnels de santé).
+LANGUE : Français
+TON : Professionnel, clair, factuel, valorisant
+LONGUEUR : 120 à 180 mots
 
-STRUCTURE :
-Rédige 2 paragraphes séparés par une ligne vide :
-- Paragraphe 1 (2-3 phrases, ~50-70 mots) : caractéristiques techniques et bénéfices principaux, mots-clés SEO intégrés naturellement.
-- Paragraphe 2 (2-3 phrases, ~40-60 mots) : indications cliniques, compatibilité, certifications ou informations complémentaires utiles au praticien.
+STRUCTURE ATTENDUE (2 à 3 paragraphes fluides et aérés, séparés par un saut de ligne) :
+1. Présentation & Rôle clinique : Nom et type exact du produit, indications principales, avantages majeurs pour la pratique quotidienne du praticien.
+2. Utilisateurs cibles & Caractéristiques techniques : Praticiens concernés (ex: dentistes, orthodontistes, prothésistes), caractéristiques techniques notables (composition, fluidité, temps de prise, précision...).
+3. Normes, Précautions & Conditionnement : Conformité réglementaire (marquage CE, normes ISO applicables au dispositif), conditionnement ou précaution essentielle d'usage/conservation.
+
+RÈGLES TYPOGRAPHIQUES & COULEURS (À UTILISER AVEC SOBRIÉTÉ) :
+- *mot ou groupe de mots* → GRAS : réservé aux 2 à 4 éléments vraiment clés (ex: nom du produit, caractéristique maîtresse, utilisateurs).
+- _mot ou terme technique_ → ITALIQUE : pour les termes techniques spécifiques, dénominations ou normes.
+- [red]texte[/red], [blue]texte[/blue], [green]texte[/green] → COULEUR : utilise avec une GRANDE modération. MAXIMUM 1 balise couleur dans toute la fiche produit, et SEULEMENT si c'est vraiment nécessaire (ex: [green] pour certification officielle ISO/CE, [red] pour précaution/sécurité critique). Si aucune couleur n'est indispensable, n'en mets aucune.
+- N'utilise jamais de balises markdown interdites (pas de #, pas de **).
 
 RÈGLES IMPÉRATIVES :
-1. N'invente AUCUNE donnée technique non mentionnée dans les informations fournies.
-2. Intègre naturellement des mots-clés Google : nom du produit, catégorie médicale, marque, pays d'origine, usages cliniques.
-3. Commence directement par le contenu — JAMAIS par "Voici", "Ce produit", "Découvrez", "Cette description".
-4. Réponds UNIQUEMENT avec les paragraphes de description, rien d'autre.
-5. Si les informations sont insuffisantes pour 2 paragraphes, écris 1 seul paragraphe de 4-5 phrases.
-
-INFORMATIONS DU PRODUIT :
-${contextParts.join('\n')}`;
+1. Rigueur médicale absolue : base-toi sur le type de produit et les informations fournies. N'invente AUCUNE donnée fantaisiste.
+2. Commence directement par le corps du texte — JAMAIS par "Voici", "Découvrez", "Fiche produit :" ou des listes de métadonnées brutes.
+3. Réponds UNIQUEMENT avec le texte final de la fiche produit prêt à être affiché, rien d'autre.`;
 
   let res = await fetch(API_URL, {
     method: 'POST',
@@ -176,6 +184,10 @@ ${contextParts.join('\n')}`;
   if (!reformulated && choice?.message?.reasoning_content) {
     reformulated = choice.message.reasoning_content.trim();
   }
+
+  // Nettoyage et normalisation du rendu
+  reformulated = reformulated.replace(/^["'«»]+|["'«»]+$/g, '').trim();
+  reformulated = reformulated.replace(/\*\*([^*]+)\*\*/g, '*$1*');
 
   if (reformulated.length < 20) {
     console.error('⚠️ Réponse brute de l\'IA :', JSON.stringify(choice?.message ?? data, null, 2));
@@ -239,16 +251,20 @@ async function runReformulateAllProducts() {
       : undefined,
   };
 
-  // Récupérer les produits avec leur sous-catégorie et marque
+  // Récupérer les produits avec leur référence, sous-catégorie, catégorie et marque
   const produits = await prisma.produit.findMany({
     where,
     select: {
       id: true,
       nom: true,
+      reference: true,
       description: true,
       paysFabrication: true,
       sousCategorie: {
-        select: { nom: true },
+        select: {
+          nom: true,
+          categorie: { select: { nom: true } },
+        },
       },
       marque: {
         select: { nom: true },
@@ -299,7 +315,9 @@ async function runReformulateAllProducts() {
         try {
           const newDesc = await reformulateDescription({
             nom: produit.nom,
+            reference: produit.reference,
             rawDescription: produit.description ?? '',
+            categorie: (produit.sousCategorie as any)?.categorie?.nom,
             sousCategorie: produit.sousCategorie?.nom,
             marque: produit.marque?.nom,
             paysFabrication: produit.paysFabrication ?? undefined,
