@@ -1,9 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
-import { submitReview, type AvisClient, type AvisStats } from "@/lib/api";
+import {
+  submitReview,
+  getClientProductReviews,
+  type AvisClient,
+  type AvisStats,
+} from "@/lib/api";
 
 interface ProductReviewsProps {
   produitId: number;
@@ -19,6 +24,21 @@ export function ProductReviews({ produitId, initialStats }: ProductReviewsProps)
     notemoyenne: initialStats?.notemoyenne ?? null,
     totalAvis: initialStats?.totalAvis ?? 0,
   });
+
+  // Synchronisation côté client : recharge toujours les derniers avis
+  useEffect(() => {
+    let active = true;
+    getClientProductReviews(produitId)
+      .then((data) => {
+        if (active && data) {
+          setStats(data);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [produitId]);
 
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -74,6 +94,21 @@ export function ProductReviews({ produitId, initialStats }: ProductReviewsProps)
       );
 
       success(res.message);
+
+      // Mise à jour immédiate de l'affichage local sans attendre de rechargement
+      if (res.avis) {
+        setStats((prev) => {
+          const updatedAvis = [res.avis, ...prev.avis.filter((a) => a.id !== res.avis.id)];
+          const total = updatedAvis.length;
+          const sum = updatedAvis.reduce((acc, a) => acc + a.note, 0);
+          return {
+            avis: updatedAvis,
+            totalAvis: total,
+            notemoyenne: total > 0 ? Math.round((sum / total) * 10) / 10 : null,
+          };
+        });
+      }
+
       setFormSubmitted(true);
       setIsOpenForm(false);
       setCommentaire("");

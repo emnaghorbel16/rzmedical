@@ -68,6 +68,7 @@ const navItems: NavItem[] = [
       { name: "Ordre sous-catégories", path: "/reorder-subcategories", pro: false },
       { name: "Marques", path: "/brands", pro: false },
       { name: "Produits", path: "/products", pro: false },
+      { name: "Avis Clients", path: "/avis", pro: false },
 
     ],
   },

@@ -16,7 +16,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     const [avis, stats] = await Promise.all([
       prisma.avisClient.findMany({
-        where: { produitId, statut: 'APPROUVE' },
+        where: { produitId, statut: { not: 'REJETE' } },
         orderBy: { creeLe: 'desc' },
         select: {
           id: true,
@@ -29,7 +29,7 @@ router.get('/', async (req: Request, res: Response) => {
         },
       }),
       prisma.avisClient.aggregate({
-        where: { produitId, statut: 'APPROUVE' },
+        where: { produitId, statut: { not: 'REJETE' } },
         _avg: { note: true },
         _count: { id: true },
       }),
@@ -116,14 +116,22 @@ router.post('/', optionalClient, async (req: AuthRequest, res: Response) => {
         note: Math.round(noteNum),
         titre: titre?.trim() || null,
         commentaire: String(commentaire).trim(),
-        statut: 'EN_ATTENTE', // Soumis à validation admin
+        statut: 'APPROUVE', // Visible directement sur le site
         verifieAchat: achatVerifie,
       },
     });
 
     res.status(201).json({
-      message: 'Votre avis a été soumis avec succès et sera publié après validation. Merci pour votre retour !',
-      avisId: avis.id,
+      message: 'Votre avis a été publié avec succès. Merci pour votre retour !',
+      avis: {
+        id: avis.id,
+        nomAuteur: avis.nomAuteur,
+        note: avis.note,
+        titre: avis.titre,
+        commentaire: avis.commentaire,
+        verifieAchat: avis.verifieAchat,
+        creeLe: avis.creeLe,
+      },
     });
   } catch (err) {
     console.error('POST /api/avis error:', err);

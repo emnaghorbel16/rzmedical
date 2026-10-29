@@ -476,12 +476,19 @@ export const getProductReviews = cache(async (produitId: number): Promise<AvisSt
 export async function submitReview(
   data: { produitId: number; note: number; titre?: string; commentaire: string; nomAuteur?: string },
   token?: string
-): Promise<{ message: string; avisId: number }> {
-  return apiFetch<{ message: string; avisId: number }>("/api/avis", {
+): Promise<{ message: string; avis: AvisClient }> {
+  return apiFetch<{ message: string; avis: AvisClient }>("/api/avis", {
     method: "POST",
     token,
     body: JSON.stringify(data),
   });
 }
+
+/** Récupère les avis récents d'un produit depuis le client (sans cache ISR). */
+export async function getClientProductReviews(produitId: number): Promise<AvisStats> {
+  return apiFetch<AvisStats>(`/api/avis?produitId=${produitId}`);
+}
+
+
 
 
