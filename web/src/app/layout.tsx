@@ -13,12 +13,16 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
+  weight: ["400", "500", "600", "700"],
 });
 
 const sora = Sora({
   subsets: ["latin"],
   variable: "--font-sora",
   display: "swap",
+  preload: true,
+  weight: ["700", "800", "900"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -79,6 +83,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+export const metadata_links = [
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+];
+
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const companyInfo = await getCompanyInfo().catch(() => null);
 
@@ -87,6 +96,20 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="fr"
       className={`${inter.variable} ${sora.variable} h-full antialiased`}
     >
+      <head>
+        {/* Preconnect pour les ressources critiques */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://flagcdn.com" />
+        {/* Préchargement de l'image hero (LCP) */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/hero_bg.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {/* Google Analytics */}
         <Script

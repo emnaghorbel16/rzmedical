@@ -10,7 +10,7 @@ import { StorefrontShell } from "@/components/layout/StorefrontShell";
 import { GlobalBannerCarousel } from "@/components/layout/GlobalBannerCarousel";
 import type { MarqueListItem } from "@/lib/types";
 import { SiteAlert } from "@/components/site/SiteAlert";
-import { ChatWidget } from "@/components/chat/ChatWidget";
+import { ChatWidgetLazy } from "@/components/chat/ChatWidgetLazy";
 import { CategoryProvider } from "@/providers/CategoryProvider";
 import { HeroVideoProvider } from "@/providers/HeroVideoProvider";
 import { CategoryOnboardingModal } from "@/components/category/CategoryOnboardingModal";
@@ -78,8 +78,8 @@ export default async function ShopLayout({ children }: { children: ReactNode }) 
       {/* ── Modal d'onboarding catégorie ──────────────────────────────── */}
       <CategoryOnboardingModal categories={categories} />
 
-      {/* ── Chatbot IA ────────────────────────────────────────────────── */}
-      <ChatWidget />
+      {/* ── Chatbot IA (lazy-chargé pour ne pas bloquer le JS critique) ── */}
+      <ChatWidgetLazy />
       </HeroVideoProvider>
     </CategoryProvider>
   );

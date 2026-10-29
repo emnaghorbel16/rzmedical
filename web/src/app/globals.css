@@ -611,3 +611,22 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* --- Optimisations de performance --------------------------------------- */
+/* Prévention de layout shift sur les images fill */
+[data-nimg="fill"] { image-rendering: auto; }
+
+/* will-change pour les éléments de navigation animés */
+.chat-window-enter,
+.animate-slide-in-right,
+.animate-slide-out-right {
+  will-change: transform, opacity;
+}
+
+/* content-visibility pour les sections hors de l'écran (améliore LCP/FCP) */
+@supports (content-visibility: auto) {
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
+  }
+}

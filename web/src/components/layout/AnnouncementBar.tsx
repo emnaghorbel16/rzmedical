@@ -125,6 +125,7 @@ export function AnnouncementBar({ annonces, onDismiss }: { annonces: AnnonceSite
               position: "absolute",
               inset: 0,
               pointerEvents: "none",
+              willChange: "transform, opacity",
               background:
                 "linear-gradient(100deg, transparent 0%, transparent 38%, rgba(33,150,210,0.18) 50%, transparent 62%, transparent 100%)",
               animation: `rzScan ${ANIM_MS * 2}ms cubic-bezier(0.16,1,0.3,1) both`,
@@ -164,9 +165,10 @@ export function AnnouncementBar({ annonces, onDismiss }: { annonces: AnnonceSite
 
               <p
                 key={`new-${slot}`}
-                className="absolute inset-0 truncate font-display text-[12.5px] font-medium tracking-tight text-white"
+                className="absolute inset-0 truncate font-display text-[12.5px] font-semibold tracking-tight text-white"
                 style={{
                   lineHeight: "2.25rem",
+                  willChange: "transform, opacity",
                   animation: isFirstSlot
                     ? "none"
                     : `rzBoardIn ${ANIM_MS}ms cubic-bezier(0.22,1,0.36,1) both`,
@@ -178,7 +180,7 @@ export function AnnouncementBar({ annonces, onDismiss }: { annonces: AnnonceSite
           </div>
 
           {/* DROITE — contacts fonctionnels + fermeture */}
-          <div className="flex shrink-0 items-center gap-3 text-[12px] font-medium text-white/70 sm:gap-4 sm:text-[12.5px]">
+          <div className="flex shrink-0 items-center gap-3 text-[12px] font-semibold text-white/90 sm:gap-4 sm:text-[12.5px]">
             <a
               href={`mailto:${email}`}
               className="hidden items-center gap-1.5 rounded-sm transition-colors hover:text-white sm:flex"

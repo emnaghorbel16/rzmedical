@@ -120,7 +120,7 @@ export function GlobalBannerCarousel({ banners }: { banners: BanniereSite[] }) {
           </button>
 
           {/* Dots */}
-          <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
+          <div className="absolute inset-x-0 bottom-3 flex justify-center items-center gap-2">
             {slides.map((_, i) => (
               <button
                 key={i}
@@ -128,10 +128,11 @@ export function GlobalBannerCarousel({ banners }: { banners: BanniereSite[] }) {
                 onClick={() => goTo(i)}
                 aria-label={`Aller à la bannière ${i + 1}`}
                 aria-current={i === index}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  i === index ? "w-6 bg-white shadow" : "w-2 bg-white/50 hover:bg-white/80",
-                )}
+                className="h-2 w-2 rounded-full bg-white transition-[opacity,transform] duration-300 will-change-transform origin-center"
+                style={{
+                  transform: i === index ? "scaleX(3)" : "scaleX(1)",
+                  opacity: i === index ? 1 : 0.5,
+                }}
               />
             ))}
           </div>
@@ -169,9 +170,11 @@ function Slide({
         src={imageUrl(banner.image)}
         alt={banner.titre ?? "Bannière promotionnelle"}
         fill
-        sizes="100vw"
+        sizes="(max-width: 640px) 100vw, (max-width: 1200px) 100vw, 1920px"
         className="object-cover object-center"
         priority={eager}
+        fetchPriority={eager ? "high" : "auto"}
+        loading={eager ? "eager" : "lazy"}
       />
       {hasText && (
         <>

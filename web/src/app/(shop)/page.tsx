@@ -80,7 +80,7 @@ export default async function HomePage() {
       </Suspense>
       {/* Brands */}
       {brands.length > 0 && (
-        <section className="relative bg-slate-50 overflow-hidden border-t border-slate-200/60">
+        <section className="relative bg-slate-50 overflow-hidden border-t border-slate-200/60 cv-auto">
           <div className="absolute inset-0 bg-gradient-to-b from-white to-slate-50 pointer-events-none" />
           <Container className="relative py-14 lg:py-20">
             <SectionHeading
@@ -93,7 +93,7 @@ export default async function HomePage() {
         </section>
       )}
       {categories.length > 0 && (
-        <section className="relative bg-navy-960 overflow-hidden">
+        <section className="relative bg-navy-960 overflow-hidden cv-auto">
           <div className="absolute top-0 left-0 right-0 h-px bg-white/10 pointer-events-none" />
 
           <Container className="relative py-14 lg:py-20">
@@ -115,7 +115,7 @@ export default async function HomePage() {
       )}
 
       {/* Expert CTA section */}
-      <section className="relative overflow-hidden bg-white border-t border-slate-200/60">
+      <section className="relative overflow-hidden bg-white border-t border-slate-200/60 cv-auto">
         <Container className="grid gap-10 py-16 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-20 relative">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-azure-200 bg-azure-50 px-4 py-1.5 mb-5 select-none shadow-sm">

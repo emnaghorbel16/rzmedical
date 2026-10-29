@@ -102,7 +102,7 @@ export function BannerCarousel({ banners }: { banners: BanniereSite[] }) {
           <CarouselArrow side="left" onClick={() => goTo(index - 1)} />
           <CarouselArrow side="right" onClick={() => goTo(index + 1)} />
 
-          <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
+          <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2">
             {slides.map((_, i) => (
               <button
                 key={i}
@@ -110,12 +110,11 @@ export function BannerCarousel({ banners }: { banners: BanniereSite[] }) {
                 onClick={() => goTo(i)}
                 aria-label={`Aller à la diapositive ${i + 1}`}
                 aria-current={i === index}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  i === index
-                    ? "w-6 bg-white"
-                    : "w-2 bg-white/50 hover:bg-white/80",
-                )}
+                className="h-2 w-2 rounded-full bg-white transition-[opacity,transform] duration-300 will-change-transform origin-center"
+                style={{
+                  transform: i === index ? "scaleX(3)" : "scaleX(1)",
+                  opacity: i === index ? 1 : 0.5,
+                }}
               />
             ))}
           </div>
@@ -167,7 +166,9 @@ function BannerSlide({
         fill
         sizes="(min-width: 1280px) 1216px, 100vw"
         className="object-cover"
-        preload={eager}
+        priority={eager}
+        fetchPriority={eager ? "high" : "auto"}
+        loading={eager ? "eager" : "lazy"}
       />
       {hasText && (
         <>
