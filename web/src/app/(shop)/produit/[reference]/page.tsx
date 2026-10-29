@@ -48,30 +48,47 @@ export async function generateMetadata({
         .trim()
     : "";
 
-  const description =
-    cleanDescription.slice(0, 160) ||
-    `${product.nom}${product.marque?.nom ? ` — ${product.marque.nom}` : ""}. Disponible chez Randz Medical, votre spécialiste en équipement médico-dentaire en Tunisie.`;
+  const brandName = product.marque?.nom;
+  const categoryName = product.sousCategorie?.nom || product.sousCategorie?.categorie?.nom;
+  const hasBrandInName = brandName && product.nom.toLowerCase().includes(brandName.toLowerCase());
+
+  // Titre ultra-optimisé pour Google : [Nom] [Marque] | Prix Tunisie - Randz Medical
+  const titleDisplay = `${product.nom}${brandName && !hasBrandInName ? ` ${brandName}` : ""} | Prix Tunisie`;
+
+  // Description orientée e-commerce et intention d'achat locale (Tunisie)
+  const priceFormatted = product.prix ? `${parseFloat(product.prix).toFixed(3)} TND` : "";
+  const priceSnippet = priceFormatted ? ` au prix de ${priceFormatted}` : "";
+  const brandSnippet = brandName ? ` de la marque ${brandName}` : "";
+
+  const description = cleanDescription.length > 30
+    ? `${cleanDescription.slice(0, 130).trim()}... Achetez ${product.nom}${brandSnippet}${priceSnippet} chez Randz Medical Tunisie.`
+    : `Achetez ${product.nom}${brandSnippet}${priceSnippet} chez Randz Medical en Tunisie. Équipement médico-dentaire professionnel de haute qualité, livraison rapide. Réf : ${product.reference}.`;
 
   const image = product.images?.[0] ? imageUrl(product.images[0]) : undefined;
   const productUrl = `${siteUrl}/produit/${encodeURIComponent(product.reference)}`;
 
-  // Mots-clés enrichis avec le nom du produit et la marque
+  // Mots-clés ciblés pour le référencement naturel en Tunisie
   const keywords = [
     product.nom,
-    product.marque?.nom,
-    product.sousCategorie?.nom,
-    product.sousCategorie?.categorie?.nom,
-    ...( product.motsCles ?? []),
-    "Tunisie",
+    brandName,
+    categoryName,
+    "matériel médical Tunisie",
+    "équipement dentaire Tunisie",
+    "prix Tunisie",
+    "achat en ligne Tunisie",
+    "Randz Medical",
     "rzmedical",
+    ...(product.motsCles ?? []),
   ].filter(Boolean) as string[];
 
   return {
-    title: product.nom,
+    title: {
+      absolute: `${titleDisplay} · Randz Medical`,
+    },
     description,
     keywords,
     openGraph: {
-      title: product.nom,
+      title: `${titleDisplay} · Randz Medical`,
       description,
       type: "website",
       url: productUrl,
@@ -81,7 +98,7 @@ export async function generateMetadata({
         ? [
             {
               url: image,
-              alt: product.nom,
+              alt: `${product.nom} ${brandName || ""}`.trim(),
               width: 800,
               height: 800,
             },
@@ -90,7 +107,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: product.nom,
+      title: `${titleDisplay} · Randz Medical`,
       description,
       images: image ? [image] : undefined,
     },
@@ -148,13 +165,14 @@ export default async function ProductPage({ params }: { params: Params }) {
       (product.description
         ? product.description
             .replace(/\[\/?(?:red|blue|green)\]/g, "")
-            .replace(/[*_]/g, "")
-            .replace(/<[^>]*>/g, "")
-            .replace(/\s+/g, " ")
-            .trim()
-        : "") || `${product.nom} disponible chez Randz Medical.`,
+        .replace(/[*_]/g, "")
+        .replace(/<[^>]*>/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        : "") || `${product.nom} disponible chez Randz Medical en Tunisie.`,
     image: product.images?.map(imageUrl).filter(Boolean),
     sku: product.reference,
+    mpn: product.reference,
     url: productUrl,
     ...(product.marque?.nom && {
       brand: { "@type": "Brand", name: product.marque.nom },
@@ -167,12 +185,15 @@ export default async function ProductPage({ params }: { params: Params }) {
       url: productUrl,
       price: parseFloat(product.prix).toFixed(3),
       priceCurrency: "TND",
+      priceValidUntil: "2027-12-31",
+      itemCondition: "https://schema.org/NewCondition",
       availability: product.disponibleALaVente
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       seller: {
         "@type": "Organization",
         name: "Randz Medical",
+        url: siteUrl,
       },
     },
     // ── aggregateRating : uniquement si de vrais avis existent ──
@@ -202,12 +223,28 @@ export default async function ProductPage({ params }: { params: Params }) {
       : {}),
   };
 
+  // ── JSON-LD BreadcrumbList (affiche le fil d'Ariane directement dans Google) ──
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems.map((item, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      name: item.label,
+      item: item.href ? `${siteUrl}${item.href}` : productUrl,
+    })),
+  };
+
   return (
     <>
       {/* Données structurées JSON-LD pour Google Rich Snippets */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       {subcategory ? (
