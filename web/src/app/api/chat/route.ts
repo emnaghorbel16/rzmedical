@@ -12,7 +12,8 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MAX_TOOL_ROUNDS = 6; // compare_products + web_search peuvent enchaîner plusieurs appels
+const MAX_TOOL_ROUNDS = 4; // compare_products + web_search peuvent enchaîner plusieurs appels
+const MAX_HISTORY_MESSAGES = 10; // Nombre max de messages à envoyer à Groq (évite les dépassements de tokens)
 
 async function groqChat(
   body: Record<string, unknown>,
@@ -390,17 +391,23 @@ async function executeTool(
 
   if (functionName === "compare_products") {
     const keywords = Array.isArray(args.keywords) ? args.keywords : [];
-    if (keywords.length < 2) throw new Error("Au moins 2 mots-clés sont requis pour la comparaison.");
+    if (keywords.length < 2) {
+      return {
+        message: "Moins de 2 mots-clés fournis. Indiquez au moins deux produits ou références à comparer.",
+      };
+    }
     const results = await Promise.all(
-      keywords.slice(0, 4).map(async (kw: string) => {
+      keywords.slice(0, 3).map(async (kw: string) => {
         const q = typeof kw === "string" ? kw.trim() : "";
         if (!q) return { keyword: kw, produit: null, webInfo: [] };
-        // Recherche catalogue + web en parallèle
-        const [products, webResults] = await Promise.all([
-          searchProducts(q),
-          tavilySearch(`${q} spécifications techniques équipement médical`, 2),
-        ]);
-        const p = products[0] ?? null;
+        // Recherche catalogue uniquement (web désactivé pour alléger les tokens)
+        let products: any[] = [];
+        try {
+          products = await searchProducts(q);
+        } catch {
+          products = [];
+        }
+        const p = Array.isArray(products) ? products[0] ?? null : null;
         return {
           keyword: kw,
           produit: p
@@ -413,13 +420,12 @@ async function executeTool(
                 marque: p.marque?.nom ?? "N/A",
                 categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
                 sousCategorie: p.sousCategorie?.nom ?? "N/A",
-                description: p.description ?? "",
-                tva: Number(p.tva),
+                // Tronquer la description à 200 chars pour éviter les dépassements de tokens
+                description: (p.description ?? "").slice(0, 200),
                 paysFabrication: p.paysFabrication ?? "N/A",
               }
             : null,
-          // Informations web enrichies (spécifications, certifications, etc.)
-          webInfo: webResults.map(r => r.content).filter(Boolean),
+          webInfo: [],
         };
       })
     );
@@ -561,9 +567,12 @@ export async function POST(req: Request) {
       })
     );
 
+    // Limiter l'historique pour éviter les dépassements de tokens Groq
+    const trimmedMessages = processedMessages.slice(-MAX_HISTORY_MESSAGES);
+
     const groqMessages: any[] = [
       { role: "system", content: SYSTEM_PROMPT },
-      ...processedMessages,
+      ...trimmedMessages,
     ];
 
     const encoder = new TextEncoder();
@@ -580,7 +589,7 @@ export async function POST(req: Request) {
               tools,
               tool_choice: "auto",
               stream: false,
-            }, "llama-3.1-8b-instant");
+            }, "openai/gpt-oss-20b");
 
             const choice = response.data?.choices?.[0];
             const message = choice?.message;
@@ -613,12 +622,12 @@ export async function POST(req: Request) {
               messages: [
                 ...groqMessages,
                 {
-                  role: "system",
+                  role: "user",
                   content: "Réponds maintenant au client avec les informations déjà obtenues, sans appeler d'autre outil.",
                 },
               ],
               stream: false,
-            });
+            }, "openai/gpt-oss-20b");
             finalText = fallback.data?.choices?.[0]?.message?.content;
             recordGroqUsage(fallback.data, fallback.headers, GROQ_MODEL).catch(() => {});
           }
