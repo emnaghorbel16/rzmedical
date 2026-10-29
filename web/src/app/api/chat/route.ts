@@ -269,10 +269,15 @@ Règles importantes :
 - Si un outil renvoie une erreur d'authentification, explique poliment au client qu'il doit se connecter à son compte pour accéder à cette information.
 
 --- RÈGLES DE COMPARAISON DE PRODUITS ---
-Quand le client demande de comparer deux produits ou plus (ex: "compare X et Y", "quelle différence entre X et Y", "lequel choisir entre X et Y") :
-1. Utilise l'outil compare_products avec les mots-clés courts de chaque produit.
-2. L'outil renvoie : données du catalogue (prix, stock, TVA, marque, référence, description, mots-clés, fiche technique) ET des infos web enrichies (webInfo) via Tavily.
-3. Génère ensuite UN SEUL tag [COMPARE|...] structuré.
+RÈGLE ABSOLUE : Tu compares UNIQUEMENT les produits vendus dans le catalogue RZMedical.
+- Si le client demande de comparer des produits dont l'un n'est pas dans le catalogue (produit: null / dansCatalogue: false) :
+  👉 Ne compare PAS ce produit hors catalogue.
+  👉 Informe poliment le client que ce produit ne fait pas partie du catalogue RZMedical et propose des alternatives disponibles chez RZMedical.
+  👉 Tu ne peux générer un tableau comparatif [COMPARE|...] QUE si au moins 2 produits sont bien présents dans le catalogue RZMedical.
+- Quand le client demande de comparer deux produits ou plus disponibles dans le catalogue :
+  1. Utilise l'outil compare_products avec les mots-clés courts de chaque produit.
+  2. L'outil renvoie : les données du catalogue RZMedical ET le champ webInfo (recherche web effectuée pour compléter les descriptions ou données techniques manquantes de chaque produit du catalogue).
+  3. Génère ensuite UN SEUL tag [COMPARE|...] structuré.
 
 FORMAT OBLIGATOIRE :
 [COMPARE|Nom Produit A|Nom Produit B]
@@ -381,14 +386,12 @@ Critères spécifiques à ajouter après les critères généraux :
 ━━━ PRODUIT GÉNÉRIQUE (si catégorie non reconnue) ━━━
 Si la catégorie n'est pas dans la liste ci-dessus, utilise les critères issus de la description, des motsCles et du webInfo : extrait les caractéristiques RÉELLES du produit (dimensions, matériaux, normes, puissance, capacité...) et n'utilise PAS les exemples d'autres catégories.
 
-IMPORTANT — UTILISATION OBLIGATOIRE DE webInfo DANS LA COMPARAISON :
-- L'outil compare_products renvoie TOUJOURS un champ "webInfo" pour chaque produit — il contient des résultats de recherche web réels (DuckDuckGo/Tavily) avec des fiches techniques, tests et pages fabricant.
-- Pour CHAQUE critère de comparaison :
-  1. Cherche d'abord la valeur dans les données catalogue du produit (prix, marque, stock, description, motsCles...).
-  2. Si absente → LIS attentivement les champs "title", "url" et "content" dans webInfo et extrais les valeurs concrètes (chiffres, normes, dimensions, matériaux).
-  3. N'écris "N/D" QUE si la valeur est vraiment absente de TOUT le contenu webInfo après lecture complète.
-- PRÉFÈRE toujours une valeur réelle extraite de webInfo plutôt que N/D.
-  Exemple : si webInfo contient "Précision ±3 mmHg validée cliniquement" → utilise "±3 mmHg".
+IMPORTANT — UTILISATION DE webInfo POUR COMPLÉTER LES DESCRIPTIONS DU CATALOGUE :
+- Pour les produits DU CATALOGUE, si la description ou les caractéristiques techniques dans la base sont incomplètes ou absentes :
+  1. Utilise en priorité les informations présentes dans la base (prix, marque, stock, référence).
+  2. Si la description de la base de données est sommaire ou s'il manque des spécifications techniques précises (précision, dimensions, normes, matériaux, autonomie) → LIS attentivement les résultats "webInfo" (recherche web ciblée sur ce produit) et extrais les données techniques réelles.
+  3. Complète ainsi le tableau comparatif grâce aux données web pour combler les manques de description.
+- N'écris "N/D" QUE si la valeur est introuvable à la fois dans le catalogue et dans le webInfo.
 - Si les 2 produits sont de catégories DIFFÉRENTES → utilise les critères communs (prix, marque, stock, usage) et mentionne qu'ils ne sont pas directement comparables dans ta recommandation.
 
 --- RÈGLE CRUCIALE : RECHERCHE WEB QUAND UN PRODUIT EST INTROUVABLE DANS LE CATALOGUE ---
@@ -523,7 +526,7 @@ const tools = [
     function: {
       name: "compare_products",
       description:
-        "Compare plusieurs produits du catalogue RZMedical côte à côte. Utilise cet outil quand le client demande de comparer deux produits ou plus. Renvoie les données complètes du catalogue (prix, marque, disponibilité, catégorie, référence, description) ET des informations web enrichies (spécifications techniques, certifications, usages).",
+        "Compare UNIQUEMENT des produits vendus dans le catalogue RZMedical. RÈGLE STRICTE : Ne compare jamais de produits hors catalogue. Pour chaque produit du catalogue dont la description ou les spécifications techniques manquent dans la base, l'outil effectue une recherche web pour enrichir sa fiche technique.",
       parameters: {
         type: "object",
         properties: {
@@ -603,9 +606,9 @@ async function executeTool(
     const results = await Promise.all(
       keywords.slice(0, 4).map(async (kw: string) => {
         const q = typeof kw === "string" ? kw.trim() : "";
-        if (!q) return { keyword: kw, produit: null, webInfo: [] };
+        if (!q) return { keyword: kw, dansCatalogue: false, produit: null, webInfo: [] };
 
-        // 1. Recherche catalogue
+        // 1. Recherche DANS le catalogue RZMedical
         let products: any[] = [];
         try {
           products = await searchProducts(q);
@@ -614,28 +617,30 @@ async function executeTool(
         }
         const p = Array.isArray(products) ? products[0] ?? null : null;
 
-        // 2. Recherche web TOUJOURS — enrichir les specs techniques, que le produit soit dans le catalogue ou non
+        // 2. Recherche web UNIQUEMENT pour les produits du catalogue afin de compléter les descriptions/spécifications manquantes
         let webInfo: { title: string; url: string; content: string }[] = [];
-        try {
-          // Si produit trouvé dans le catalogue : requête ciblée avec son nom et sa marque
-          // Si pas trouvé : utiliser directement le mot-clé de l'utilisateur
-          const searchQuery = p
-            ? `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim()
-            : `${q} equipement medical caracteristiques specifications`;
-          webInfo = await performWebSearch(searchQuery, 4);
-        } catch {
-          webInfo = [];
+        if (p) {
+          const descManquante = !p.description || p.description.trim().length < 150;
+          console.log(`ℹ️ [compare_products] Produit catalogue : "${p.nom}" (${p.marque?.nom ?? "Sans marque"}). Description ${descManquante ? "incomplète -> recherche web de complétion" : "présente"}.`);
+          try {
+            const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim();
+            webInfo = await performWebSearch(searchQuery, 4);
+          } catch {
+            webInfo = [];
+          }
+        } else {
+          console.log(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical. Non inclus dans la comparaison.`);
         }
 
         return {
           keyword: kw,
+          dansCatalogue: !!p,
           produit: p
             ? {
                 nom: p.nom,
                 reference: p.reference,
                 prix: Number(p.prix),
                 remise: Number(p.remise),
-                // Prix final avec remise
                 prixFinal: p.remise > 0
                   ? Number(p.prix) * (1 - Number(p.remise) / 100)
                   : Number(p.prix),
@@ -644,7 +649,7 @@ async function executeTool(
                 marque: p.marque?.nom ?? "N/A",
                 categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
                 sousCategorie: p.sousCategorie?.nom ?? "N/A",
-                description: (p.description ?? "").slice(0, 250),
+                description: (p.description ?? "").slice(0, 300),
                 paysFabrication: p.paysFabrication ?? "N/A",
                 tva: p.tva ? `${Number(p.tva)}%` : "N/A",
                 motsCles: Array.isArray(p.motsCles) ? p.motsCles.slice(0, 5).join(", ") : "N/A",
@@ -653,10 +658,23 @@ async function executeTool(
               }
             : null,
           webInfo,
+          message: p
+            ? "Produit présent dans le catalogue RZMedical."
+            : `Le produit "${kw}" n'existe pas dans le catalogue RZMedical. Seuls les produits du catalogue sont comparables.`,
         };
       })
     );
-    return results;
+
+    const trouves = results.filter((r) => r.dansCatalogue);
+    return {
+      totalDemandes: keywords.length,
+      nombreDansCatalogue: trouves.length,
+      produits: results,
+      consigne:
+        trouves.length < 2
+          ? "Attention : moins de 2 produits demandés sont présents dans le catalogue RZMedical. Tu ne dois comparer QUE les produits vendus par RZMedical. Indique clairement au client quels produits ne sont pas dans le catalogue, et propose des alternatives disponibles chez RZMedical."
+          : "Tous les produits à comparer proviennent du catalogue RZMedical. Utilise les données du catalogue et complète les caractéristiques techniques manquantes avec webInfo.",
+    };
   }
 
   if (functionName === "get_categories") {
