@@ -446,3 +446,42 @@ export const getCompanyInfo = cache(
 
 // Ré-export pratique pour les composants bannière (typage direct).
 export type { BanniereSite };
+
+// ─── Avis clients ─────────────────────────────────────────────────────────────
+
+export interface AvisClient {
+  id: number;
+  nomAuteur: string;
+  note: number;
+  titre?: string;
+  commentaire: string;
+  verifieAchat: boolean;
+  creeLe: string;
+}
+
+export interface AvisStats {
+  avis: AvisClient[];
+  notemoyenne: number | null;
+  totalAvis: number;
+}
+
+/** Récupère les avis approuvés + note moyenne d'un produit (Server Component / ISR). */
+export const getProductReviews = cache(async (produitId: number): Promise<AvisStats> => {
+  return apiFetch<AvisStats>(`/api/avis?produitId=${produitId}`, {
+    revalidate: 300, // 5 minutes
+  });
+});
+
+/** Soumet un nouvel avis (depuis le navigateur, client connecté ou invité). */
+export async function submitReview(
+  data: { produitId: number; note: number; titre?: string; commentaire: string; nomAuteur?: string },
+  token?: string
+): Promise<{ message: string; avisId: number }> {
+  return apiFetch<{ message: string; avisId: number }>("/api/avis", {
+    method: "POST",
+    token,
+    body: JSON.stringify(data),
+  });
+}
+
+

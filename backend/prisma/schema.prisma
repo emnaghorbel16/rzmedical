@@ -152,6 +152,9 @@ model Utilisateur {
   inventaires          InventaireCommercial[]         @relation("CommercialInventaire")
   inventairesValides   InventaireCommercial[]         @relation("ValidateurInventaire")
 
+  // Avis produits
+  avisClients          AvisClient[]
+
   @@unique([email, typeUtilisateur])
   @@map("utilisateurs")
 }
@@ -281,10 +284,39 @@ model Produit {
   stockCommercial             StockCommercial[]
   lignesBonSortie             LigneBonSortie[]
   lignesInventaire            LigneInventaire[]
+  avisClients                 AvisClient[]
 
   @@index([sousCategorieId])
   @@index([marqueId])
   @@map("produits")
+}
+
+// ─── Avis clients ─────────────────────────────────────────────────────────────
+
+enum StatutAvis {
+  EN_ATTENTE
+  APPROUVE
+  REJETE
+}
+
+model AvisClient {
+  id               Int          @id @default(autoincrement())
+  produitId        Int
+  produit          Produit      @relation(fields: [produitId], references: [id], onDelete: Cascade)
+  utilisateurId    Int?
+  utilisateur      Utilisateur? @relation(fields: [utilisateurId], references: [id], onDelete: SetNull)
+  nomAuteur        String       // prénom affiché (ex: "Ahmed B.")
+  note             Int          // 1 à 5
+  titre            String?
+  commentaire      String
+  statut           StatutAvis   @default(EN_ATTENTE)
+  verifieAchat     Boolean      @default(false) // achat vérifié dans les commandes
+  creeLe           DateTime     @default(now())
+  misAJourLe       DateTime     @updatedAt
+
+  @@index([produitId, statut])
+  @@index([utilisateurId])
+  @@map("avis_clients")
 }
 
 enum StockMovementType {

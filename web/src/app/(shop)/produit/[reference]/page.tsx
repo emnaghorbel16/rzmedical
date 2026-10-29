@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   getProductByReference,
   getSubcategories,
+  getProductReviews,
   imageUrl,
 } from "@/lib/api";
 import { Container } from "@/components/ui/Container";
@@ -13,6 +14,7 @@ import { Gallery } from "@/components/product/Gallery";
 import { ProductInfo } from "@/components/product/ProductInfo";
 import { ProductReassuranceBar } from "@/components/product/ProductReassuranceBar";
 import { ProductTabs } from "@/components/product/ProductTabs";
+import { ProductReviews } from "@/components/product/ProductReviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { ProductGridSkeleton } from "@/components/catalogue/ProductGrid";
 
@@ -100,12 +102,15 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: { params: Params }) {
   const { reference } = await params;
-  const [product, subcategories] = await Promise.all([
-    getProductByReference(decodeURIComponent(reference)),
-    getSubcategories(),
-  ]);
 
+  // Fetch produit d'abord pour avoir l'id, puis paralléliser le reste
+  const product = await getProductByReference(decodeURIComponent(reference));
   if (!product) notFound();
+
+  const [subcategories, avisSummary] = await Promise.all([
+    getSubcategories(),
+    getProductReviews(product.id).catch(() => null),
+  ]);
 
   const subcategory =
     product.sousCategorie ??
@@ -135,7 +140,7 @@ export default async function ProductPage({ params }: { params: Params }) {
 
   // ── JSON-LD Schema.org Product (Rich Snippets Google) ─────────────────────
   const productUrl = `${siteUrl}/produit/${encodeURIComponent(product.reference)}`;
-  const jsonLd = {
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.nom,
@@ -150,6 +155,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         : "") || `${product.nom} disponible chez Randz Medical.`,
     image: product.images?.map(imageUrl).filter(Boolean),
     sku: product.reference,
+    url: productUrl,
     ...(product.marque?.nom && {
       brand: { "@type": "Brand", name: product.marque.nom },
     }),
@@ -169,6 +175,31 @@ export default async function ProductPage({ params }: { params: Params }) {
         name: "Randz Medical",
       },
     },
+    // ── aggregateRating : uniquement si de vrais avis existent ──
+    ...(avisSummary && avisSummary.totalAvis > 0 && avisSummary.notemoyenne !== null
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: avisSummary.notemoyenne.toFixed(1),
+            reviewCount: avisSummary.totalAvis,
+            bestRating: "5",
+            worstRating: "1",
+          },
+          // Inclure les 5 premiers avis dans le JSON-LD pour les Rich Snippets
+          review: avisSummary.avis.slice(0, 5).map((a) => ({
+            "@type": "Review",
+            author: { "@type": "Person", name: a.nomAuteur },
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: a.note,
+              bestRating: "5",
+              worstRating: "1",
+            },
+            reviewBody: a.commentaire,
+            datePublished: new Date(a.creeLe).toISOString().split("T")[0],
+          })),
+        }
+      : {}),
   };
 
   return (
@@ -206,6 +237,10 @@ export default async function ProductPage({ params }: { params: Params }) {
       <div className="mt-12 lg:mt-16">
         <ProductTabs product={product} />
       </div>
+
+      {/* Avis et Témoignages */}
+      <ProductReviews produitId={product.id} initialStats={avisSummary} />
+
 
       {/* Produits similaires */}
       <div className="mt-14 lg:mt-20">

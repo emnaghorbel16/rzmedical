@@ -53,6 +53,11 @@ export type Marque = Prisma.MarqueModel
  */
 export type Produit = Prisma.ProduitModel
 /**
+ * Model AvisClient
+ * 
+ */
+export type AvisClient = Prisma.AvisClientModel
+/**
  * Model StockMovement
  * 
  */

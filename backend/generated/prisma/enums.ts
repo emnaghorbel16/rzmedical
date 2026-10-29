@@ -139,6 +139,15 @@ export const StatutBonCommercial = {
 export type StatutBonCommercial = (typeof StatutBonCommercial)[keyof typeof StatutBonCommercial]
 
 
+export const StatutAvis = {
+  EN_ATTENTE: 'EN_ATTENTE',
+  APPROUVE: 'APPROUVE',
+  REJETE: 'REJETE'
+} as const
+
+export type StatutAvis = (typeof StatutAvis)[keyof typeof StatutAvis]
+
+
 export const StockMovementType = {
   PURCHASE: 'PURCHASE',
   SALE: 'SALE',

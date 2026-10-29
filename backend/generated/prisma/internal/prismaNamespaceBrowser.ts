@@ -58,6 +58,7 @@ export const ModelName = {
   SousCategorie: 'SousCategorie',
   Marque: 'Marque',
   Produit: 'Produit',
+  AvisClient: 'AvisClient',
   StockMovement: 'StockMovement',
   PurchasePriceHistory: 'PurchasePriceHistory',
   Commande: 'Commande',
@@ -239,6 +240,23 @@ export const ProduitScalarFieldEnum = {
 } as const
 
 export type ProduitScalarFieldEnum = (typeof ProduitScalarFieldEnum)[keyof typeof ProduitScalarFieldEnum]
+
+
+export const AvisClientScalarFieldEnum = {
+  id: 'id',
+  produitId: 'produitId',
+  utilisateurId: 'utilisateurId',
+  nomAuteur: 'nomAuteur',
+  note: 'note',
+  titre: 'titre',
+  commentaire: 'commentaire',
+  statut: 'statut',
+  verifieAchat: 'verifieAchat',
+  creeLe: 'creeLe',
+  misAJourLe: 'misAJourLe'
+} as const
+
+export type AvisClientScalarFieldEnum = (typeof AvisClientScalarFieldEnum)[keyof typeof AvisClientScalarFieldEnum]
 
 
 export const StockMovementScalarFieldEnum = {

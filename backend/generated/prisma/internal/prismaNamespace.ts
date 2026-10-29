@@ -404,6 +404,7 @@ export const ModelName = {
   SousCategorie: 'SousCategorie',
   Marque: 'Marque',
   Produit: 'Produit',
+  AvisClient: 'AvisClient',
   StockMovement: 'StockMovement',
   PurchasePriceHistory: 'PurchasePriceHistory',
   Commande: 'Commande',
@@ -458,7 +459,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "utilisateur" | "ticketSupport" | "messageSupport" | "categorie" | "sousCategorie" | "marque" | "produit" | "stockMovement" | "purchasePriceHistory" | "commande" | "ligneCommande" | "bonLivraison" | "ligneBonLivraison" | "facture" | "devis" | "ligneDevis" | "factureBonLivraison" | "ligneFacture" | "paiement" | "service" | "alerteSite" | "annonceSite" | "banniereSite" | "videoHero" | "tokenReset" | "newsletterAbonne" | "infoSociete" | "exercice" | "documentSequence" | "fournisseur" | "bonCommande" | "ligneBonCommande" | "bonReception" | "ligneBonReception" | "factureFournisseur" | "chargeGenerale" | "chargeCnss" | "charge9ba4a" | "ligneFactureFournisseur" | "paiementFactureFournisseur" | "stockCommercial" | "bonSortie" | "ligneBonSortie" | "inventaireCommercial" | "ligneInventaire" | "groqUsage"
+    modelProps: "utilisateur" | "ticketSupport" | "messageSupport" | "categorie" | "sousCategorie" | "marque" | "produit" | "avisClient" | "stockMovement" | "purchasePriceHistory" | "commande" | "ligneCommande" | "bonLivraison" | "ligneBonLivraison" | "facture" | "devis" | "ligneDevis" | "factureBonLivraison" | "ligneFacture" | "paiement" | "service" | "alerteSite" | "annonceSite" | "banniereSite" | "videoHero" | "tokenReset" | "newsletterAbonne" | "infoSociete" | "exercice" | "documentSequence" | "fournisseur" | "bonCommande" | "ligneBonCommande" | "bonReception" | "ligneBonReception" | "factureFournisseur" | "chargeGenerale" | "chargeCnss" | "charge9ba4a" | "ligneFactureFournisseur" | "paiementFactureFournisseur" | "stockCommercial" | "bonSortie" | "ligneBonSortie" | "inventaireCommercial" | "ligneInventaire" | "groqUsage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -977,6 +978,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProduitCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProduitCountAggregateOutputType> | number
+        }
+      }
+    }
+    AvisClient: {
+      payload: Prisma.$AvisClientPayload<ExtArgs>
+      fields: Prisma.AvisClientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AvisClientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AvisClientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>
+        }
+        findFirst: {
+          args: Prisma.AvisClientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AvisClientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>
+        }
+        findMany: {
+          args: Prisma.AvisClientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>[]
+        }
+        create: {
+          args: Prisma.AvisClientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>
+        }
+        createMany: {
+          args: Prisma.AvisClientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AvisClientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>[]
+        }
+        delete: {
+          args: Prisma.AvisClientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>
+        }
+        update: {
+          args: Prisma.AvisClientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>
+        }
+        deleteMany: {
+          args: Prisma.AvisClientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AvisClientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AvisClientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>[]
+        }
+        upsert: {
+          args: Prisma.AvisClientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvisClientPayload>
+        }
+        aggregate: {
+          args: Prisma.AvisClientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAvisClient>
+        }
+        groupBy: {
+          args: Prisma.AvisClientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AvisClientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AvisClientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AvisClientCountAggregateOutputType> | number
         }
       }
     }
@@ -4031,6 +4106,23 @@ export const ProduitScalarFieldEnum = {
 export type ProduitScalarFieldEnum = (typeof ProduitScalarFieldEnum)[keyof typeof ProduitScalarFieldEnum]
 
 
+export const AvisClientScalarFieldEnum = {
+  id: 'id',
+  produitId: 'produitId',
+  utilisateurId: 'utilisateurId',
+  nomAuteur: 'nomAuteur',
+  note: 'note',
+  titre: 'titre',
+  commentaire: 'commentaire',
+  statut: 'statut',
+  verifieAchat: 'verifieAchat',
+  creeLe: 'creeLe',
+  misAJourLe: 'misAJourLe'
+} as const
+
+export type AvisClientScalarFieldEnum = (typeof AvisClientScalarFieldEnum)[keyof typeof AvisClientScalarFieldEnum]
+
+
 export const StockMovementScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -4874,6 +4966,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'StatutAvis'
+ */
+export type EnumStatutAvisFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutAvis'>
+    
+
+
+/**
+ * Reference to a field of type 'StatutAvis[]'
+ */
+export type ListEnumStatutAvisFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutAvis[]'>
+    
+
+
+/**
  * Reference to a field of type 'StockMovementType'
  */
 export type EnumStockMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockMovementType'>
@@ -5310,6 +5416,7 @@ export type GlobalOmitConfig = {
   sousCategorie?: Prisma.SousCategorieOmit
   marque?: Prisma.MarqueOmit
   produit?: Prisma.ProduitOmit
+  avisClient?: Prisma.AvisClientOmit
   stockMovement?: Prisma.StockMovementOmit
   purchasePriceHistory?: Prisma.PurchasePriceHistoryOmit
   commande?: Prisma.CommandeOmit

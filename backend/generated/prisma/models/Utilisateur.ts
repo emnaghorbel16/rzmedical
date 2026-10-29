@@ -368,6 +368,7 @@ export type UtilisateurWhereInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonListRelationFilter
   inventaires?: Prisma.InventaireCommercialListRelationFilter
   inventairesValides?: Prisma.InventaireCommercialListRelationFilter
+  avisClients?: Prisma.AvisClientListRelationFilter
 }
 
 export type UtilisateurOrderByWithRelationInput = {
@@ -408,6 +409,7 @@ export type UtilisateurOrderByWithRelationInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonOrderByRelationAggregateInput
   inventaires?: Prisma.InventaireCommercialOrderByRelationAggregateInput
   inventairesValides?: Prisma.InventaireCommercialOrderByRelationAggregateInput
+  avisClients?: Prisma.AvisClientOrderByRelationAggregateInput
 }
 
 export type UtilisateurWhereUniqueInput = Prisma.AtLeast<{
@@ -452,6 +454,7 @@ export type UtilisateurWhereUniqueInput = Prisma.AtLeast<{
   bonsLivraisonAsComm?: Prisma.BonLivraisonListRelationFilter
   inventaires?: Prisma.InventaireCommercialListRelationFilter
   inventairesValides?: Prisma.InventaireCommercialListRelationFilter
+  avisClients?: Prisma.AvisClientListRelationFilter
 }, "id" | "email_typeUtilisateur">
 
 export type UtilisateurOrderByWithAggregationInput = {
@@ -546,6 +549,7 @@ export type UtilisateurCreateInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateInput = {
@@ -585,6 +589,7 @@ export type UtilisateurUncheckedCreateInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUpdateInput = {
@@ -623,6 +628,7 @@ export type UtilisateurUpdateInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateInput = {
@@ -662,6 +668,7 @@ export type UtilisateurUncheckedUpdateInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateManyInput = {
@@ -945,6 +952,22 @@ export type UtilisateurUncheckedUpdateManyWithoutActiviteCategorieNestedInput = 
   deleteMany?: Prisma.UtilisateurScalarWhereInput | Prisma.UtilisateurScalarWhereInput[]
 }
 
+export type UtilisateurCreateNestedOneWithoutAvisClientsInput = {
+  create?: Prisma.XOR<Prisma.UtilisateurCreateWithoutAvisClientsInput, Prisma.UtilisateurUncheckedCreateWithoutAvisClientsInput>
+  connectOrCreate?: Prisma.UtilisateurCreateOrConnectWithoutAvisClientsInput
+  connect?: Prisma.UtilisateurWhereUniqueInput
+}
+
+export type UtilisateurUpdateOneWithoutAvisClientsNestedInput = {
+  create?: Prisma.XOR<Prisma.UtilisateurCreateWithoutAvisClientsInput, Prisma.UtilisateurUncheckedCreateWithoutAvisClientsInput>
+  connectOrCreate?: Prisma.UtilisateurCreateOrConnectWithoutAvisClientsInput
+  upsert?: Prisma.UtilisateurUpsertWithoutAvisClientsInput
+  disconnect?: Prisma.UtilisateurWhereInput | boolean
+  delete?: Prisma.UtilisateurWhereInput | boolean
+  connect?: Prisma.UtilisateurWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UtilisateurUpdateToOneWithWhereWithoutAvisClientsInput, Prisma.UtilisateurUpdateWithoutAvisClientsInput>, Prisma.UtilisateurUncheckedUpdateWithoutAvisClientsInput>
+}
+
 export type UtilisateurCreateNestedOneWithoutMouvementsStockInput = {
   create?: Prisma.XOR<Prisma.UtilisateurCreateWithoutMouvementsStockInput, Prisma.UtilisateurUncheckedCreateWithoutMouvementsStockInput>
   connectOrCreate?: Prisma.UtilisateurCreateOrConnectWithoutMouvementsStockInput
@@ -1194,6 +1217,7 @@ export type UtilisateurCreateWithoutTicketsSupportInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutTicketsSupportInput = {
@@ -1232,6 +1256,7 @@ export type UtilisateurUncheckedCreateWithoutTicketsSupportInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutTicketsSupportInput = {
@@ -1285,6 +1310,7 @@ export type UtilisateurUpdateWithoutTicketsSupportInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutTicketsSupportInput = {
@@ -1323,6 +1349,7 @@ export type UtilisateurUncheckedUpdateWithoutTicketsSupportInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutActiviteCategorieInput = {
@@ -1360,6 +1387,7 @@ export type UtilisateurCreateWithoutActiviteCategorieInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutActiviteCategorieInput = {
@@ -1398,6 +1426,7 @@ export type UtilisateurUncheckedCreateWithoutActiviteCategorieInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutActiviteCategorieInput = {
@@ -1453,6 +1482,176 @@ export type UtilisateurScalarWhereInput = {
   misAJourLe?: Prisma.DateTimeFilter<"Utilisateur"> | Date | string
 }
 
+export type UtilisateurCreateWithoutAvisClientsInput = {
+  email: string
+  motDePasseHash?: string | null
+  prenom?: string | null
+  nom?: string | null
+  telephone?: string | null
+  cin?: string | null
+  photo?: string | null
+  adresse?: string | null
+  dateNaissance?: Date | string | null
+  typeUtilisateur?: $Enums.TypeUtilisateur
+  remise?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  matriculeFiscale?: string | null
+  matriculeVoiture?: string | null
+  activite?: string | null
+  otpCode?: string | null
+  otpExpire?: Date | string | null
+  dernierLogin?: Date | string | null
+  creeLe?: Date | string
+  misAJourLe?: Date | string
+  activiteCategorie?: Prisma.CategorieCreateNestedOneWithoutUtilisateursInput
+  commandes?: Prisma.CommandeCreateNestedManyWithoutUtilisateurInput
+  mouvementsStock?: Prisma.StockMovementCreateNestedManyWithoutUserInput
+  bonsLivraison?: Prisma.BonLivraisonCreateNestedManyWithoutUtilisateurInput
+  factures?: Prisma.FactureCreateNestedManyWithoutUtilisateurInput
+  devis?: Prisma.DevisCreateNestedManyWithoutUtilisateurInput
+  ticketsSupport?: Prisma.TicketSupportCreateNestedManyWithoutUtilisateurInput
+  tokenReset?: Prisma.TokenResetCreateNestedOneWithoutUtilisateurInput
+  chargesGenerales?: Prisma.ChargeGeneraleCreateNestedManyWithoutCommercialInput
+  chargesCnss?: Prisma.ChargeCnssCreateNestedManyWithoutCommercialInput
+  charges9ba4a?: Prisma.Charge9ba4aCreateNestedManyWithoutCommercialInput
+  stockCommercial?: Prisma.StockCommercialCreateNestedManyWithoutCommercialInput
+  bonsEntree?: Prisma.BonSortieCreateNestedManyWithoutCommercialInput
+  bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
+  inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
+  inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+}
+
+export type UtilisateurUncheckedCreateWithoutAvisClientsInput = {
+  id?: number
+  email: string
+  motDePasseHash?: string | null
+  prenom?: string | null
+  nom?: string | null
+  telephone?: string | null
+  cin?: string | null
+  photo?: string | null
+  adresse?: string | null
+  dateNaissance?: Date | string | null
+  typeUtilisateur?: $Enums.TypeUtilisateur
+  remise?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  matriculeFiscale?: string | null
+  matriculeVoiture?: string | null
+  activite?: string | null
+  activiteCategoryId?: number | null
+  otpCode?: string | null
+  otpExpire?: Date | string | null
+  dernierLogin?: Date | string | null
+  creeLe?: Date | string
+  misAJourLe?: Date | string
+  commandes?: Prisma.CommandeUncheckedCreateNestedManyWithoutUtilisateurInput
+  mouvementsStock?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
+  bonsLivraison?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutUtilisateurInput
+  factures?: Prisma.FactureUncheckedCreateNestedManyWithoutUtilisateurInput
+  devis?: Prisma.DevisUncheckedCreateNestedManyWithoutUtilisateurInput
+  ticketsSupport?: Prisma.TicketSupportUncheckedCreateNestedManyWithoutUtilisateurInput
+  tokenReset?: Prisma.TokenResetUncheckedCreateNestedOneWithoutUtilisateurInput
+  chargesGenerales?: Prisma.ChargeGeneraleUncheckedCreateNestedManyWithoutCommercialInput
+  chargesCnss?: Prisma.ChargeCnssUncheckedCreateNestedManyWithoutCommercialInput
+  charges9ba4a?: Prisma.Charge9ba4aUncheckedCreateNestedManyWithoutCommercialInput
+  stockCommercial?: Prisma.StockCommercialUncheckedCreateNestedManyWithoutCommercialInput
+  bonsEntree?: Prisma.BonSortieUncheckedCreateNestedManyWithoutCommercialInput
+  bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
+  inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
+  inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+}
+
+export type UtilisateurCreateOrConnectWithoutAvisClientsInput = {
+  where: Prisma.UtilisateurWhereUniqueInput
+  create: Prisma.XOR<Prisma.UtilisateurCreateWithoutAvisClientsInput, Prisma.UtilisateurUncheckedCreateWithoutAvisClientsInput>
+}
+
+export type UtilisateurUpsertWithoutAvisClientsInput = {
+  update: Prisma.XOR<Prisma.UtilisateurUpdateWithoutAvisClientsInput, Prisma.UtilisateurUncheckedUpdateWithoutAvisClientsInput>
+  create: Prisma.XOR<Prisma.UtilisateurCreateWithoutAvisClientsInput, Prisma.UtilisateurUncheckedCreateWithoutAvisClientsInput>
+  where?: Prisma.UtilisateurWhereInput
+}
+
+export type UtilisateurUpdateToOneWithWhereWithoutAvisClientsInput = {
+  where?: Prisma.UtilisateurWhereInput
+  data: Prisma.XOR<Prisma.UtilisateurUpdateWithoutAvisClientsInput, Prisma.UtilisateurUncheckedUpdateWithoutAvisClientsInput>
+}
+
+export type UtilisateurUpdateWithoutAvisClientsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  motDePasseHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  typeUtilisateur?: Prisma.EnumTypeUtilisateurFieldUpdateOperationsInput | $Enums.TypeUtilisateur
+  remise?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  matriculeFiscale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matriculeVoiture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpire?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dernierLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  creeLe?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  misAJourLe?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activiteCategorie?: Prisma.CategorieUpdateOneWithoutUtilisateursNestedInput
+  commandes?: Prisma.CommandeUpdateManyWithoutUtilisateurNestedInput
+  mouvementsStock?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
+  bonsLivraison?: Prisma.BonLivraisonUpdateManyWithoutUtilisateurNestedInput
+  factures?: Prisma.FactureUpdateManyWithoutUtilisateurNestedInput
+  devis?: Prisma.DevisUpdateManyWithoutUtilisateurNestedInput
+  ticketsSupport?: Prisma.TicketSupportUpdateManyWithoutUtilisateurNestedInput
+  tokenReset?: Prisma.TokenResetUpdateOneWithoutUtilisateurNestedInput
+  chargesGenerales?: Prisma.ChargeGeneraleUpdateManyWithoutCommercialNestedInput
+  chargesCnss?: Prisma.ChargeCnssUpdateManyWithoutCommercialNestedInput
+  charges9ba4a?: Prisma.Charge9ba4aUpdateManyWithoutCommercialNestedInput
+  stockCommercial?: Prisma.StockCommercialUpdateManyWithoutCommercialNestedInput
+  bonsEntree?: Prisma.BonSortieUpdateManyWithoutCommercialNestedInput
+  bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
+  inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
+  inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+}
+
+export type UtilisateurUncheckedUpdateWithoutAvisClientsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  motDePasseHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prenom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateNaissance?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  typeUtilisateur?: Prisma.EnumTypeUtilisateurFieldUpdateOperationsInput | $Enums.TypeUtilisateur
+  remise?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  matriculeFiscale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matriculeVoiture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activiteCategoryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpire?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dernierLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  creeLe?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  misAJourLe?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commandes?: Prisma.CommandeUncheckedUpdateManyWithoutUtilisateurNestedInput
+  mouvementsStock?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  bonsLivraison?: Prisma.BonLivraisonUncheckedUpdateManyWithoutUtilisateurNestedInput
+  factures?: Prisma.FactureUncheckedUpdateManyWithoutUtilisateurNestedInput
+  devis?: Prisma.DevisUncheckedUpdateManyWithoutUtilisateurNestedInput
+  ticketsSupport?: Prisma.TicketSupportUncheckedUpdateManyWithoutUtilisateurNestedInput
+  tokenReset?: Prisma.TokenResetUncheckedUpdateOneWithoutUtilisateurNestedInput
+  chargesGenerales?: Prisma.ChargeGeneraleUncheckedUpdateManyWithoutCommercialNestedInput
+  chargesCnss?: Prisma.ChargeCnssUncheckedUpdateManyWithoutCommercialNestedInput
+  charges9ba4a?: Prisma.Charge9ba4aUncheckedUpdateManyWithoutCommercialNestedInput
+  stockCommercial?: Prisma.StockCommercialUncheckedUpdateManyWithoutCommercialNestedInput
+  bonsEntree?: Prisma.BonSortieUncheckedUpdateManyWithoutCommercialNestedInput
+  bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
+  inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
+  inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+}
+
 export type UtilisateurCreateWithoutMouvementsStockInput = {
   email: string
   motDePasseHash?: string | null
@@ -1488,6 +1687,7 @@ export type UtilisateurCreateWithoutMouvementsStockInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutMouvementsStockInput = {
@@ -1526,6 +1726,7 @@ export type UtilisateurUncheckedCreateWithoutMouvementsStockInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutMouvementsStockInput = {
@@ -1579,6 +1780,7 @@ export type UtilisateurUpdateWithoutMouvementsStockInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutMouvementsStockInput = {
@@ -1617,6 +1819,7 @@ export type UtilisateurUncheckedUpdateWithoutMouvementsStockInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutCommandesInput = {
@@ -1654,6 +1857,7 @@ export type UtilisateurCreateWithoutCommandesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutCommandesInput = {
@@ -1692,6 +1896,7 @@ export type UtilisateurUncheckedCreateWithoutCommandesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutCommandesInput = {
@@ -1745,6 +1950,7 @@ export type UtilisateurUpdateWithoutCommandesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutCommandesInput = {
@@ -1783,6 +1989,7 @@ export type UtilisateurUncheckedUpdateWithoutCommandesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutBonsLivraisonInput = {
@@ -1820,6 +2027,7 @@ export type UtilisateurCreateWithoutBonsLivraisonInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutBonsLivraisonInput = {
@@ -1858,6 +2066,7 @@ export type UtilisateurUncheckedCreateWithoutBonsLivraisonInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutBonsLivraisonInput = {
@@ -1900,6 +2109,7 @@ export type UtilisateurCreateWithoutBonsLivraisonAsCommInput = {
   bonsEntree?: Prisma.BonSortieCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutBonsLivraisonAsCommInput = {
@@ -1938,6 +2148,7 @@ export type UtilisateurUncheckedCreateWithoutBonsLivraisonAsCommInput = {
   bonsEntree?: Prisma.BonSortieUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutBonsLivraisonAsCommInput = {
@@ -1991,6 +2202,7 @@ export type UtilisateurUpdateWithoutBonsLivraisonInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutBonsLivraisonInput = {
@@ -2029,6 +2241,7 @@ export type UtilisateurUncheckedUpdateWithoutBonsLivraisonInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUpsertWithoutBonsLivraisonAsCommInput = {
@@ -2077,6 +2290,7 @@ export type UtilisateurUpdateWithoutBonsLivraisonAsCommInput = {
   bonsEntree?: Prisma.BonSortieUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutBonsLivraisonAsCommInput = {
@@ -2115,6 +2329,7 @@ export type UtilisateurUncheckedUpdateWithoutBonsLivraisonAsCommInput = {
   bonsEntree?: Prisma.BonSortieUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutFacturesInput = {
@@ -2152,6 +2367,7 @@ export type UtilisateurCreateWithoutFacturesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutFacturesInput = {
@@ -2190,6 +2406,7 @@ export type UtilisateurUncheckedCreateWithoutFacturesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutFacturesInput = {
@@ -2243,6 +2460,7 @@ export type UtilisateurUpdateWithoutFacturesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutFacturesInput = {
@@ -2281,6 +2499,7 @@ export type UtilisateurUncheckedUpdateWithoutFacturesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutDevisInput = {
@@ -2318,6 +2537,7 @@ export type UtilisateurCreateWithoutDevisInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutDevisInput = {
@@ -2356,6 +2576,7 @@ export type UtilisateurUncheckedCreateWithoutDevisInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutDevisInput = {
@@ -2409,6 +2630,7 @@ export type UtilisateurUpdateWithoutDevisInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutDevisInput = {
@@ -2447,6 +2669,7 @@ export type UtilisateurUncheckedUpdateWithoutDevisInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutTokenResetInput = {
@@ -2484,6 +2707,7 @@ export type UtilisateurCreateWithoutTokenResetInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutTokenResetInput = {
@@ -2522,6 +2746,7 @@ export type UtilisateurUncheckedCreateWithoutTokenResetInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutTokenResetInput = {
@@ -2575,6 +2800,7 @@ export type UtilisateurUpdateWithoutTokenResetInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutTokenResetInput = {
@@ -2613,6 +2839,7 @@ export type UtilisateurUncheckedUpdateWithoutTokenResetInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutChargesGeneralesInput = {
@@ -2650,6 +2877,7 @@ export type UtilisateurCreateWithoutChargesGeneralesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutChargesGeneralesInput = {
@@ -2688,6 +2916,7 @@ export type UtilisateurUncheckedCreateWithoutChargesGeneralesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutChargesGeneralesInput = {
@@ -2741,6 +2970,7 @@ export type UtilisateurUpdateWithoutChargesGeneralesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutChargesGeneralesInput = {
@@ -2779,6 +3009,7 @@ export type UtilisateurUncheckedUpdateWithoutChargesGeneralesInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutChargesCnssInput = {
@@ -2816,6 +3047,7 @@ export type UtilisateurCreateWithoutChargesCnssInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutChargesCnssInput = {
@@ -2854,6 +3086,7 @@ export type UtilisateurUncheckedCreateWithoutChargesCnssInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutChargesCnssInput = {
@@ -2907,6 +3140,7 @@ export type UtilisateurUpdateWithoutChargesCnssInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutChargesCnssInput = {
@@ -2945,6 +3179,7 @@ export type UtilisateurUncheckedUpdateWithoutChargesCnssInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutCharges9ba4aInput = {
@@ -2982,6 +3217,7 @@ export type UtilisateurCreateWithoutCharges9ba4aInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutCharges9ba4aInput = {
@@ -3020,6 +3256,7 @@ export type UtilisateurUncheckedCreateWithoutCharges9ba4aInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutCharges9ba4aInput = {
@@ -3073,6 +3310,7 @@ export type UtilisateurUpdateWithoutCharges9ba4aInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutCharges9ba4aInput = {
@@ -3111,6 +3349,7 @@ export type UtilisateurUncheckedUpdateWithoutCharges9ba4aInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutStockCommercialInput = {
@@ -3148,6 +3387,7 @@ export type UtilisateurCreateWithoutStockCommercialInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutStockCommercialInput = {
@@ -3186,6 +3426,7 @@ export type UtilisateurUncheckedCreateWithoutStockCommercialInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutStockCommercialInput = {
@@ -3239,6 +3480,7 @@ export type UtilisateurUpdateWithoutStockCommercialInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutStockCommercialInput = {
@@ -3277,6 +3519,7 @@ export type UtilisateurUncheckedUpdateWithoutStockCommercialInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutBonsEntreeInput = {
@@ -3314,6 +3557,7 @@ export type UtilisateurCreateWithoutBonsEntreeInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutBonsEntreeInput = {
@@ -3352,6 +3596,7 @@ export type UtilisateurUncheckedCreateWithoutBonsEntreeInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutBonsEntreeInput = {
@@ -3405,6 +3650,7 @@ export type UtilisateurUpdateWithoutBonsEntreeInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutBonsEntreeInput = {
@@ -3443,6 +3689,7 @@ export type UtilisateurUncheckedUpdateWithoutBonsEntreeInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateWithoutInventairesInput = {
@@ -3480,6 +3727,7 @@ export type UtilisateurCreateWithoutInventairesInput = {
   bonsEntree?: Prisma.BonSortieCreateNestedManyWithoutCommercialInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutInventairesInput = {
@@ -3518,6 +3766,7 @@ export type UtilisateurUncheckedCreateWithoutInventairesInput = {
   bonsEntree?: Prisma.BonSortieUncheckedCreateNestedManyWithoutCommercialInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutValideParInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutInventairesInput = {
@@ -3560,6 +3809,7 @@ export type UtilisateurCreateWithoutInventairesValidesInput = {
   bonsEntree?: Prisma.BonSortieCreateNestedManyWithoutCommercialInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialCreateNestedManyWithoutCommercialInput
+  avisClients?: Prisma.AvisClientCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurUncheckedCreateWithoutInventairesValidesInput = {
@@ -3598,6 +3848,7 @@ export type UtilisateurUncheckedCreateWithoutInventairesValidesInput = {
   bonsEntree?: Prisma.BonSortieUncheckedCreateNestedManyWithoutCommercialInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedCreateNestedManyWithoutCommercialInput
   inventaires?: Prisma.InventaireCommercialUncheckedCreateNestedManyWithoutCommercialInput
+  avisClients?: Prisma.AvisClientUncheckedCreateNestedManyWithoutUtilisateurInput
 }
 
 export type UtilisateurCreateOrConnectWithoutInventairesValidesInput = {
@@ -3651,6 +3902,7 @@ export type UtilisateurUpdateWithoutInventairesInput = {
   bonsEntree?: Prisma.BonSortieUpdateManyWithoutCommercialNestedInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutInventairesInput = {
@@ -3689,6 +3941,7 @@ export type UtilisateurUncheckedUpdateWithoutInventairesInput = {
   bonsEntree?: Prisma.BonSortieUncheckedUpdateManyWithoutCommercialNestedInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUpsertWithoutInventairesValidesInput = {
@@ -3737,6 +3990,7 @@ export type UtilisateurUpdateWithoutInventairesValidesInput = {
   bonsEntree?: Prisma.BonSortieUpdateManyWithoutCommercialNestedInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutInventairesValidesInput = {
@@ -3775,6 +4029,7 @@ export type UtilisateurUncheckedUpdateWithoutInventairesValidesInput = {
   bonsEntree?: Prisma.BonSortieUncheckedUpdateManyWithoutCommercialNestedInput
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurCreateManyActiviteCategorieInput = {
@@ -3835,6 +4090,7 @@ export type UtilisateurUpdateWithoutActiviteCategorieInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateWithoutActiviteCategorieInput = {
@@ -3873,6 +4129,7 @@ export type UtilisateurUncheckedUpdateWithoutActiviteCategorieInput = {
   bonsLivraisonAsComm?: Prisma.BonLivraisonUncheckedUpdateManyWithoutCommercialNestedInput
   inventaires?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutCommercialNestedInput
   inventairesValides?: Prisma.InventaireCommercialUncheckedUpdateManyWithoutValideParNestedInput
+  avisClients?: Prisma.AvisClientUncheckedUpdateManyWithoutUtilisateurNestedInput
 }
 
 export type UtilisateurUncheckedUpdateManyWithoutActiviteCategorieInput = {
@@ -3918,6 +4175,7 @@ export type UtilisateurCountOutputType = {
   bonsLivraisonAsComm: number
   inventaires: number
   inventairesValides: number
+  avisClients: number
 }
 
 export type UtilisateurCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3935,6 +4193,7 @@ export type UtilisateurCountOutputTypeSelect<ExtArgs extends runtime.Types.Exten
   bonsLivraisonAsComm?: boolean | UtilisateurCountOutputTypeCountBonsLivraisonAsCommArgs
   inventaires?: boolean | UtilisateurCountOutputTypeCountInventairesArgs
   inventairesValides?: boolean | UtilisateurCountOutputTypeCountInventairesValidesArgs
+  avisClients?: boolean | UtilisateurCountOutputTypeCountAvisClientsArgs
 }
 
 /**
@@ -4045,6 +4304,13 @@ export type UtilisateurCountOutputTypeCountInventairesValidesArgs<ExtArgs extend
   where?: Prisma.InventaireCommercialWhereInput
 }
 
+/**
+ * UtilisateurCountOutputType without action
+ */
+export type UtilisateurCountOutputTypeCountAvisClientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AvisClientWhereInput
+}
+
 
 export type UtilisateurSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4084,6 +4350,7 @@ export type UtilisateurSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   bonsLivraisonAsComm?: boolean | Prisma.Utilisateur$bonsLivraisonAsCommArgs<ExtArgs>
   inventaires?: boolean | Prisma.Utilisateur$inventairesArgs<ExtArgs>
   inventairesValides?: boolean | Prisma.Utilisateur$inventairesValidesArgs<ExtArgs>
+  avisClients?: boolean | Prisma.Utilisateur$avisClientsArgs<ExtArgs>
   _count?: boolean | Prisma.UtilisateurCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["utilisateur"]>
 
@@ -4179,6 +4446,7 @@ export type UtilisateurInclude<ExtArgs extends runtime.Types.Extensions.Internal
   bonsLivraisonAsComm?: boolean | Prisma.Utilisateur$bonsLivraisonAsCommArgs<ExtArgs>
   inventaires?: boolean | Prisma.Utilisateur$inventairesArgs<ExtArgs>
   inventairesValides?: boolean | Prisma.Utilisateur$inventairesValidesArgs<ExtArgs>
+  avisClients?: boolean | Prisma.Utilisateur$avisClientsArgs<ExtArgs>
   _count?: boolean | Prisma.UtilisateurCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UtilisateurIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4207,6 +4475,7 @@ export type $UtilisateurPayload<ExtArgs extends runtime.Types.Extensions.Interna
     bonsLivraisonAsComm: Prisma.$BonLivraisonPayload<ExtArgs>[]
     inventaires: Prisma.$InventaireCommercialPayload<ExtArgs>[]
     inventairesValides: Prisma.$InventaireCommercialPayload<ExtArgs>[]
+    avisClients: Prisma.$AvisClientPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -4640,6 +4909,7 @@ export interface Prisma__UtilisateurClient<T, Null = never, ExtArgs extends runt
   bonsLivraisonAsComm<T extends Prisma.Utilisateur$bonsLivraisonAsCommArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Utilisateur$bonsLivraisonAsCommArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonLivraisonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventaires<T extends Prisma.Utilisateur$inventairesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Utilisateur$inventairesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventaireCommercialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inventairesValides<T extends Prisma.Utilisateur$inventairesValidesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Utilisateur$inventairesValidesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventaireCommercialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  avisClients<T extends Prisma.Utilisateur$avisClientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Utilisateur$avisClientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AvisClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5462,6 +5732,30 @@ export type Utilisateur$inventairesValidesArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.InventaireCommercialScalarFieldEnum | Prisma.InventaireCommercialScalarFieldEnum[]
+}
+
+/**
+ * Utilisateur.avisClients
+ */
+export type Utilisateur$avisClientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AvisClient
+   */
+  select?: Prisma.AvisClientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AvisClient
+   */
+  omit?: Prisma.AvisClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvisClientInclude<ExtArgs> | null
+  where?: Prisma.AvisClientWhereInput
+  orderBy?: Prisma.AvisClientOrderByWithRelationInput | Prisma.AvisClientOrderByWithRelationInput[]
+  cursor?: Prisma.AvisClientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AvisClientScalarFieldEnum | Prisma.AvisClientScalarFieldEnum[]
 }
 
 /**
