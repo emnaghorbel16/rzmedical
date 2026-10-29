@@ -373,12 +373,15 @@ Critères spécifiques à ajouter après les critères généraux :
 ━━━ PRODUIT GÉNÉRIQUE (si catégorie non reconnue) ━━━
 Si la catégorie n'est pas dans la liste ci-dessus, utilise les critères issus de la description, des motsCles et du webInfo : extrait les caractéristiques RÉELLES du produit (dimensions, matériaux, normes, puissance, capacité...) et n'utilise PAS les exemples d'autres catégories.
 
-IMPORTANT — COMPLÉTER LES DONNÉES MANQUANTES AVEC webInfo :
-- Pour CHAQUE critère, cherche d'abord la valeur dans les données catalogue du produit.
-- Si absente du catalogue → cherche la valeur dans les résultats webInfo (Tavily) du produit. Les webInfo contiennent souvent des fiches techniques, des tests, ou des pages constructeur avec les spécifications exactes. Extrais les valeurs pertinentes.
-- N'écris "N/D" QUE si la valeur est absente des données catalogue ET de webInfo ET que tu ne peux pas la déduire logiquement.
-- PRÉFÈRE toujours une valeur réelle trouvée dans webInfo plutôt que N/D. Par exemple si webInfo mentionne "Précision cliniquement validée ±3 mmHg", utilise "±3 mmHg".
-- Si les 2 produits sont de catégories DIFFÉRENTES → utilise les critères communs (prix, marque, stock, usage) et mentionne qu'ils ne sont pas comparables directement dans ta recommandation.
+IMPORTANT — UTILISATION OBLIGATOIRE DE webInfo DANS LA COMPARAISON :
+- L'outil compare_products renvoie TOUJOURS un champ "webInfo" pour chaque produit — il contient des résultats de recherche web réels (DuckDuckGo/Tavily) avec des fiches techniques, tests et pages fabricant.
+- Pour CHAQUE critère de comparaison :
+  1. Cherche d'abord la valeur dans les données catalogue du produit (prix, marque, stock, description, motsCles...).
+  2. Si absente → LIS attentivement les champs "title", "url" et "content" dans webInfo et extrais les valeurs concrètes (chiffres, normes, dimensions, matériaux).
+  3. N'écris "N/D" QUE si la valeur est vraiment absente de TOUT le contenu webInfo après lecture complète.
+- PRÉFÈRE toujours une valeur réelle extraite de webInfo plutôt que N/D.
+  Exemple : si webInfo contient "Précision ±3 mmHg validée cliniquement" → utilise "±3 mmHg".
+- Si les 2 produits sont de catégories DIFFÉRENTES → utilise les critères communs (prix, marque, stock, usage) et mentionne qu'ils ne sont pas directement comparables dans ta recommandation.
 
 --- RÈGLE CRUCIALE : RECHERCHE WEB QUAND UN PRODUIT EST INTROUVABLE DANS LE CATALOGUE ---
 - Quand le client recherche un produit ou demande des informations sur un équipement : tu DOIS d'abord chercher avec search_products.
@@ -601,17 +604,17 @@ async function executeTool(
         }
         const p = Array.isArray(products) ? products[0] ?? null : null;
 
-        // 2. Recherche web approfondie pour enrichir les spécifications techniques
+        // 2. Recherche web TOUJOURS — enrichir les specs techniques, que le produit soit dans le catalogue ou non
         let webInfo: { title: string; url: string; content: string }[] = [];
-        if (p) {
-          // Requête ciblée : nom exact + marque + "fiche technique" pour obtenir les specs réelles
-          const catContext = p.sousCategorie?.nom ?? p.sousCategorie?.categorie?.nom ?? "";
-          const searchQuery = `"${p.nom}" ${p.marque?.nom ?? ""} ${catContext} fiche technique caractéristiques spécifications`;
-          try {
-            webInfo = await performWebSearch(searchQuery.trim(), 4);
-          } catch {
-            webInfo = [];
-          }
+        try {
+          // Si produit trouvé dans le catalogue : requête ciblée avec son nom et sa marque
+          // Si pas trouvé : utiliser directement le mot-clé de l'utilisateur
+          const searchQuery = p
+            ? `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim()
+            : `${q} equipement medical caracteristiques specifications`;
+          webInfo = await performWebSearch(searchQuery, 4);
+        } catch {
+          webInfo = [];
         }
 
         return {
