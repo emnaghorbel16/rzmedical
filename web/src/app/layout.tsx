@@ -22,7 +22,7 @@ const sora = Sora({
   variable: "--font-sora",
   display: "swap",
   preload: true,
-  weight: ["700", "800", "900"],
+  weight: ["600", "700", "800"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
