@@ -290,6 +290,8 @@ RÈGLES GÉNÉRALES :
 - Pour le stock : "Disponible (X unités)" si > 5 | "Stock faible (X unités)" si 1-5 | "Épuisé" si 0.
 - Pour le prix : affiche "X TND (-Y%)" si remise > 0, sinon juste "X TND".
 - Critères SANS emojis — texte uniquement.
+- INTERDICTION ABSOLUE DES LIGNES DOUBLES "N/D" : Ne mets JAMAIS une ligne où les deux produits ont "N/D" (par exemple si "Rotation backrest" ou "Charge max" est inconnu pour les 2, NE METS PAS cette ligne). Chaque ligne du tableau doit apporter au moins une vraie valeur concrète !
+- N'ajoute QUE les critères techniques pour lesquels tu as trouvé des informations réelles dans le catalogue ou dans le webInfo (ex: Revêtement, Équipements inclus, Commandes, Positions, Fonctions spéciales).
 - Termine TOUJOURS par [COMPARE_END].
 - APRÈS le tableau, rédige OBLIGATOIREMENT une recommandation personnalisée de 2-3 phrases. Commence par "**Notre recommandation :**".
 - Si plus de 2 produits : ajoute les colonnes supplémentaires séparées par |.
@@ -624,7 +626,7 @@ async function executeTool(
           console.log(`ℹ️ [compare_products] Produit catalogue : "${p.nom}" (${p.marque?.nom ?? "Sans marque"}). Description ${descManquante ? "incomplète -> recherche web de complétion" : "présente"}.`);
           try {
             const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim();
-            webInfo = await performWebSearch(searchQuery, 4);
+            webInfo = await performWebSearch(searchQuery, 6);
           } catch {
             webInfo = [];
           }
