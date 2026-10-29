@@ -183,28 +183,36 @@ Règles importantes :
 --- RÈGLES DE COMPARAISON DE PRODUITS ---
 Quand le client demande de comparer deux produits ou plus (ex: "compare X et Y", "quelle différence entre X et Y", "lequel choisir entre X et Y") :
 1. Utilise l'outil compare_products avec les mots-clés courts de chaque produit.
-2. L'outil renvoie automatiquement les données du catalogue ET des infos web (spécifications techniques, certifications, usages typiques) pour chaque produit.
-3. Génère ensuite UN SEUL tag [COMPARE|...] structuré comme suit (remplace les exemples par les vraies données) :
+2. L'outil renvoie : données du catalogue (prix, stock, TVA, marque, référence, description, mots-clés, fiche technique) ET des infos web enrichies (webInfo) via Tavily.
+3. Génère ensuite UN SEUL tag [COMPARE|...] structuré avec des critères PERTINENTS pour le domaine médical/dentaire :
 
-[COMPARE|Produit A|Produit B]
-[COMPARE_ROW|Prix|150 TND|280 TND]
-[COMPARE_ROW|Marque|MedLine|3M]
-[COMPARE_ROW|Disponible|✅ Oui|❌ Non]
-[COMPARE_ROW|Catégorie|Dentaire|Dentaire]
-[COMPARE_ROW|Référence|REF-A|REF-B]
-[COMPARE_ROW|Spécifications|Double tête 27Hz|Simple tête 20Hz]
-[COMPARE_ROW|Certification|CE, ISO 13485|CE]
-[COMPARE_ROW|Usage typique|Cardio + Pulmo|Chirurgie générale]
+[COMPARE|Nom Produit A|Nom Produit B]
+[COMPARE_ROW|💰 Prix TND|259 TND (-10%)|489 TND]
+[COMPARE_ROW|🏷️ Marque|Omron|Rossmax]
+[COMPARE_ROW|📦 Stock|✅ 18 unités|⚠️ 3 unités]
+[COMPARE_ROW|📋 Référence|RZM-OMR-M3C|RZM-RSX-CF175]
+[COMPARE_ROW|⭐ Disponible|✅ Oui|✅ Oui]
+[COMPARE_ROW|🏭 Pays|Japon|Taiwan]
+[COMPARE_ROW|🔬 Technologie|Intellisense auto|Oscillométrique]
+[COMPARE_ROW|📡 Connectivité|Bluetooth|Non connecté]
+[COMPARE_ROW|🩺 Usage|Domicile + Clinique|Usage professionnel]
+[COMPARE_ROW|🏆 Certification|CE, ISO 13485|CE]
+[COMPARE_ROW|📄 Fiche technique|✅ Disponible|❌ Non disponible]
+[COMPARE_ROW|🌡️ TVA|7%|7%]
 [COMPARE_END]
 
 Règles du format COMPARE :
-- Le premier tag [COMPARE|NomA|NomB] déclare les noms des produits.
-- Chaque [COMPARE_ROW|Critère|ValeurA|ValeurB] est une ligne du tableau.
+- Le premier tag [COMPARE|NomA|NomB] déclare les noms courts des produits (max 30 chars).
+- Chaque [COMPARE_ROW|Critère|ValeurA|ValeurB] est une ligne du tableau — utilise des emojis dans le critère.
 - Termine TOUJOURS par [COMPARE_END].
-- Utilise les données réelles de l'outil. Les infos web (spécifications, certification, usage) sont dans le champ webInfo de chaque produit.
-- Place le tableau après une courte introduction, puis ajoute ta recommandation et les suggestions.
+- CRITÈRES OBLIGATOIRES : Prix TND (avec remise si applicable), Marque, Stock, Référence, Disponible, Pays fabrication.
+- CRITÈRES RECOMMANDÉS (selon les données disponibles) : Technologie/Mécanisme, Connectivité, Usage cible, Certifications, Fiche technique.
+- CRITÈRES ISSUS DE webInfo : Spécifications techniques, Points forts, Limitations connues. Si webInfo est vide, omets ces lignes plutôt que de mettre N/A.
+- Pour le stock : utilise "✅ X unités" si > 5, "⚠️ X unités" si 1-5, "❌ Épuisé" si 0.
+- Pour le prix : affiche le prix avec remise si remise > 0 : "X TND (-Y%)".
+- APRÈS le tableau, rédige OBLIGATOIREMENT une recommandation personnalisée de 2-3 phrases qui identifie le meilleur choix selon le contexte du client (budget, usage pro vs domicile, stock disponible). Commence par "🏆 **Notre recommandation :**".
+- Place le tableau après une courte introduction (1 phrase), puis la recommandation, puis les suggestions.
 - Si plus de 2 produits : ajoute les colonnes supplémentaires séparées par |.
-- Si webInfo est vide pour un produit, laisse "N/A" dans les cellules web.
 
 --- RÈGLES POUR LA RECHERCHE WEB (web_search) ---
 - Utilise web_search UNIQUEMENT si le client pose une question générale sur un équipement médical (pas pour chercher dans le catalogue RZMedical).
@@ -397,10 +405,11 @@ async function executeTool(
       };
     }
     const results = await Promise.all(
-      keywords.slice(0, 3).map(async (kw: string) => {
+      keywords.slice(0, 4).map(async (kw: string) => {
         const q = typeof kw === "string" ? kw.trim() : "";
         if (!q) return { keyword: kw, produit: null, webInfo: [] };
-        // Recherche catalogue uniquement (web désactivé pour alléger les tokens)
+
+        // 1. Recherche catalogue
         let products: any[] = [];
         try {
           products = await searchProducts(q);
@@ -408,6 +417,18 @@ async function executeTool(
           products = [];
         }
         const p = Array.isArray(products) ? products[0] ?? null : null;
+
+        // 2. Recherche web Tavily pour enrichir les spécifications techniques
+        let webInfo: { title: string; url: string; content: string }[] = [];
+        if (p) {
+          const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} spécifications techniques certifications usage médical`;
+          try {
+            webInfo = await tavilySearch(searchQuery.trim(), 2);
+          } catch {
+            webInfo = [];
+          }
+        }
+
         return {
           keyword: kw,
           produit: p
@@ -416,16 +437,24 @@ async function executeTool(
                 reference: p.reference,
                 prix: Number(p.prix),
                 remise: Number(p.remise),
+                // Prix final avec remise
+                prixFinal: p.remise > 0
+                  ? Number(p.prix) * (1 - Number(p.remise) / 100)
+                  : Number(p.prix),
+                stock: p.stock ?? 0,
                 disponible: p.disponible,
                 marque: p.marque?.nom ?? "N/A",
                 categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
                 sousCategorie: p.sousCategorie?.nom ?? "N/A",
-                // Tronquer la description à 200 chars pour éviter les dépassements de tokens
-                description: (p.description ?? "").slice(0, 200),
+                description: (p.description ?? "").slice(0, 250),
                 paysFabrication: p.paysFabrication ?? "N/A",
+                tva: p.tva ? `${Number(p.tva)}%` : "N/A",
+                motsCles: Array.isArray(p.motsCles) ? p.motsCles.slice(0, 5).join(", ") : "N/A",
+                ficheTechnique: p.ficheTechnique ? "Disponible" : "Non disponible",
+                video: p.video ? "Disponible" : "Non disponible",
               }
             : null,
-          webInfo: [],
+          webInfo,
         };
       })
     );

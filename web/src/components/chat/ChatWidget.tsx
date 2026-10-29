@@ -161,6 +161,50 @@ function renderMarkdown(text: string): string {
 
 // ── Tableau de comparaison produits ───────────────────────────────────────────
 
+/** Détecte la "meilleure" colonne pour une ligne (prix le plus bas, stock le plus élevé, etc.) */
+function detectBestCol(values: string[]): number | null {
+  // Prix : cherche les valeurs numériques (premier nombre dans chaque cellule)
+  const nums = values.map((v) => {
+    const m = v.match(/[\d]+([.,]\d+)?/);
+    return m ? parseFloat(m[0].replace(",", ".")) : null;
+  });
+  if (nums.every((n) => n !== null)) {
+    // Pour le prix → plus bas = meilleur
+    const min = Math.min(...(nums as number[]));
+    return nums.indexOf(min);
+  }
+  return null;
+}
+
+function CompareCellValue({ val, isBest }: { val: string; isBest: boolean }) {
+  const hasCheck = val.includes("✅");
+  const hasCross = val.includes("❌");
+  const hasWarn  = val.includes("⚠️");
+
+  return (
+    <div
+      className={`px-2 py-2.5 text-[10.5px] text-center border-r border-slate-200/70 last:border-r-0 leading-snug transition-colors ${
+        hasCheck
+          ? "text-emerald-700 font-semibold bg-emerald-50/60"
+          : hasCross
+          ? "text-red-500 font-semibold bg-red-50/40"
+          : hasWarn
+          ? "text-amber-600 font-semibold bg-amber-50/50"
+          : isBest
+          ? "text-blue-700 font-semibold"
+          : "text-slate-700"
+      }`}
+    >
+      {val}
+      {isBest && !hasCheck && !hasCross && !hasWarn && (
+        <span className="ml-0.5 text-[8px] bg-blue-100 text-blue-700 px-1 py-0.5 rounded-full align-middle">
+          ★
+        </span>
+      )}
+    </div>
+  );
+}
+
 function CompareTable({
   products,
   rows,
@@ -169,64 +213,107 @@ function CompareTable({
   rows: { label: string; values: string[] }[];
 }) {
   const colCount = products.length;
+
+  // Colonnes gagnantes par ligne (pour mettre en valeur le meilleur choix)
+  const bestCols: (number | null)[] = rows.map((row) => {
+    const lbl = row.label.toLowerCase();
+    // Pour les lignes de prix : meilleur = plus bas
+    if (lbl.includes("prix")) {
+      const nums = row.values.map((v) => {
+        const m = v.match(/[\d]+([.,]\d+)?/);
+        return m ? parseFloat(m[0].replace(",", ".")) : null;
+      });
+      if (nums.every((n) => n !== null)) {
+        const min = Math.min(...(nums as number[]));
+        return nums.indexOf(min);
+      }
+    }
+    // Pour le stock : meilleur = plus haut
+    if (lbl.includes("stock")) {
+      const nums = row.values.map((v) => {
+        const m = v.match(/\d+/);
+        return m ? parseInt(m[0]) : 0;
+      });
+      const max = Math.max(...nums);
+      return max > 0 ? nums.indexOf(max) : null;
+    }
+    return null;
+  });
+
   return (
     <div
-      className="my-3 w-full overflow-x-auto rounded-2xl border border-slate-200 shadow-md"
+      className="my-3 w-full overflow-hidden rounded-2xl border border-slate-200/80 shadow-lg"
       style={{ maxWidth: "100%" }}
     >
-      {/* Header produits */}
+      {/* ── Header produits ── */}
       <div
         className="grid"
-        style={{ gridTemplateColumns: `100px repeat(${colCount}, 1fr)` }}
+        style={{ gridTemplateColumns: `96px repeat(${colCount}, 1fr)` }}
       >
+        {/* Coin haut-gauche vide */}
         <div
-          className="px-2 py-2.5 border-b border-r border-white/10"
-          style={{ background: "linear-gradient(135deg, #0c2340 0%, #1a3a6b 100%)" }}
-        />
+          className="px-2 py-3 border-b border-r border-white/15 flex items-center justify-center"
+          style={{ background: "linear-gradient(135deg, #0c2340 0%, #1565c0 100%)" }}
+        >
+          <span className="text-[9px] text-white/60 font-semibold uppercase tracking-wide">Critères</span>
+        </div>
+
+        {/* Colonnes produits */}
         {products.map((name, i) => (
           <div
             key={i}
-            className="px-2 py-2.5 text-[11px] font-bold text-white text-center leading-tight border-b border-r border-white/10 last:border-r-0"
-            style={{ background: "linear-gradient(135deg, #0c2340 0%, #1a3a6b 100%)" }}
+            className="px-2 py-3 flex flex-col items-center justify-center border-b border-r border-white/15 last:border-r-0 gap-0.5"
+            style={{ background: i === 0
+              ? "linear-gradient(135deg, #0c2340 0%, #1565c0 100%)"
+              : "linear-gradient(135deg, #1a3a5c 0%, #0d47a1 100%)"
+            }}
           >
-            {name}
+            <span className="text-[11px] font-bold text-white text-center leading-tight line-clamp-2">
+              {name}
+            </span>
+            {i === 0 && colCount === 2 && (
+              <span className="text-[8px] bg-white/20 text-white/90 px-1.5 py-0.5 rounded-full">A</span>
+            )}
+            {i === 1 && colCount === 2 && (
+              <span className="text-[8px] bg-white/20 text-white/90 px-1.5 py-0.5 rounded-full">B</span>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Lignes */}
+      {/* ── Lignes de données ── */}
       {rows.map((row, ri) => (
         <div
           key={ri}
-          className="grid items-center"
+          className="grid items-stretch border-b border-slate-100 last:border-b-0"
           style={{
-            gridTemplateColumns: `100px repeat(${colCount}, 1fr)`,
-            background: ri % 2 === 0 ? "#ffffff" : "#f8fafc",
+            gridTemplateColumns: `96px repeat(${colCount}, 1fr)`,
+            background: ri % 2 === 0 ? "#ffffff" : "#f8fafd",
           }}
         >
-          <div className="px-2 py-2 text-[10px] font-semibold text-navy-800 border-r border-slate-200 bg-slate-50 leading-tight">
+          {/* Étiquette critère */}
+          <div className="px-2 py-2.5 text-[10px] font-semibold text-slate-600 border-r border-slate-200/70 bg-slate-50 leading-tight flex items-center">
             {row.label}
           </div>
-          {row.values.map((val, vi) => {
-            const isPositive = val.includes("✅");
-            const isNegative = val.includes("❌");
-            return (
-              <div
-                key={vi}
-                className={`px-2 py-2 text-[10px] text-center border-r border-slate-200 last:border-r-0 leading-tight ${
-                  isPositive
-                    ? "text-emerald-600 font-semibold"
-                    : isNegative
-                    ? "text-red-500 font-semibold"
-                    : "text-slate-700"
-                }`}
-              >
-                {val}
-              </div>
-            );
-          })}
+
+          {/* Valeurs par produit */}
+          {row.values.map((val, vi) => (
+            <CompareCellValue
+              key={vi}
+              val={val}
+              isBest={bestCols[ri] === vi}
+            />
+          ))}
         </div>
       ))}
+
+      {/* ── Pied de tableau ── */}
+      <div
+        className="px-3 py-2 text-[9px] text-white/70 text-right"
+        style={{ background: "linear-gradient(135deg, #0c2340 0%, #1565c0 100%)" }}
+      >
+        Comparaison RZBot · données catalogue RZMedical
+      </div>
     </div>
   );
 }
