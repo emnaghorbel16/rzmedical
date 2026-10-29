@@ -786,7 +786,7 @@ export function ChatWidget() {
           role="dialog"
           aria-label="Assistant RZBot"
           aria-modal="true"
-          className="chat-window-enter fixed bottom-24 right-4 sm:right-6 z-[110] flex flex-col w-[90vw] max-w-[380px] h-[560px] max-h-[80vh] rounded-2xl overflow-hidden"
+          className="chat-window-enter fixed bottom-24 right-4 sm:right-6 z-[110] flex flex-col w-[340px] sm:w-[380px] h-[560px] max-h-[80vh] rounded-2xl overflow-hidden"
           style={{
             background: "#ffffff",
             border: "1px solid #e2e8f0",
