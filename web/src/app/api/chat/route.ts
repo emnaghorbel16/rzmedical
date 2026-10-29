@@ -77,6 +77,7 @@ function decodeHtmlEntities(str: string): string {
 }
 
 async function webSearchFallback(query: string, maxResults = 4): Promise<{ title: string; url: string; content: string }[]> {
+  console.log(`🦆 [DuckDuckGo] Lancement recherche fallback: "${query}" (max: ${maxResults})`);
   return new Promise((resolve) => {
     const postData = "q=" + encodeURIComponent(query);
     const options = {
@@ -98,6 +99,7 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         if (res.statusCode !== 200) {
+          console.warn(`⚠️ [DuckDuckGo] Statut HTTP non-200 : ${res.statusCode}`);
           return resolve([]);
         }
 
@@ -113,14 +115,18 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
           return match ? decodeURIComponent(match[1]) : u;
         });
 
+        console.log(`🦆 [DuckDuckGo] ${titles.length} résultat(s) brut(s) trouvé(s) pour "${query}"`);
+
         const results: { title: string; url: string; content: string }[] = [];
         for (let i = 0; i < Math.min(titles.length, maxResults); i++) {
           if (snippets[i] || titles[i]) {
             results.push({
               title: titles[i] || "Résultat web",
               url: urls[i] || "",
-              content: (snippets[i] || "").slice(0, 500),
+              content: (snippets[i] || "").slice(0, 750),
             });
+            console.log(`   └─ [Web ${i + 1}] "${titles[i]}" (${urls[i]?.slice(0, 45) ?? ""}...)`);
+            console.log(`      Extrait: ${(snippets[i] || "").slice(0, 140)}...`);
           }
         }
         resolve(results);
@@ -128,7 +134,7 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
     });
 
     req.on("error", (err) => {
-      console.error("[webSearchFallback] Erreur:", err);
+      console.error("❌ [DuckDuckGo] Erreur réseau:", err);
       resolve([]);
     });
 
@@ -139,8 +145,12 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
 
 async function tavilySearch(query: string, maxResults = 3): Promise<{ title: string; url: string; content: string }[]> {
   const apiKey = process.env.TAVILY_API_KEY;
-  if (!apiKey) return [];
+  if (!apiKey) {
+    console.log("ℹ️ [Tavily] Pas de clé TAVILY_API_KEY, passage au moteur DuckDuckGo.");
+    return [];
+  }
 
+  console.log(`🔎 [Tavily] Requête envoyée: "${query}"`);
   try {
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
@@ -154,25 +164,30 @@ async function tavilySearch(query: string, maxResults = 3): Promise<{ title: str
         include_domains: [],
       }),
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.error(`❌ [Tavily] Erreur API statut ${res.status}:`, await res.text().catch(() => ""));
+      return [];
+    }
     const data = await res.json();
     const results: { title: string; url: string; content: string }[] = (data.results ?? []).map((r: any) => ({
       title: r.title ?? "",
       url: r.url ?? "",
-      content: (r.content ?? "").slice(0, 400),
+      content: (r.content ?? "").slice(0, 750),
     }));
     if (data.answer) {
-      results.unshift({ title: "Synthèse", url: "", content: data.answer.slice(0, 500) });
+      results.unshift({ title: "Synthèse Tavily", url: "", content: data.answer.slice(0, 600) });
     }
+    console.log(`✅ [Tavily] ${results.length} résultat(s) retourné(s) pour "${query}"`);
     return results;
-  } catch {
+  } catch (err) {
+    console.error("❌ [Tavily] Erreur exception fetch:", err);
     return [];
   }
 }
 
 async function performWebSearch(query: string, maxResults = 4): Promise<{ title: string; url: string; content: string }[]> {
   const engine = process.env.TAVILY_API_KEY ? "Tavily" : "DuckDuckGo / Web";
-  console.log(`🌐 [RZBot Web Search] Lancement recherche: "${query}" (Moteur: ${engine})`);
+  console.log(`\n🌐 [RZBot Web Search] Lancement recherche: "${query}" (Moteur: ${engine})`);
   
   let results: { title: string; url: string; content: string }[] = [];
   if (process.env.TAVILY_API_KEY) {
@@ -182,7 +197,7 @@ async function performWebSearch(query: string, maxResults = 4): Promise<{ title:
     results = await webSearchFallback(query, maxResults);
   }
 
-  console.log(`✅ [RZBot Web Search] ${results.length} résultat(s) web trouvé(s) pour: "${query}"`);
+  console.log(`✅ [RZBot Web Search] Total ${results.length} résultat(s) web récupéré(s) pour: "${query}"\n`);
   return results;
 }
 
@@ -568,7 +583,14 @@ async function executeTool(
   if (functionName === "search_products") {
     const q = typeof args.q === "string" && args.q.trim() ? args.q.trim() : "";
     if (!q) throw new Error("Le paramètre 'q' est requis pour search_products.");
-    const products = await searchProducts(q);
+    console.log(`🔍 [search_products] Recherche BDD pour: "${q}"`);
+    let products: any[] = [];
+    try {
+      products = await searchProducts(q);
+      console.log(`📦 [search_products] ${products.length} produit(s) trouvé(s) en base pour "${q}"`);
+    } catch (err) {
+      console.error(`❌ [search_products] Erreur requête BDD pour "${q}":`, err);
+    }
     const mapped = products
       .map((p) => ({
         nom: p.nom,
@@ -610,11 +632,16 @@ async function executeTool(
         const q = typeof kw === "string" ? kw.trim() : "";
         if (!q) return { keyword: kw, dansCatalogue: false, produit: null, webInfo: [] };
 
+        console.log(`\n======================================================`);
+        console.log(`🔍 [compare_products] Recherche BDD pour le mot-clé: "${q}"`);
+
         // 1. Recherche DANS le catalogue RZMedical
         let products: any[] = [];
         try {
           products = await searchProducts(q);
-        } catch {
+          console.log(`📦 [compare_products] Résultat BDD pour "${q}": ${products.length} produit(s) trouvé(s)`);
+        } catch (dbErr) {
+          console.error(`❌ [compare_products] Erreur requête BDD pour "${q}":`, dbErr);
           products = [];
         }
         const p = Array.isArray(products) ? products[0] ?? null : null;
@@ -622,17 +649,24 @@ async function executeTool(
         // 2. Recherche web UNIQUEMENT pour les produits du catalogue afin de compléter les descriptions/spécifications manquantes
         let webInfo: { title: string; url: string; content: string }[] = [];
         if (p) {
-          const descManquante = !p.description || p.description.trim().length < 150;
-          console.log(`ℹ️ [compare_products] Produit catalogue : "${p.nom}" (${p.marque?.nom ?? "Sans marque"}). Description ${descManquante ? "incomplète -> recherche web de complétion" : "présente"}.`);
+          const descLen = p.description ? p.description.trim().length : 0;
+          console.log(`✅ [compare_products] Produit sélectionné : "${p.nom}"`);
+          console.log(`   - Marque : ${p.marque?.nom ?? "N/A"} | Réf : ${p.reference}`);
+          console.log(`   - Description en base (${descLen} car.) : ${p.description ? `"${p.description.slice(0, 100)}..."` : "VIDE / INEXISTANTE"}`);
+
           try {
             const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim();
+            console.log(`🚀 [compare_products] Déclenchement recherche web pour enrichir "${p.nom}"`);
             webInfo = await performWebSearch(searchQuery, 6);
-          } catch {
+            console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
+          } catch (webErr) {
+            console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
             webInfo = [];
           }
         } else {
-          console.log(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical. Non inclus dans la comparaison.`);
+          console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical -> Aucune recherche web effectuée.`);
         }
+        console.log(`======================================================\n`);
 
         return {
           keyword: kw,
