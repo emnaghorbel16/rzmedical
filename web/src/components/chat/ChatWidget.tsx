@@ -591,6 +591,8 @@ export function ChatWidget() {
       const ctrl = new AbortController();
       abortRef.current = ctrl;
 
+      console.log("💬 [RZBot Navigateur (F12)] Envoi du message au serveur:", text.trim() || "(image)");
+
       try {
         const res = await fetch("/api/chat", {
           method: "POST",
@@ -601,6 +603,8 @@ export function ChatWidget() {
           body: JSON.stringify({ messages: history }),
           signal: ctrl.signal,
         });
+
+        console.log("📡 [RZBot Navigateur (F12)] Réponse HTTP statut:", res.status);
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));

@@ -818,10 +818,15 @@ Mots-clés: [2-3 mots-clés courts pour chercher dans un catalogue médical]`,
 }
 
 export async function POST(req: Request) {
+  console.log("\n=======================================================");
+  console.log("🚀 [SERVER /api/chat] NOUVELLE REQUÊTE CHAT REÇUE DU NAVIGATEUR !");
   try {
     const { messages } = (await req.json()) as { messages: ChatMessage[] };
+    const lastUserMsg = messages?.[messages.length - 1];
+    console.log(`📩 [SERVER /api/chat] Message du client : "${lastUserMsg?.content ?? "(aucun texte)"}"`);
 
     if (!messages || !Array.isArray(messages)) {
+      console.error("❌ [SERVER /api/chat] Format messages invalide");
       return new Response(JSON.stringify({ error: "Invalid messages array" }), {
         status: 400,
       });
