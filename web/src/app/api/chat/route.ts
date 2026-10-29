@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MAX_TOOL_ROUNDS = 4; // évite les boucles infinies d'appels d'outils
+const MAX_TOOL_ROUNDS = 6; // compare_products + web_search peuvent enchaîner plusieurs appels
 
 async function groqChat(body: Record<string, unknown>, fallbackModel?: string): Promise<{ data: any; headers: Headers }> {
   const apiKey = process.env.GROQ_API_KEY;
@@ -38,6 +38,42 @@ async function groqChat(body: Record<string, unknown>, fallbackModel?: string): 
 
   const data = await response.json();
   return { data, headers: response.headers };
+}
+
+// ─── Recherche web via Tavily AI ──────────────────────────────────────────────
+async function tavilySearch(query: string, maxResults = 3): Promise<{ title: string; url: string; content: string }[]> {
+  const apiKey = process.env.TAVILY_API_KEY;
+  if (!apiKey) return []; // Désactivé si clé absente — pas bloquant
+
+  try {
+    const res = await fetch("https://api.tavily.com/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        api_key: apiKey,
+        query,
+        search_depth: "basic",
+        include_answer: true,
+        max_results: maxResults,
+        include_domains: [], // pas de restriction de domaine
+      }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    // Tavily retourne { results: [{title, url, content}], answer }
+    const results: { title: string; url: string; content: string }[] = (data.results ?? []).map((r: any) => ({
+      title: r.title ?? "",
+      url: r.url ?? "",
+      content: (r.content ?? "").slice(0, 400), // limiter à 400 chars par résultat
+    }));
+    // Ajouter la réponse synthétisée de Tavily en premier si disponible
+    if (data.answer) {
+      results.unshift({ title: "Synthèse", url: "", content: data.answer.slice(0, 500) });
+    }
+    return results;
+  } catch {
+    return [];
+  }
 }
 
 // ─── Enregistre l'usage Groq dans le backend ─────────────────────────────────
@@ -86,6 +122,8 @@ Ton rôle :
 - Aider les clients à trouver les bons produits dans le catalogue.
 - Répondre aux questions sur les équipements médicaux, dentaires, etc.
 - Donner des conseils professionnels.
+- Comparer des produits à la demande du client.
+- Enrichir les comparaisons avec des informations techniques issues du web (spécifications, certifications, usages).
 
 Règles importantes :
 - TU DOIS UTILISER LES OUTILS (Fonctions) fournis pour chercher des produits, des prix, des catégories ou des marques avant de répondre à une question sur le catalogue. Ne devine jamais les prix ou le stock.
@@ -119,6 +157,38 @@ Règles importantes :
 - INTERDICTION ABSOLUE DE REMISE : Tu ne dois JAMAIS proposer, accorder, négocier ou mentionner une remise, réduction, promotion spéciale ou geste commercial à un client, quelle que soit sa demande. Si le client demande une remise, réponds poliment que les prix affichés sont les prix officiels de RZMedical et que pour toute demande commerciale particulière, il doit contacter directement notre équipe commerciale.
 - Si le client demande un numéro de téléphone, un email, une adresse ou le site web de RZMedical, tu DOIS utiliser l'outil get_contact_info. Ne devine et n'invente JAMAIS ces informations — si l'outil renvoie une valeur vide (null), dis au client que cette information n'est pas encore disponible et propose une alternative (ex: page contact du site).
 - Si un outil renvoie une erreur d'authentification, explique poliment au client qu'il doit se connecter à son compte pour accéder à cette information.
+
+--- RÈGLES DE COMPARAISON DE PRODUITS ---
+Quand le client demande de comparer deux produits ou plus (ex: "compare X et Y", "quelle différence entre X et Y", "lequel choisir entre X et Y") :
+1. Utilise l'outil compare_products avec les mots-clés courts de chaque produit.
+2. L'outil renvoie automatiquement les données du catalogue ET des infos web (spécifications techniques, certifications, usages typiques) pour chaque produit.
+3. Génère ensuite UN SEUL tag [COMPARE|...] structuré comme suit (remplace les exemples par les vraies données) :
+
+[COMPARE|Produit A|Produit B]
+[COMPARE_ROW|Prix|150 TND|280 TND]
+[COMPARE_ROW|Marque|MedLine|3M]
+[COMPARE_ROW|Disponible|✅ Oui|❌ Non]
+[COMPARE_ROW|Catégorie|Dentaire|Dentaire]
+[COMPARE_ROW|Référence|REF-A|REF-B]
+[COMPARE_ROW|Spécifications|Double tête 27Hz|Simple tête 20Hz]
+[COMPARE_ROW|Certification|CE, ISO 13485|CE]
+[COMPARE_ROW|Usage typique|Cardio + Pulmo|Chirurgie générale]
+[COMPARE_END]
+
+Règles du format COMPARE :
+- Le premier tag [COMPARE|NomA|NomB] déclare les noms des produits.
+- Chaque [COMPARE_ROW|Critère|ValeurA|ValeurB] est une ligne du tableau.
+- Termine TOUJOURS par [COMPARE_END].
+- Utilise les données réelles de l'outil. Les infos web (spécifications, certification, usage) sont dans le champ webInfo de chaque produit.
+- Place le tableau après une courte introduction, puis ajoute ta recommandation et les suggestions.
+- Si plus de 2 produits : ajoute les colonnes supplémentaires séparées par |.
+- Si webInfo est vide pour un produit, laisse "N/A" dans les cellules web.
+
+--- RÈGLES POUR LA RECHERCHE WEB (web_search) ---
+- Utilise web_search UNIQUEMENT si le client pose une question générale sur un équipement médical (pas pour chercher dans le catalogue RZMedical).
+- Exemple d'usage : "Qu'est-ce qu'un tensiomètre à mercure ?", "Quelles sont les certifications obligatoires pour les gants chirurgicaux ?"
+- Ne jamais inventer des URLs ou des sources. Cite les sources Tavily telles quelles.
+- Si Tavily renvoie une réponse vide, dis que tu n'as pas trouvé d'info externe et propose de contacter l'équipe.
 
 --- RÈGLES SPÉCIALES POUR LA RECHERCHE PAR IMAGE ---
 Quand le message contient une balise [Image identifiée : ...] avec des caractéristiques extraites par l'IA :
@@ -214,6 +284,44 @@ const tools = [
       parameters: { type: "object", properties: {} },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "web_search",
+      description:
+        "Recherche des informations techniques sur le web via Tavily AI. Utiliser pour des questions générales sur les équipements médicaux (spécifications, certifications, comparatif de produits). NE PAS utiliser pour chercher des produits dans le catalogue RZMedical (utiliser search_products à la place).",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "La requête de recherche en français ou en anglais. Ex: \"tensiomètre Omron M3 spécifications techniques\".",
+          },
+        },
+        required: ["query"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "compare_products",
+      description:
+        "Compare plusieurs produits du catalogue RZMedical côte à côte. Utilise cet outil quand le client demande de comparer deux produits ou plus. Renvoie les données complètes du catalogue (prix, marque, disponibilité, catégorie, référence, description) ET des informations web enrichies (spécifications techniques, certifications, usages) via Tavily.",
+      parameters: {
+        type: "object",
+        properties: {
+          keywords: {
+            type: "array",
+            items: { type: "string" },
+            description:
+              "Liste de 2 à 4 mots-clés courts (un par produit à comparer). Exemple : [\"tensiomètre omron\", \"tensiomètre rossmax\"].",
+          },
+        },
+        required: ["keywords"],
+      },
+    },
+  },
 ];
 
 type ToolCall = {
@@ -249,6 +357,52 @@ async function executeTool(
         categorie: p.sousCategorie?.categorie?.nom,
       }))
       .slice(0, 10);
+  }
+
+  if (functionName === "web_search") {
+    const query = typeof args.query === "string" && args.query.trim() ? args.query.trim() : "";
+    if (!query) throw new Error("Le paramètre 'query' est requis pour web_search.");
+    const results = await tavilySearch(query, 4);
+    if (results.length === 0) return { message: "Aucun résultat web trouvé." };
+    return results;
+  }
+
+  if (functionName === "compare_products") {
+    const keywords = Array.isArray(args.keywords) ? args.keywords : [];
+    if (keywords.length < 2) throw new Error("Au moins 2 mots-clés sont requis pour la comparaison.");
+    const results = await Promise.all(
+      keywords.slice(0, 4).map(async (kw: string) => {
+        const q = typeof kw === "string" ? kw.trim() : "";
+        if (!q) return { keyword: kw, produit: null, webInfo: [] };
+        // Recherche catalogue + web en parallèle
+        const [products, webResults] = await Promise.all([
+          searchProducts(q),
+          tavilySearch(`${q} spécifications techniques équipement médical`, 2),
+        ]);
+        const p = products[0] ?? null;
+        return {
+          keyword: kw,
+          produit: p
+            ? {
+                nom: p.nom,
+                reference: p.reference,
+                prix: Number(p.prix),
+                remise: Number(p.remise),
+                disponible: p.disponible,
+                marque: p.marque?.nom ?? "N/A",
+                categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
+                sousCategorie: p.sousCategorie?.nom ?? "N/A",
+                description: p.description ?? "",
+                tva: Number(p.tva),
+                paysFabrication: p.paysFabrication ?? "N/A",
+              }
+            : null,
+          // Informations web enrichies (spécifications, certifications, etc.)
+          webInfo: webResults.map(r => r.content).filter(Boolean),
+        };
+      })
+    );
+    return results;
   }
 
   if (functionName === "get_categories") {

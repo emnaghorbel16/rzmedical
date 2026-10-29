@@ -27,6 +27,7 @@ const QUICK_SUGGESTIONS = [
   "Comment passer une commande ?",
   "Livraison en Tunisie ?",
   "Vos marques disponibles ?",
+  "Comparez deux produits pour moi",
 ];
 
 // ── Icônes SVG inline (pas de dépendance externe) ─────────────────────────────
@@ -130,18 +131,89 @@ function renderMarkdown(text: string): string {
     .replace(/\n/g, "<br />");
 }
 
-// ── Rendu de Contenu Riche (Cartes Produits & Suggestions) ──────────────────────
+// ── Tableau de comparaison produits ───────────────────────────────────────────
 
-function renderMessageContent(content: string, onSuggestionClick?: (text: string) => void) {
-  // Recherche des tags [PRODUCT|Nom|Prix|Reference] ou [SUGGESTION|Texte]
+function CompareTable({
+  products,
+  rows,
+}: {
+  products: string[];
+  rows: { label: string; values: string[] }[];
+}) {
+  const colCount = products.length;
+  return (
+    <div
+      className="my-3 w-full overflow-x-auto rounded-2xl border border-slate-200 shadow-md"
+      style={{ maxWidth: "100%" }}
+    >
+      {/* Header produits */}
+      <div
+        className="grid"
+        style={{ gridTemplateColumns: `100px repeat(${colCount}, 1fr)` }}
+      >
+        <div
+          className="px-2 py-2.5 border-b border-r border-white/10"
+          style={{ background: "linear-gradient(135deg, #0c2340 0%, #1a3a6b 100%)" }}
+        />
+        {products.map((name, i) => (
+          <div
+            key={i}
+            className="px-2 py-2.5 text-[11px] font-bold text-white text-center leading-tight border-b border-r border-white/10 last:border-r-0"
+            style={{ background: "linear-gradient(135deg, #0c2340 0%, #1a3a6b 100%)" }}
+          >
+            {name}
+          </div>
+        ))}
+      </div>
+
+      {/* Lignes */}
+      {rows.map((row, ri) => (
+        <div
+          key={ri}
+          className="grid items-center"
+          style={{
+            gridTemplateColumns: `100px repeat(${colCount}, 1fr)`,
+            background: ri % 2 === 0 ? "#ffffff" : "#f8fafc",
+          }}
+        >
+          <div className="px-2 py-2 text-[10px] font-semibold text-navy-800 border-r border-slate-200 bg-slate-50 leading-tight">
+            {row.label}
+          </div>
+          {row.values.map((val, vi) => {
+            const isPositive = val.includes("✅");
+            const isNegative = val.includes("❌");
+            return (
+              <div
+                key={vi}
+                className={`px-2 py-2 text-[10px] text-center border-r border-slate-200 last:border-r-0 leading-tight ${
+                  isPositive
+                    ? "text-emerald-600 font-semibold"
+                    : isNegative
+                    ? "text-red-500 font-semibold"
+                    : "text-slate-700"
+                }`}
+              >
+                {val}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Rendu inline (PRODUCT + SUGGESTION) ───────────────────────────────────────
+
+function renderInlineContent(content: string, onSuggestionClick?: (text: string) => void) {
   const regex = /\[PRODUCT\|(.*?)\|(.*?)\|(.*?)\]|\[SUGGESTION\|(.*?)\]/g;
-  const parts: React.ReactNode[] = [];
+  const inlineParts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
 
   while ((match = regex.exec(content)) !== null) {
     if (match.index > lastIndex) {
-      parts.push(
+      inlineParts.push(
         <span
           key={`text-${lastIndex}`}
           dangerouslySetInnerHTML={{ __html: renderMarkdown(content.slice(lastIndex, match.index)) }}
@@ -150,9 +222,8 @@ function renderMessageContent(content: string, onSuggestionClick?: (text: string
     }
 
     if (match[4]) {
-      // C'est un tag SUGGESTION
       const suggestionText = match[4];
-      parts.push(
+      inlineParts.push(
         <button
           key={`sugg-${match.index}`}
           onClick={() => onSuggestionClick?.(suggestionText)}
@@ -162,9 +233,8 @@ function renderMessageContent(content: string, onSuggestionClick?: (text: string
         </button>
       );
     } else {
-      // C'est un tag PRODUCT
       const [, nom, prix, ref] = match;
-      parts.push(
+      inlineParts.push(
         <div key={`card-${match.index}`} className="my-2 p-3 border border-azure-200/60 rounded-xl bg-white shadow-sm flex flex-col gap-1 w-[240px]">
           <div className="flex items-start justify-between gap-2">
             <span className="font-bold text-navy-800 text-[13px] leading-tight">{nom}</span>
@@ -173,7 +243,7 @@ function renderMessageContent(content: string, onSuggestionClick?: (text: string
             <span className="text-azure-600 font-bold text-[14px]">{prix} TND</span>
             <span className="text-[10px] text-slate-400 font-mono">Réf: {ref}</span>
           </div>
-          <a 
+          <a
             href={`/produit/${ref}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -188,15 +258,96 @@ function renderMessageContent(content: string, onSuggestionClick?: (text: string
   }
 
   if (lastIndex < content.length) {
-    parts.push(
+    inlineParts.push(
       <span
-        key={`text-${lastIndex}`}
+        key={`text-end-${lastIndex}`}
         dangerouslySetInnerHTML={{ __html: renderMarkdown(content.slice(lastIndex)) }}
       />
     );
   }
 
-  return parts.length > 0 ? <>{parts}</> : <span dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />;
+  return inlineParts.length > 0
+    ? <>{inlineParts}</>
+    : <span dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />;
+}
+
+// ── Rendu de Contenu Riche (Cartes Produits & Suggestions & Comparaisons) ────
+
+function renderMessageContent(content: string, onSuggestionClick?: (text: string) => void) {
+  // Détection des blocs COMPARE (multi-lignes):
+  //   [COMPARE|NomA|NomB]
+  //   [COMPARE_ROW|Critère|ValA|ValB]
+  //   [COMPARE_END]
+  const compareBlockRegex =
+    /\[COMPARE\|([^\]]+)\]([\s\S]*?)\[COMPARE_END\]/g;
+
+  interface Segment {
+    type: "text" | "compare";
+    content: string;
+    products?: string[];
+    rows?: { label: string; values: string[] }[];
+  }
+
+  const segments: Segment[] = [];
+  let lastIdx = 0;
+  let cMatch: RegExpExecArray | null;
+
+  while ((cMatch = compareBlockRegex.exec(content)) !== null) {
+    if (cMatch.index > lastIdx) {
+      segments.push({ type: "text", content: content.slice(lastIdx, cMatch.index) });
+    }
+
+    // Noms des produits : séparés par ||| ou par |
+    const namesRaw = cMatch[1]
+      .split(/\|+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    // Parser les COMPARE_ROW
+    const bodyRaw = cMatch[2];
+    const rows: { label: string; values: string[] }[] = [];
+    const rowRegex = /\[COMPARE_ROW\|([^\]]+)\]/g;
+    let rMatch: RegExpExecArray | null;
+    while ((rMatch = rowRegex.exec(bodyRaw)) !== null) {
+      const parts2 = rMatch[1].split("|");
+      const label = parts2[0].trim();
+      const values = parts2.slice(1).map((v) => v.trim());
+      rows.push({ label, values });
+    }
+
+    segments.push({ type: "compare", content: "", products: namesRaw, rows });
+    lastIdx = compareBlockRegex.lastIndex;
+  }
+
+  if (lastIdx < content.length) {
+    segments.push({ type: "text", content: content.slice(lastIdx) });
+  }
+
+  // Si aucun bloc COMPARE trouvé → rendu inline classique
+  if (!segments.some((s) => s.type === "compare")) {
+    return renderInlineContent(content, onSuggestionClick);
+  }
+
+  return (
+    <>
+      {segments.map((seg, i) => {
+        if (seg.type === "compare" && seg.products && seg.rows) {
+          return (
+            <CompareTable
+              key={`cmp-${i}`}
+              products={seg.products}
+              rows={seg.rows}
+            />
+          );
+        }
+        return (
+          <span key={`seg-${i}`}>
+            {renderInlineContent(seg.content, onSuggestionClick)}
+          </span>
+        );
+      })}
+    </>
+  );
 }
 
 // ── Bubble de message ─────────────────────────────────────────────────────────
