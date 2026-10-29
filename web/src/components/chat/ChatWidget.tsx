@@ -62,7 +62,7 @@ const QUICK_SUGGESTIONS = [
 
 function IconBot() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0" aria-hidden>
       <rect x="3" y="8" width="18" height="13" rx="3" stroke="currentColor" strokeWidth="1.8" />
       <path d="M12 3v5M9 3h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       <circle cx="9" cy="14" r="1.5" fill="currentColor" />
@@ -476,11 +476,11 @@ function MessageBubble({ msg, onSuggestionClick }: { msg: Message; onSuggestionC
 
   return (
     <div
-      className={`flex items-end gap-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      className={`flex items-start gap-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}
     >
       {/* Avatar bot */}
       {!isUser && (
-        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-azure-500 to-navy-800 flex items-center justify-center text-white shadow-sm">
+        <div className="w-7 h-7 min-w-[28px] min-h-[28px] max-w-[28px] max-h-[28px] shrink-0 rounded-full bg-gradient-to-br from-azure-500 to-navy-800 flex items-center justify-center text-white shadow-sm mt-0.5">
           <IconBot />
         </div>
       )}
@@ -855,8 +855,8 @@ export function ChatWidget() {
             {/* Message de bienvenue */}
             {messages.length === 0 && (
               <div className="chat-msg-enter">
-                <div className="flex items-end gap-2">
-                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-azure-600 to-navy-800 flex items-center justify-center text-white shadow-sm">
+                <div className="flex items-start gap-2">
+                  <div className="w-7 h-7 min-w-[28px] min-h-[28px] max-w-[28px] max-h-[28px] shrink-0 rounded-full bg-gradient-to-br from-azure-600 to-navy-800 flex items-center justify-center text-white shadow-sm mt-0.5">
                     <IconBot />
                   </div>
                   <div className="flex flex-col gap-0.5">
