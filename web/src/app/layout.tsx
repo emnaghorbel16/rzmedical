@@ -83,10 +83,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export const metadata_links = [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-];
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const companyInfo = await getCompanyInfo().catch(() => null);
