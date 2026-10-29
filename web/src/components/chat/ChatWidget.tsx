@@ -633,12 +633,19 @@ export function ChatWidget() {
             const raw = line.slice(6).trim();
             if (raw === "[DONE]") break;
 
-            let parsed: { error?: string; text?: string };
+            let parsed: { error?: string; text?: string; log?: string };
             try {
               parsed = JSON.parse(raw);
             } catch {
               // ligne mal formée, on ignore
               continue;
+            }
+
+            if (parsed.log) {
+              console.log(
+                `%c[RZBot F12] ${parsed.log}`,
+                "color: #0284c7; background: #f0f9ff; padding: 2px 8px; border-radius: 4px; font-weight: 600; border-left: 3px solid #0284c7;"
+              );
             }
 
             if (parsed.error) throw new Error(parsed.error);
@@ -654,6 +661,8 @@ export function ChatWidget() {
             }
           }
         }
+
+        console.log("%c[RZBot F12] ✅ Réponse complète reçue et affichée.", "color: #16a34a; font-weight: bold;");
 
         // Fin du streaming
         setMessages((prev) =>

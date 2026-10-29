@@ -570,6 +570,7 @@ async function executeTool(
   functionName: string,
   rawArgs: string,
   clientToken?: string,
+  onLog?: (msg: string) => void,
 ): Promise<unknown> {
   let args: Record<string, unknown> = {};
   try {
@@ -584,12 +585,15 @@ async function executeTool(
     const q = typeof args.q === "string" && args.q.trim() ? args.q.trim() : "";
     if (!q) throw new Error("Le paramètre 'q' est requis pour search_products.");
     console.log(`🔍 [search_products] Recherche BDD pour: "${q}"`);
+    onLog?.(`🔍 Recherche catalogue pour "${q}"...`);
     let products: any[] = [];
     try {
       products = await searchProducts(q);
       console.log(`📦 [search_products] ${products.length} produit(s) trouvé(s) en base pour "${q}"`);
+      onLog?.(`📦 BDD : ${products.length} produit(s) trouvé(s) pour "${q}"`);
     } catch (err) {
       console.error(`❌ [search_products] Erreur requête BDD pour "${q}":`, err);
+      onLog?.(`❌ Erreur BDD pour "${q}"`);
     }
     const mapped = products
       .map((p) => ({
@@ -615,7 +619,9 @@ async function executeTool(
   if (functionName === "web_search") {
     const query = typeof args.query === "string" && args.query.trim() ? args.query.trim() : "";
     if (!query) throw new Error("Le paramètre 'query' est requis pour web_search.");
+    onLog?.(`🌐 Recherche Web (Google/Web) pour "${query}"...`);
     const results = await performWebSearch(query, 4);
+    onLog?.(`✅ ${results.length} résultat(s) web récupéré(s) pour "${query}"`);
     if (results.length === 0) return { message: "Aucun résultat web trouvé pour cette requête." };
     return results;
   }
@@ -627,6 +633,7 @@ async function executeTool(
         message: "Moins de 2 mots-clés fournis. Indiquez au moins deux produits ou références à comparer.",
       };
     }
+    onLog?.(`🔄 Comparaison catalogue demandée pour : ${keywords.join(" vs ")}`);
     const results = await Promise.all(
       keywords.slice(0, 4).map(async (kw: string) => {
         const q = typeof kw === "string" ? kw.trim() : "";
@@ -653,18 +660,22 @@ async function executeTool(
           console.log(`✅ [compare_products] Produit sélectionné : "${p.nom}"`);
           console.log(`   - Marque : ${p.marque?.nom ?? "N/A"} | Réf : ${p.reference}`);
           console.log(`   - Description en base (${descLen} car.) : ${p.description ? `"${p.description.slice(0, 100)}..."` : "VIDE / INEXISTANTE"}`);
+          onLog?.(`📦 BDD : Produit "${p.nom}" (${p.marque?.nom ?? "Sans marque"}) trouvé`);
 
           try {
             const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim();
             console.log(`🚀 [compare_products] Déclenchement recherche web pour enrichir "${p.nom}"`);
+            onLog?.(`🌐 Recherche web technique pour "${p.nom}"...`);
             webInfo = await performWebSearch(searchQuery, 6);
             console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
+            onLog?.(`✅ ${webInfo.length} fiches web techniques récupérées pour "${p.nom}"`);
           } catch (webErr) {
             console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
             webInfo = [];
           }
         } else {
           console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical -> Aucune recherche web effectuée.`);
+          onLog?.(`⚠️ Produit "${q}" absent du catalogue RZMedical`);
         }
         console.log(`======================================================\n`);
 
@@ -753,11 +764,12 @@ async function executeTool(
   throw new Error(`Outil inconnu: ${functionName}`);
 }
 
-async function runToolCall(toolCall: ToolCall, clientToken?: string) {
+async function runToolCall(toolCall: ToolCall, clientToken?: string, onLog?: (msg: string) => void) {
   const { name, arguments: rawArgs } = toolCall.function;
+  onLog?.(`🛠️ Outil IA déclenché : ${name}`);
   let result: unknown;
   try {
-    result = await executeTool(name, rawArgs, clientToken);
+    result = await executeTool(name, rawArgs, clientToken, onLog);
   } catch (error) {
     result = { error: error instanceof Error ? error.message : "Erreur lors de l'exécution de l'outil." };
   }
@@ -865,7 +877,14 @@ export async function POST(req: Request) {
 
     const stream = new ReadableStream({
       async start(controller) {
+        const onLog = (text: string) => {
+          try {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ log: text })}\n\n`));
+          } catch {}
+        };
+
         try {
+          onLog(`Message client reçu : "${lastUserMsg?.content?.slice(0, 60) ?? ""}"`);
           let finalText: string | undefined;
 
           for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
@@ -897,7 +916,7 @@ export async function POST(req: Request) {
 
             // On exécute tous les outils demandés (potentiellement en parallèle)
             const toolResults = await Promise.all(
-              toolCalls.map((tc) => runToolCall(tc, clientToken)),
+              toolCalls.map((tc) => runToolCall(tc, clientToken, onLog)),
             );
             groqMessages.push(...toolResults);
           }
