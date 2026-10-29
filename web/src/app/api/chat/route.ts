@@ -171,11 +171,19 @@ async function tavilySearch(query: string, maxResults = 3): Promise<{ title: str
 }
 
 async function performWebSearch(query: string, maxResults = 4): Promise<{ title: string; url: string; content: string }[]> {
+  const engine = process.env.TAVILY_API_KEY ? "Tavily" : "DuckDuckGo / Web";
+  console.log(`🌐 [RZBot Web Search] Lancement recherche: "${query}" (Moteur: ${engine})`);
+  
+  let results: { title: string; url: string; content: string }[] = [];
   if (process.env.TAVILY_API_KEY) {
-    const res = await tavilySearch(query, maxResults);
-    if (res && res.length > 0) return res;
+    results = await tavilySearch(query, maxResults);
   }
-  return webSearchFallback(query, maxResults);
+  if (!results || results.length === 0) {
+    results = await webSearchFallback(query, maxResults);
+  }
+
+  console.log(`✅ [RZBot Web Search] ${results.length} résultat(s) web trouvé(s) pour: "${query}"`);
+  return results;
 }
 
 // ─── Enregistre l'usage Groq dans le backend ─────────────────────────────────
@@ -549,6 +557,8 @@ async function executeTool(
   } catch {
     // arguments malformés : on continue avec un objet vide plutôt que de planter
   }
+
+  console.log(`🤖 [RZBot Tool Call] Outil appelé : ${functionName}`, JSON.stringify(args));
 
   if (functionName === "search_products") {
     const q = typeof args.q === "string" && args.q.trim() ? args.q.trim() : "";
