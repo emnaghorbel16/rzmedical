@@ -14,7 +14,11 @@ export const runtime = "nodejs";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MAX_TOOL_ROUNDS = 6; // compare_products + web_search peuvent enchaîner plusieurs appels
 
-async function groqChat(body: Record<string, unknown>, fallbackModel?: string): Promise<{ data: any; headers: Headers }> {
+async function groqChat(
+  body: Record<string, unknown>,
+  fallbackModel?: string,
+  attempt = 0
+): Promise<{ data: any; headers: Headers }> {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) throw new Error("GROQ_API_KEY n'est pas configurée.");
 
@@ -28,9 +32,26 @@ async function groqChat(body: Record<string, unknown>, fallbackModel?: string): 
   });
 
   if (!response.ok) {
-    if (response.status === 429 && fallbackModel && body.model !== fallbackModel) {
-      console.warn(`Rate limit on ${body.model}, retrying with ${fallbackModel}`);
-      return groqChat({ ...body, model: fallbackModel });
+    if (response.status === 429) {
+      // Essayer le modèle de secours en premier si disponible
+      if (fallbackModel && body.model !== fallbackModel) {
+        console.warn(`Rate limit on ${body.model}, switching to fallback ${fallbackModel}`);
+        return groqChat({ ...body, model: fallbackModel }, undefined, 0);
+      }
+      // Retry avec délai exponentiel jusqu'à 2 fois
+      if (attempt < 2) {
+        // Groq envoie le délai dans le header retry-after ou x-ratelimit-reset-tokens
+        const retryAfterHeader = response.headers.get("retry-after");
+        const waitMs = retryAfterHeader
+          ? Math.ceil(parseFloat(retryAfterHeader) * 1000)
+          : (attempt + 1) * 10_000; // 10s puis 20s
+        console.warn(`Groq 429, retrying in ${waitMs}ms (attempt ${attempt + 1})...`);
+        await new Promise((r) => setTimeout(r, waitMs));
+        return groqChat(body, fallbackModel, attempt + 1);
+      }
+      throw new Error(
+        "Le chatbot est temporairement surchargé. Veuillez réessayer dans quelques secondes."
+      );
     }
     const error = await response.text();
     throw new Error(`Erreur Groq (${response.status}): ${error}`);
@@ -559,7 +580,7 @@ export async function POST(req: Request) {
               tools,
               tool_choice: "auto",
               stream: false,
-            }, "openai/gpt-oss-20b");
+            }, "llama-3.1-8b-instant");
 
             const choice = response.data?.choices?.[0];
             const message = choice?.message;

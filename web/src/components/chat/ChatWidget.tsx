@@ -9,7 +9,35 @@ import {
 } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 
+// ── Utilitaires ───────────────────────────────────────────────────────────────
+
+/** Transforme un message d'erreur technique Groq en message convivial en français. */
+function sanitizeGroqError(raw: string): string {
+  if (!raw) return "Une erreur est survenue. Veuillez réessayer.";
+  if (
+    raw.toLowerCase().includes("surcharg") ||
+    raw.toLowerCase().includes("rate limit") ||
+    raw.includes("429") ||
+    raw.includes("tokens per minute") ||
+    raw.includes("rate_limit_exceeded")
+  ) {
+    return "Le chatbot est momentanément surchargé. Réessayez dans quelques secondes 🙏";
+  }
+  if (raw.toLowerCase().includes("connexion") || raw.toLowerCase().includes("network") || raw.toLowerCase().includes("fetch")) {
+    return "Connexion perdue. Vérifiez votre réseau et réessayez.";
+  }
+  if (raw.toLowerCase().includes("api_key") || raw.toLowerCase().includes("unauthorized")) {
+    return "Problème de configuration du chatbot. Contactez le support.";
+  }
+  // Masquer les détails JSON techniques
+  if (raw.startsWith("{") || raw.includes("\"error\"") || raw.includes("Erreur Groq")) {
+    return "Une erreur technique est survenue. Réessayez dans un instant.";
+  }
+  return raw.length > 120 ? raw.slice(0, 117) + "…" : raw;
+}
+
 // ── Types ──────────────────────────────────────────────────────────────────────
+
 
 interface Message {
   id: string;
@@ -548,10 +576,9 @@ export function ChatWidget() {
         if (!open) setHasNewMessage(true);
       } catch (err) {
         if ((err as Error).name === "AbortError") return;
-        const errorText =
-          err instanceof Error
-            ? err.message
-            : "Une erreur est survenue. Vérifiez votre connexion.";
+        const rawMsg = err instanceof Error ? err.message : "";
+        // Convertir les erreurs techniques en messages conviviaux
+        const errorText = sanitizeGroqError(rawMsg);
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantMsgId
