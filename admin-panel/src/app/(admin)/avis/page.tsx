@@ -48,7 +48,8 @@ export default function AvisAdminPage() {
     setError(null);
     try {
       const token = getToken();
-      const res = await fetch(`${API_URL}/api/avis/admin`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/avis/admin`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,7 +74,8 @@ export default function AvisAdminPage() {
     setActionLoading(id);
     try {
       const token = getToken();
-      const res = await fetch(`${API_URL}/api/avis/${id}`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/avis/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +101,8 @@ export default function AvisAdminPage() {
     setActionLoading(id);
     try {
       const token = getToken();
-      const res = await fetch(`${API_URL}/api/avis/${id}`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/avis/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
