@@ -211,3 +211,10 @@ logout
 .prettiercache
 *.tmp
 *.temp
+
+google-service-account.json
+rzmedical-indexing.json
+*service-account*.json
+*indexing*.json
+submit_done.txt
+submit_log.txt

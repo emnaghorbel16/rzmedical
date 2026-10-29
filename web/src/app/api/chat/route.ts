@@ -1,3 +1,4 @@
+import https from "https";
 import {
   getBrands,
   getCompanyInfo,
@@ -62,10 +63,83 @@ async function groqChat(
   return { data, headers: response.headers };
 }
 
-// ─── Recherche web via Tavily AI ──────────────────────────────────────────────
+// ─── Recherche web (Tavily AI ou Fallback Web Direct) ─────────────────────────
+function decodeHtmlEntities(str: string): string {
+  return str
+    .replace(/&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
+async function webSearchFallback(query: string, maxResults = 4): Promise<{ title: string; url: string; content: string }[]> {
+  return new Promise((resolve) => {
+    const postData = "q=" + encodeURIComponent(query);
+    const options = {
+      hostname: "html.duckduckgo.com",
+      path: "/html/",
+      method: "POST",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(postData),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let data = "";
+      res.on("data", (chunk) => (data += chunk));
+      res.on("end", () => {
+        if (res.statusCode !== 200) {
+          return resolve([]);
+        }
+
+        const snippets = [...data.matchAll(/class="result__snippet[^"]*"[^>]*>([\s\S]*?)<\/a>/g)].map((m) =>
+          decodeHtmlEntities(m[1].replace(/<[^>]+>/g, "").trim())
+        );
+        const titles = [...data.matchAll(/class="result__a"[^>]*>([\s\S]*?)<\/a>/g)].map((m) =>
+          decodeHtmlEntities(m[1].replace(/<[^>]+>/g, "").trim())
+        );
+        const urls = [...data.matchAll(/<a class="result__url" href="([^"]+)"/g)].map((m) => {
+          const u = m[1];
+          const match = u.match(/uddg=([^&]+)/);
+          return match ? decodeURIComponent(match[1]) : u;
+        });
+
+        const results: { title: string; url: string; content: string }[] = [];
+        for (let i = 0; i < Math.min(titles.length, maxResults); i++) {
+          if (snippets[i] || titles[i]) {
+            results.push({
+              title: titles[i] || "Résultat web",
+              url: urls[i] || "",
+              content: (snippets[i] || "").slice(0, 500),
+            });
+          }
+        }
+        resolve(results);
+      });
+    });
+
+    req.on("error", (err) => {
+      console.error("[webSearchFallback] Erreur:", err);
+      resolve([]);
+    });
+
+    req.write(postData);
+    req.end();
+  });
+}
+
 async function tavilySearch(query: string, maxResults = 3): Promise<{ title: string; url: string; content: string }[]> {
   const apiKey = process.env.TAVILY_API_KEY;
-  if (!apiKey) return []; // Désactivé si clé absente — pas bloquant
+  if (!apiKey) return [];
 
   try {
     const res = await fetch("https://api.tavily.com/search", {
@@ -77,18 +151,16 @@ async function tavilySearch(query: string, maxResults = 3): Promise<{ title: str
         search_depth: "basic",
         include_answer: true,
         max_results: maxResults,
-        include_domains: [], // pas de restriction de domaine
+        include_domains: [],
       }),
     });
     if (!res.ok) return [];
     const data = await res.json();
-    // Tavily retourne { results: [{title, url, content}], answer }
     const results: { title: string; url: string; content: string }[] = (data.results ?? []).map((r: any) => ({
       title: r.title ?? "",
       url: r.url ?? "",
-      content: (r.content ?? "").slice(0, 400), // limiter à 400 chars par résultat
+      content: (r.content ?? "").slice(0, 400),
     }));
-    // Ajouter la réponse synthétisée de Tavily en premier si disponible
     if (data.answer) {
       results.unshift({ title: "Synthèse", url: "", content: data.answer.slice(0, 500) });
     }
@@ -96,6 +168,14 @@ async function tavilySearch(query: string, maxResults = 3): Promise<{ title: str
   } catch {
     return [];
   }
+}
+
+async function performWebSearch(query: string, maxResults = 4): Promise<{ title: string; url: string; content: string }[]> {
+  if (process.env.TAVILY_API_KEY) {
+    const res = await tavilySearch(query, maxResults);
+    if (res && res.length > 0) return res;
+  }
+  return webSearchFallback(query, maxResults);
 }
 
 // ─── Enregistre l'usage Groq dans le backend ─────────────────────────────────
@@ -300,11 +380,20 @@ IMPORTANT — COMPLÉTER LES DONNÉES MANQUANTES AVEC webInfo :
 - PRÉFÈRE toujours une valeur réelle trouvée dans webInfo plutôt que N/D. Par exemple si webInfo mentionne "Précision cliniquement validée ±3 mmHg", utilise "±3 mmHg".
 - Si les 2 produits sont de catégories DIFFÉRENTES → utilise les critères communs (prix, marque, stock, usage) et mentionne qu'ils ne sont pas comparables directement dans ta recommandation.
 
---- RÈGLES POUR LA RECHERCHE WEB (web_search) ---
-- Utilise web_search UNIQUEMENT si le client pose une question générale sur un équipement médical (pas pour chercher dans le catalogue RZMedical).
-- Exemple d'usage : "Qu'est-ce qu'un tensiomètre à mercure ?", "Quelles sont les certifications obligatoires pour les gants chirurgicaux ?"
-- Ne jamais inventer des URLs ou des sources. Cite les sources Tavily telles quelles.
-- Si Tavily renvoie une réponse vide, dis que tu n'as pas trouvé d'info externe et propose de contacter l'équipe.
+--- RÈGLE CRUCIALE : RECHERCHE WEB QUAND UN PRODUIT EST INTROUVABLE DANS LE CATALOGUE ---
+- Quand le client recherche un produit ou demande des informations sur un équipement : tu DOIS d'abord chercher avec search_products.
+- SI search_products NE RENVOIE AUCUN PRODUIT (0 résultat dans le catalogue RZMedical) :
+  👉 Tu DOIS OBLIGATOIREMENT APPELER L'OUTIL web_search pour chercher sur le web (Google / Web).
+  👉 Avec les informations trouvées sur le web :
+     1. Explique en détail et de manière professionnelle ce qu'est cet équipement, ses fonctions, ses caractéristiques techniques majeures et son utilité médicale ou dentaire.
+     2. Indique clairement : "Cet équipement n'est pas actuellement disponible en stock dans notre catalogue en ligne RZMedical, mais notre équipe peut vous le fournir sur commande spéciale auprès de nos partenaires."
+     3. Invite le client à contacter le service commercial de RZMedical pour un devis ou une commande sur mesure.
+  👉 Ne dis JAMAIS simplement "nous n'avons pas ce produit" sans faire de recherche web pour renseigner le client !
+
+--- RÈGLES GÉNÉRALES POUR LA RECHERCHE WEB (web_search) ---
+- Utilise web_search pour toute question technique ou générale sur un équipement médical, son fonctionnement, ses normes (CE, ISO, etc.) ou ses spécifications.
+- Utilise web_search pour enrichir tes connaissances dès qu'un équipement n'est pas dans le catalogue.
+- Cite les éléments concrets et fiables obtenus sur le web.
 
 --- RÈGLES SPÉCIALES POUR LA RECHERCHE PAR IMAGE ---
 Quand le message contient une balise [Image identifiée : ...] avec des caractéristiques extraites par l'IA :
@@ -405,13 +494,13 @@ const tools = [
     function: {
       name: "web_search",
       description:
-        "Recherche des informations techniques sur le web via Tavily AI. Utiliser pour des questions générales sur les équipements médicaux (spécifications, certifications, comparatif de produits). NE PAS utiliser pour chercher des produits dans le catalogue RZMedical (utiliser search_products à la place).",
+        "Recherche sur le web (Google / moteur de recherche). À utiliser OBLIGATOIREMENT dès que search_products ne trouve pas de produit dans le catalogue RZMedical, ou pour des questions générales et techniques sur les équipements médicaux.",
       parameters: {
         type: "object",
         properties: {
           query: {
             type: "string",
-            description: "La requête de recherche en français ou en anglais. Ex: \"tensiomètre Omron M3 spécifications techniques\".",
+            description: "La requête de recherche (ex: 'aspirateur chirurgical caractéristiques', 'tensiomètre rossmax x3 spécifications').",
           },
         },
         required: ["query"],
@@ -423,7 +512,7 @@ const tools = [
     function: {
       name: "compare_products",
       description:
-        "Compare plusieurs produits du catalogue RZMedical côte à côte. Utilise cet outil quand le client demande de comparer deux produits ou plus. Renvoie les données complètes du catalogue (prix, marque, disponibilité, catégorie, référence, description) ET des informations web enrichies (spécifications techniques, certifications, usages) via Tavily.",
+        "Compare plusieurs produits du catalogue RZMedical côte à côte. Utilise cet outil quand le client demande de comparer deux produits ou plus. Renvoie les données complètes du catalogue (prix, marque, disponibilité, catégorie, référence, description) ET des informations web enrichies (spécifications techniques, certifications, usages).",
       parameters: {
         type: "object",
         properties: {
@@ -462,7 +551,7 @@ async function executeTool(
     const q = typeof args.q === "string" && args.q.trim() ? args.q.trim() : "";
     if (!q) throw new Error("Le paramètre 'q' est requis pour search_products.");
     const products = await searchProducts(q);
-    return products
+    const mapped = products
       .map((p) => ({
         nom: p.nom,
         reference: p.reference,
@@ -473,13 +562,21 @@ async function executeTool(
         categorie: p.sousCategorie?.categorie?.nom,
       }))
       .slice(0, 10);
+
+    if (mapped.length === 0) {
+      return {
+        produits: [],
+        message: `Aucun produit correspondant à "${q}" dans le catalogue interne RZMedical. RÈGLE OBLIGATOIRE : Tu DOIS maintenant exécuter l'outil 'web_search' avec la requête "${q}" pour chercher sur le web (Google/Web) et renseigner précisément le client sur cet équipement.`,
+      };
+    }
+    return mapped;
   }
 
   if (functionName === "web_search") {
     const query = typeof args.query === "string" && args.query.trim() ? args.query.trim() : "";
     if (!query) throw new Error("Le paramètre 'query' est requis pour web_search.");
-    const results = await tavilySearch(query, 4);
-    if (results.length === 0) return { message: "Aucun résultat web trouvé." };
+    const results = await performWebSearch(query, 4);
+    if (results.length === 0) return { message: "Aucun résultat web trouvé pour cette requête." };
     return results;
   }
 
@@ -504,14 +601,14 @@ async function executeTool(
         }
         const p = Array.isArray(products) ? products[0] ?? null : null;
 
-        // 2. Recherche web Tavily approfondie pour enrichir les spécifications techniques
+        // 2. Recherche web approfondie pour enrichir les spécifications techniques
         let webInfo: { title: string; url: string; content: string }[] = [];
         if (p) {
           // Requête ciblée : nom exact + marque + "fiche technique" pour obtenir les specs réelles
           const catContext = p.sousCategorie?.nom ?? p.sousCategorie?.categorie?.nom ?? "";
           const searchQuery = `"${p.nom}" ${p.marque?.nom ?? ""} ${catContext} fiche technique caractéristiques spécifications`;
           try {
-            webInfo = await tavilySearch(searchQuery.trim(), 4);
+            webInfo = await performWebSearch(searchQuery.trim(), 4);
           } catch {
             webInfo = [];
           }
