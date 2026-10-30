@@ -940,8 +940,8 @@ export async function POST(req: Request) {
       });
     }
 
-    const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
-    const FALLBACK_MODEL = "qwen/qwen3.8-27b";
+    const GROQ_MODEL = process.env.GROQ_MODEL || "qwen/qwen3.8-27b";
+    const FALLBACK_MODEL = "openai/gpt-oss-20b";
     const clientToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
     // Traitement des images avant l'orchestration principale
