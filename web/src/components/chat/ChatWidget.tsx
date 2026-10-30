@@ -408,7 +408,7 @@ function renderInlineContent(content: string, onSuggestionClick?: (text: string)
     } else {
       const [, nom, prix, ref] = match;
       inlineParts.push(
-        <div key={`card-${match.index}`} className="my-2 p-3 border border-azure-200/60 rounded-xl bg-white shadow-sm flex flex-col gap-1 w-[240px]">
+        <div key={`card-${match.index}`} className="my-2 p-3.5 border border-azure-200/80 rounded-xl bg-slate-50/70 hover:bg-azure-50/30 transition-colors shadow-sm flex flex-col gap-1.5 w-full">
           <div className="flex items-start justify-between gap-2">
             <span className="font-bold text-navy-800 text-[13px] leading-tight">{nom}</span>
           </div>
@@ -553,13 +553,13 @@ function MessageBubble({ msg, onSuggestionClick }: { msg: Message; onSuggestionC
         </div>
       )}
 
-      <div className={`flex flex-col gap-0.5 max-w-[82%] ${isUser ? "items-end" : "items-start"}`}>
-        {/* Bulle */}
+      <div className={`flex flex-col gap-0.5 ${isUser ? "max-w-[82%] items-end" : "w-full max-w-[88%] sm:max-w-[90%] items-start"}`}>
+        {/* Bulle / Card */}
         <div
           className={`rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${
             isUser
               ? "bg-gradient-to-br from-azure-500 to-navy-700 text-white rounded-br-sm shadow-sm"
-              : "bg-white border border-slate-200 text-slate-700 rounded-bl-sm shadow-sm"
+              : "w-full bg-white border border-slate-200 text-slate-700 rounded-bl-sm shadow-sm"
           }`}
         >
           {msg.streaming && msg.content === "" ? (
@@ -1030,8 +1030,8 @@ export function ChatWidget() {
                   <div className="w-7 h-7 min-w-[28px] min-h-[28px] max-w-[28px] max-h-[28px] shrink-0 rounded-full bg-gradient-to-br from-azure-600 to-navy-800 flex items-center justify-center text-white shadow-sm mt-0.5">
                     <IconBot />
                   </div>
-                  <div className="flex flex-col gap-0.5">
-                    <div className="rounded-2xl rounded-bl-sm px-3.5 py-2.5 text-[13px] leading-relaxed bg-white border border-slate-200 shadow-sm">
+                  <div className="flex flex-col gap-0.5 w-full max-w-[88%] sm:max-w-[90%]">
+                    <div className="w-full rounded-2xl rounded-bl-sm px-3.5 py-2.5 text-[13px] leading-relaxed bg-white border border-slate-200 shadow-sm">
                       <span className="text-slate-700">
                         👋 Bonjour ! Je suis <strong className="text-navy-900">RZBot</strong>, votre assistant RZMedical.
                         <br />
