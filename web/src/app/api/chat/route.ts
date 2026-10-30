@@ -60,6 +60,7 @@ async function groqChat(
       );
     }
     const error = await response.text();
+    console.error(`❌ [groqChat] Erreur Groq HTTP ${response.status} sur modèle ${String(body.model)}:`, error.slice(0, 400));
     throw new Error(`Erreur Groq (${response.status}): ${error}`);
   }
 
@@ -104,6 +105,7 @@ async function groqStreamChat(
       }
     }
     const errorText = await response.text();
+    console.error(`❌ [groqStreamChat] Erreur Groq Stream HTTP ${response.status} sur modèle ${model}:`, errorText.slice(0, 400));
     throw new Error(`Erreur Groq Stream (${response.status}): ${errorText}`);
   }
 
@@ -1074,6 +1076,7 @@ export async function POST(req: Request) {
           controller.close();
         } catch (err) {
           const message = err instanceof Error ? err.message : "Erreur Groq";
+          console.error("❌ [RZBot stream] EXCEPTION dans le stream:", message);
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify({ error: message })}\n\n`)
           );
