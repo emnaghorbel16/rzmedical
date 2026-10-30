@@ -752,22 +752,19 @@ async function executeTool(
           console.log(`   - Description en base (${descLen} car.) : ${p.description ? `"${p.description.slice(0, 100)}..."` : "VIDE / INEXISTANTE"}`);
           onLog?.(`📦 BDD : "${p.nom}" (${p.marque?.nom ?? "Sans marque"})`);
 
-          // Si le produit a déjà une description technique riche en base (>= 150 car.),
-          // on utilise directement ces données pour une comparaison immédiate sans ralentissement réseau.
-          const needsWebSearch = descLen < 150;
+          // Pour la comparaison, on enrichit TOUJOURS avec la recherche web (Tavily)
+          // afin d'obtenir les spécifications techniques, certifications, etc.
+          const needsWebSearch = true;
           if (needsWebSearch) {
             try {
-              const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique`.trim();
-              console.log(`🚀 [compare_products] Recherche web d'appoint pour enrichir "${p.nom}"`);
+              const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique spécifications`.trim();
+              console.log(`🚀 [compare_products] Recherche Tavily pour enrichir "${p.nom}"`);
               webInfo = await performWebSearch(searchQuery, 4, onLog);
-              console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
+              console.log(`📥 [compare_products] WebInfo : ${webInfo.length} résultat(s) Tavily pour "${p.nom}"`);
             } catch (webErr) {
               console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
               webInfo = [];
             }
-          } else {
-            console.log(`⚡ [compare_products] Fiche BDD complète pour "${p.nom}" (${descLen} car.) -> Recherche web externe évitée`);
-            onLog?.(`⚡ BDD : "${p.nom}" spécifications déjà complètes en base`);
           }
         } else {
           console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical -> Aucune recherche web effectuée.`);
