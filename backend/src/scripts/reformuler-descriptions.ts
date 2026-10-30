@@ -287,6 +287,7 @@ async function runReformulateAllProducts() {
   // ── Sous-catégorie spécifique via --sous-cat=NOM
   const sousCatArg = process.argv.find((a) => a.startsWith('--sous-cat='))?.split('=').slice(1).join('=');
   // ── Limite optionnelle via --limit=N
+  const limitArg = parseInt(process.argv.find((a) => a.startsWith('--limit='))?.split('=')[1] ?? '0', 10);
   // ── Sauter les premiers produits via --start=N (ex: --start=4) ou --skip=N (ex: --skip=3)
   const startArg = parseInt(process.argv.find((a) => a.startsWith('--start='))?.split('=')[1] ?? '0', 10);
   const skipArg = parseInt(process.argv.find((a) => a.startsWith('--skip='))?.split('=')[1] ?? '0', 10);
