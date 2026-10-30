@@ -51,18 +51,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     });
 
-    // 2. Pages de sous-catégories (ex: /catalogue?sousCategorieId=5)
-    // Ces pages existent et sont crawlées mais n'étaient pas dans le sitemap
-    const subcategories = await getSubcategories();
-    subcategories.forEach((sub) => {
-      routes.push({
-        url: `${baseUrl}/catalogue?sousCategorieId=${sub.id}`,
-        lastModified: new Date(),
-        changeFrequency: "weekly",
-        priority: 0.75,
-      });
-    });
-
     // 3. Pages de produits — on inclut TOUS les produits (même en rupture)
     // Les produits en rupture restent indexés → pas de perte de ranking quand
     // ils reviennent en stock.

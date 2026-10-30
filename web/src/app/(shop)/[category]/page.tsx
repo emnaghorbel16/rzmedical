@@ -24,6 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: cat.nom,
     description: `Découvrez tous nos produits de la catégorie ${cat.nom} pour les professionnels de santé en Tunisie.`,
+    alternates: {
+      canonical: `/${catSlug}`,
+    },
   };
 }
 

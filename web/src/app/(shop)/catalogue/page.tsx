@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "Catalogue",
   description:
     "Découvrez notre catalogue de matériel médical et dentaire : équipements, consommables et instruments de qualité, livrés partout en Tunisie.",
+  alternates: {
+    canonical: "/catalogue",
+  },
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;

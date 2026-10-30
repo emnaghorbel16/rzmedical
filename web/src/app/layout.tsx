@@ -38,6 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(siteUrl),
+    alternates: {
+      canonical: "./",
+    },
     title: {
       default: `${name} — Équipements & consommables médico-dentaires`,
       template: `%s · ${name}`,
