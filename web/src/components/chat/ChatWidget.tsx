@@ -595,8 +595,8 @@ export function ChatWidget() {
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isScrolledUp, setIsScrolledUp] = useState(false);
-  // Mobile keyboard detection
-  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  // Adaptation stable au clavier mobile (visualViewport)
+  const [mobileViewportStyle, setMobileViewportStyle] = useState<React.CSSProperties>({});
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -629,26 +629,38 @@ export function ChatWidget() {
     }
   }, [messages]);
 
-  // Détection adaptation au clavier virtuel mobile via visualViewport
+  // Détection du clavier virtuel mobile sans vibration ni saut d'écran
   useEffect(() => {
+    if (!open) return;
     const vv = window.visualViewport;
-    if (!vv) return;
 
-    const onViewportResize = () => {
-      const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-      setKeyboardOffset(offset);
-      if (offset > 50 && !isUserScrolledUpRef.current) {
-        setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    const updateMobileViewport = () => {
+      // Uniquement sur mobile (< 640px)
+      if (window.innerWidth < 640 && vv) {
+        setMobileViewportStyle({
+          height: `${vv.height}px`,
+          top: `${vv.offsetTop}px`,
+          bottom: "auto",
+        });
+      } else {
+        setMobileViewportStyle({});
       }
     };
 
-    vv.addEventListener("resize", onViewportResize);
-    vv.addEventListener("scroll", onViewportResize);
+    updateMobileViewport();
+
+    if (vv) {
+      vv.addEventListener("resize", updateMobileViewport);
+    }
+    window.addEventListener("resize", updateMobileViewport);
+
     return () => {
-      vv.removeEventListener("resize", onViewportResize);
-      vv.removeEventListener("scroll", onViewportResize);
+      if (vv) {
+        vv.removeEventListener("resize", updateMobileViewport);
+      }
+      window.removeEventListener("resize", updateMobileViewport);
     };
-  }, []);
+  }, [open]);
 
   // Gestion du scroll utilisateur pour pouvoir "dérouler" librement
   const handleScroll = () => {
@@ -939,16 +951,17 @@ export function ChatWidget() {
           role="dialog"
           aria-label="Assistant RZBot"
           aria-modal="true"
-          className="chat-window-enter fixed z-[110] flex flex-col overflow-hidden bottom-20 right-3 left-3 sm:left-auto sm:right-6 sm:bottom-24 sm:w-[400px] h-[540px] max-h-[75vh] sm:max-h-[82vh] rounded-2xl border border-slate-200/90 shadow-2xl"
+          className="chat-window-enter fixed z-[110] flex flex-col overflow-hidden inset-x-0 bottom-0 top-0 sm:top-auto sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-[400px] sm:h-[540px] sm:max-h-[82vh] rounded-none sm:rounded-2xl border-0 sm:border sm:border-slate-200/90 shadow-2xl"
           style={{
             background: "#ffffff",
             boxShadow: "0 20px 60px rgba(12,35,64,0.22), 0 4px 20px rgba(12,35,64,0.10)",
-            ...(keyboardOffset > 0 ? { bottom: keyboardOffset + 12 } : {}),
+            overscrollBehavior: "contain",
+            ...mobileViewportStyle,
           }}
         >
-          {/* ── Header navy gradient ─────────────────────────────────────── */}
+          {/* ── Header navy gradient (toujours visible et fixé en haut) ─── */}
           <div
-            className="flex-shrink-0 flex items-center gap-3 px-4 py-3"
+            className="flex-shrink-0 sticky top-0 z-10 flex items-center gap-3 px-4 py-3 shadow-sm"
             style={{
               background: "linear-gradient(135deg, #0c2340 0%, #1a3a6b 100%)",
             }}
@@ -1146,7 +1159,7 @@ export function ChatWidget() {
                 disabled={loading}
                 rows={1}
                 aria-label="Message à envoyer"
-                className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-[13px] text-slate-800 outline-none focus:border-azure-400 focus:ring-2 focus:ring-azure-100 transition-all disabled:opacity-50 leading-relaxed min-h-[40px]"
+                className="flex-1 resize-none bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-[16px] sm:text-[13px] text-slate-800 outline-none focus:border-azure-400 focus:ring-2 focus:ring-azure-100 transition-all disabled:opacity-50 leading-relaxed min-h-[40px]"
                 style={{ scrollbarWidth: "thin" }}
               />
               <button
