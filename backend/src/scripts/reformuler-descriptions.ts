@@ -46,6 +46,10 @@ async function resolveGroqModel(apiKey: string): Promise<string> {
       const data = (await res.json()) as any;
       const ids: string[] = (data.data || []).map((m: any) => m.id);
       const preferred = [
+        'openai/gpt-oss-120b',
+        'qwen/qwen3.8-27b',
+        'openai/gpt-oss-20b',
+        'allam-2-7b',
         'llama-3.3-70b-versatile',
         'llama-3.1-70b-versatile',
         'llama-3.1-8b-instant',
@@ -60,7 +64,7 @@ async function resolveGroqModel(apiKey: string): Promise<string> {
       if (ids.length > 0) return ids[0];
     }
   } catch {}
-  return 'llama-3.1-8b-instant';
+  return 'openai/gpt-oss-120b';
 }
 
 // ─── Basculement vers Groq ──────────────────────────────────────────────────
