@@ -24,6 +24,10 @@
     "import:all-dentaire:slug": "node dist/src/scripts/import-all-dentaire.js",
     "reformuler:descriptions": "node dist/src/scripts/reformuler-descriptions.js",
     "reformuler:descriptions:dev": "tsx src/scripts/reformuler-descriptions.ts",
+    "exporter:produits": "node dist/src/scripts/exporter-produits.js",
+    "exporter:produits:dev": "tsx src/scripts/exporter-produits.ts",
+    "importer:descriptions": "node dist/src/scripts/importer-descriptions.js",
+    "importer:descriptions:dev": "tsx src/scripts/importer-descriptions.ts",
     "verifier:doublons": "node dist/src/scripts/verifier-doublons-produits.js",
     "verifier:doublons:dev": "tsx src/scripts/verifier-doublons-produits.ts"
   },

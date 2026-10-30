@@ -7,29 +7,49 @@ import prisma from '../config/prisma';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
 
-// Fournisseur IA : OpenAI ou Groq (avec basculement automatique si OpenAI est épuisé)
-const FORCE_GROQ = process.argv.includes('--groq') || process.env.AI_PROVIDER === 'groq';
-let IS_OPENAI = Boolean(OPENAI_API_KEY) && !FORCE_GROQ;
-let API_KEY = IS_OPENAI ? OPENAI_API_KEY : GROQ_API_KEY;
+// Détection du fournisseur IA : OpenRouter, OpenAI ou Groq
 const cliModelArg = process.argv.find((a) => a.startsWith('--model='))?.split('=')[1];
+const FORCE_OPENROUTER = process.argv.includes('--openrouter') || process.env.AI_PROVIDER === 'openrouter' || (Boolean(OPENROUTER_API_KEY) && !process.argv.includes('--groq') && !process.argv.includes('--openai'));
+const FORCE_GROQ = process.argv.includes('--groq') || process.env.AI_PROVIDER === 'groq';
 
-let API_URL = IS_OPENAI
-  ? 'https://api.openai.com/v1/chat/completions'
-  : 'https://api.groq.com/openai/v1/chat/completions';
+type AiProvider = 'openrouter' | 'openai' | 'groq';
+let PROVIDER: AiProvider = FORCE_OPENROUTER && OPENROUTER_API_KEY
+  ? 'openrouter'
+  : (Boolean(OPENAI_API_KEY) && !FORCE_GROQ ? 'openai' : 'groq');
+
+let IS_OPENAI = PROVIDER === 'openai';
+let IS_OPENROUTER = PROVIDER === 'openrouter';
+
+let API_KEY = PROVIDER === 'openrouter'
+  ? OPENROUTER_API_KEY
+  : (PROVIDER === 'openai' ? OPENAI_API_KEY : GROQ_API_KEY);
+
+let API_URL = PROVIDER === 'openrouter'
+  ? 'https://openrouter.ai/api/v1/chat/completions'
+  : (PROVIDER === 'openai'
+    ? 'https://api.openai.com/v1/chat/completions'
+    : 'https://api.groq.com/openai/v1/chat/completions');
+
 const GROQ_ROTATION_MODELS = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'allam-2-7b'];
 
 let MODEL = cliModelArg
   ? cliModelArg
-  : IS_OPENAI
-    ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
-    : (process.env.GROQ_MODEL || 'qwen/qwen3.8-27b');
+  : PROVIDER === 'openrouter'
+    ? (process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct')
+    : (PROVIDER === 'openai'
+      ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
+      : (process.env.GROQ_MODEL || 'qwen/qwen3.8-27b'));
 
-// Taille du lot traité en parallèle (1 pour rester sous les 8 000 TPM de Groq)
+// Taille du lot traité en parallèle
 const BATCH_SIZE = parseInt(process.env.BATCH_SIZE || '1', 10);
 
-// Délai entre les requêtes (ms) pour respecter les 8 000 TPM de Groq
-const DELAY_BETWEEN_BATCHES_MS = parseInt(process.env.BATCH_DELAY_MS || '6000', 10);
+// Délai entre les requêtes (ms) : 1s pour OpenRouter, 6s pour Groq
+const DELAY_BETWEEN_BATCHES_MS = parseInt(
+  process.env.BATCH_DELAY_MS || (PROVIDER === 'openrouter' ? '1200' : '6000'),
+  10
+);
 
 // Fichier de rapport final
 const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
@@ -162,6 +182,12 @@ EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
       headers: {
         Authorization: `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
+        ...(IS_OPENROUTER
+          ? {
+              'HTTP-Referer': 'https://rzmedical.tn',
+              'X-Title': 'RZMedical Fiches Produits',
+            }
+          : {}),
       },
       body: JSON.stringify({
         model: MODEL,
@@ -189,7 +215,7 @@ EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
       const errText = await res.text();
 
       // En cas de 429, on bascule immédiatement sur un autre modèle disponible ayant un quota séparé !
-      if (!cliModelArg && !IS_OPENAI) {
+      if (!cliModelArg && PROVIDER === 'groq') {
         const curIdx = GROQ_ROTATION_MODELS.indexOf(MODEL);
         const nextIdx = (curIdx + 1) % GROQ_ROTATION_MODELS.length;
         const nextModel = GROQ_ROTATION_MODELS[nextIdx];
@@ -213,14 +239,14 @@ EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
         waitSeconds = matchSec ? Math.min(25, Math.ceil(parseFloat(matchSec[1]))) : Math.min(25, 6 * attempt);
       }
 
-      console.warn(`   ⏳ Limite Groq atteinte. Pause courte de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
+      console.warn(`   ⏳ Limite atteinte (${PROVIDER}). Pause courte de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
       await sleep(waitSeconds * 1000);
       continue;
     }
 
     if (!res.ok) {
       const errText = await res.text();
-      throw new Error(`${IS_OPENAI ? 'OpenAI' : 'Groq'} API ${res.status}: ${errText.slice(0, 300)}`);
+      throw new Error(`${PROVIDER.toUpperCase()} API ${res.status}: ${errText.slice(0, 300)}`);
     }
 
     data = (await res.json()) as any;
@@ -297,15 +323,15 @@ async function runReformulateAllProducts() {
   console.log('═══════════════════════════════════════════════════════════════════\n');
 
   if (!API_KEY) {
-    console.error('❌ Aucune clé API trouvée. Définissez OPENAI_API_KEY ou GROQ_API_KEY dans backend/.env — arrêt.');
+    console.error('❌ Aucune clé API trouvée. Définissez OPENROUTER_API_KEY, OPENAI_API_KEY ou GROQ_API_KEY dans backend/.env — arrêt.');
     process.exit(1);
   }
 
-  if (!IS_OPENAI && GROQ_API_KEY && !cliModelArg && !process.env.GROQ_MODEL) {
+  if (PROVIDER === 'groq' && GROQ_API_KEY && !cliModelArg && !process.env.GROQ_MODEL) {
     MODEL = await resolveGroqModel(GROQ_API_KEY);
   }
 
-  console.log(`🤖 Moteur IA      : ${IS_OPENAI ? 'OpenAI GPT' : 'Groq'}`);
+  console.log(`🤖 Moteur IA      : ${PROVIDER === 'openrouter' ? 'OpenRouter 🚀' : (PROVIDER === 'openai' ? 'OpenAI GPT' : 'Groq')}`);
   console.log(`🧠 Modèle         : ${MODEL}\n`);
 
   // ── Lire l'argument optionnel --only-empty (reformuler seulement les descriptions vides/courtes)
