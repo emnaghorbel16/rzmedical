@@ -217,7 +217,7 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
   });
 }
 
-async function tavilySearch(query: string, maxResults = 3, onLog?: (msg: string) => void): Promise<{ title: string; url: string; content: string }[]> {
+async function tavilySearch(query: string, maxResults = 4, onLog?: (msg: string) => void): Promise<{ title: string; url: string; content: string }[]> {
   const apiKey = process.env.TAVILY_API_KEY;
   if (!apiKey) {
     console.log("ℹ️ [Tavily] TAVILY_API_KEY non définie ou vide dans .env.local -> Basculement sur DuckDuckGo");
@@ -231,20 +231,19 @@ async function tavilySearch(query: string, maxResults = 3, onLog?: (msg: string)
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      signal: AbortSignal.timeout(3500),
+      signal: AbortSignal.timeout(8000),
       body: JSON.stringify({
         api_key: apiKey,
         query,
         search_depth: "basic",
         include_answer: true,
         max_results: maxResults,
-        include_domains: [],
       }),
     });
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
       console.error(`❌ [Tavily] Échec API (statut ${res.status}):`, errText);
-      onLog?.(`❌ Erreur Tavily (HTTP ${res.status}) -> Repli DuckDuckGo`);
+      onLog?.(`❌ Erreur Tavily (HTTP ${res.status}: ${errText.slice(0, 60)}) -> Repli DuckDuckGo`);
       return [];
     }
     const data = await res.json();
@@ -259,9 +258,10 @@ async function tavilySearch(query: string, maxResults = 3, onLog?: (msg: string)
     console.log(`✅ [Tavily] Succès ! ${results.length} résultat(s) retourné(s) par Tavily AI pour "${query}"`);
     onLog?.(`✅ Tavily a répondu : ${results.length} résultat(s) trouvés`);
     return results;
-  } catch (err) {
-    console.error("❌ [Tavily] Erreur exception fetch:", err);
-    onLog?.("❌ Exception réseau Tavily -> Repli DuckDuckGo");
+  } catch (err: any) {
+    const msg = err?.name === "TimeoutError" ? "Timeout 8s dépassé" : (err?.message ?? String(err));
+    console.error("❌ [Tavily] Erreur exception fetch:", msg);
+    onLog?.(`❌ Exception Tavily (${msg}) -> Repli DuckDuckGo`);
     return [];
   }
 }
@@ -811,7 +811,7 @@ async function executeTool(
           webInfo,
           message: p
             ? "Produit présent dans le catalogue RZMedical."
-            : `Le produit "${kw}" n'existe pas dans le catalogue RZMedical. Seuls les produits du catalogue sont comparables.`,
+            : `Produit "${kw}" absent du catalogue RZMedical : caractéristiques techniques récupérées via recherche web Tavily pour la comparaison.`,
         };
       })
     );
@@ -822,9 +822,10 @@ async function executeTool(
       nombreDansCatalogue: trouves.length,
       produits: results,
       consigne:
-        trouves.length < 2
-          ? "Attention : moins de 2 produits demandés sont présents dans le catalogue RZMedical. Tu ne dois comparer QUE les produits vendus par RZMedical. Indique clairement au client quels produits ne sont pas dans le catalogue, et propose des alternatives disponibles chez RZMedical."
-          : "Tous les produits à comparer proviennent du catalogue RZMedical. Utilise les données du catalogue et complète les caractéristiques techniques manquantes avec webInfo.",
+        "RÈGLE COMPARATIF : Construis OBLIGATOIREMENT le tableau comparatif [COMPARE|...] pour TOUS les produits demandés. " +
+        "1) Pour les produits vendus par RZMedical (dansCatalogue: true) : affiche leurs données officielles (prix, remise, stock, réf) et complète OBLIGATOIREMENT les spécifications techniques avec le champ webInfo (Tavily). Ajoute une ligne 'Disponibilité catalogue' = '✅ Vendu par RZMedical'. " +
+        "2) Pour les produits non vendus par RZMedical (dansCatalogue: false) : utilise EXCLUSIVEMENT le champ webInfo (Tavily) pour remplir leurs caractéristiques techniques. Ajoute une ligne 'Disponibilité catalogue' = '❌ Non vendu par RZMedical' et n'invente aucun prix ni stock. " +
+        "3) EXPLOITE À FOND les informations techniques contenues dans webInfo (puissance, dimensions, fonctionnalités, matériaux, options, etc.) pour créer un tableau riche avec de vrais critères techniques.",
     };
   }
 
