@@ -375,6 +375,7 @@ Règles impératives :
    (Interdiction de poser des questions ouvertes en texte libre sans ce tag).
 9. FORMAT COMPARATIF :
    RÈGLE STRICTE ET ABSOLUE : Tu dois COMPARER UNIQUEMENT DES PRODUITS PRÉSENTS DANS LE CATALOGUE RZMEDICAL. Ne compare JAMAIS de produits hors catalogue !
+   - Pour les mots-clés de compare_products : utilise TOUJOURS les vrais noms, marques ou modèles courts des produits existant dans le catalogue RZMedical (ex: ["Ultimate", "P3"] ou ["Omron M3", "Rossmax X3"]), jamais des noms inventés.
    - Si un produit demandé n'est pas dans le catalogue RZMedical, indique clairement qu'il n'est pas commercialisé par RZMedical et qu'on ne compare que les produits de notre catalogue.
    - Ne construis de tableau [COMPARE|...] QUE si au moins 2 produits sont présents dans le catalogue RZMedical.
    [COMPARE|Produit A|Produit B]
@@ -584,87 +585,129 @@ async function executeTool(
       };
     }
     onLog?.(`🔄 Comparaison catalogue demandée pour : ${keywords.join(" vs ")}`);
-    const results = await Promise.all(
-      keywords.slice(0, 4).map(async (kw: string) => {
-        const q = typeof kw === "string" ? kw.trim() : "";
-        if (!q) return { keyword: kw, dansCatalogue: false, produit: null, webInfo: [] };
+    const selectedIds = new Set<number>();
+    const results = [];
 
-        console.log(`\n======================================================`);
-        console.log(`🔍 [compare_products] Recherche BDD pour le mot-clé: "${q}"`);
+    for (const kw of keywords.slice(0, 4)) {
+      const q = typeof kw === "string" ? kw.trim() : "";
+      if (!q) {
+        results.push({ keyword: kw, dansCatalogue: false, produit: null, webInfo: [] });
+        continue;
+      }
 
-        // 1. Recherche DANS le catalogue RZMedical
-        let products: any[] = [];
-        try {
-          products = await searchProducts(q);
-          console.log(`📦 [compare_products] Résultat BDD pour "${q}": ${products.length} produit(s) trouvé(s)`);
-        } catch (dbErr) {
-          console.error(`❌ [compare_products] Erreur requête BDD pour "${q}":`, dbErr);
-          products = [];
-        }
-        const p = Array.isArray(products) ? products[0] ?? null : null;
+      console.log(`\n======================================================`);
+      console.log(`🔍 [compare_products] Recherche BDD pour le mot-clé: "${q}"`);
 
-        // 2. Recherche web UNIQUEMENT pour les produits du catalogue afin de compléter les descriptions/spécifications manquantes
-        let webInfo: { title: string; url: string; content: string }[] = [];
-        if (p) {
-          const descLen = p.description ? p.description.trim().length : 0;
-          console.log(`✅ [compare_products] Produit sélectionné : "${p.nom}"`);
-          console.log(`   - Marque : ${p.marque?.nom ?? "N/A"} | Réf : ${p.reference}`);
-          console.log(`   - Description en base (${descLen} car.) : ${p.description ? `"${p.description.slice(0, 100)}..."` : "VIDE / INEXISTANTE"}`);
-          onLog?.(`📦 BDD : "${p.nom}" (${p.marque?.nom ?? "Sans marque"})`);
+      // 1. Recherche directe dans le catalogue RZMedical
+      let products: any[] = [];
+      try {
+        products = await searchProducts(q);
+        console.log(`📦 [compare_products] Résultat BDD pour "${q}": ${products.length} produit(s) trouvé(s)`);
+      } catch (dbErr) {
+        console.error(`❌ [compare_products] Erreur requête BDD pour "${q}":`, dbErr);
+        products = [];
+      }
 
-          // Pour la comparaison, on enrichit TOUJOURS avec la recherche web (Tavily)
-          // afin d'obtenir les spécifications techniques, certifications, etc.
-          const needsWebSearch = true;
-          if (needsWebSearch) {
-            try {
-              const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique spécifications`.trim();
-              console.log(`🚀 [compare_products] Recherche Tavily pour enrichir "${p.nom}"`);
-              webInfo = await performWebSearch(searchQuery, 4, onLog);
-              console.log(`📥 [compare_products] WebInfo : ${webInfo.length} résultat(s) Tavily pour "${p.nom}"`);
-            } catch (webErr) {
-              console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
-              webInfo = [];
-            }
-          }
-        } else {
-          // Produit absent du catalogue : on ne recherche pas sur le web car RZMedical ne compare que son catalogue
-          console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical → exclu de la comparaison.`);
-          onLog?.(`ℹ️ Produit "${q}" non présent dans le catalogue RZMedical`);
-        }
-        console.log(`======================================================\n`);
+      // Sélectionner un produit qui n'a pas encore été sélectionné
+      let p = Array.isArray(products)
+        ? products.find((prod) => !selectedIds.has(prod.id)) || products[0] || null
+        : null;
 
-        return {
-          keyword: kw,
-          dansCatalogue: !!p,
-          produit: p
-            ? {
-                nom: p.nom,
-                reference: p.reference,
-                prix: Number(p.prix),
-                remise: Number(p.remise),
-                prixFinal: p.remise > 0
-                  ? Number(p.prix) * (1 - Number(p.remise) / 100)
-                  : Number(p.prix),
-                stock: p.stock ?? 0,
-                disponible: p.disponible,
-                marque: p.marque?.nom ?? "N/A",
-                categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
-                sousCategorie: p.sousCategorie?.nom ?? "N/A",
-                description: (p.description ?? "").slice(0, 800),
-                paysFabrication: p.paysFabrication ?? "N/A",
-                tva: p.tva ? `${Number(p.tva)}%` : "N/A",
-                motsCles: Array.isArray(p.motsCles) && p.motsCles.length > 0 ? p.motsCles.join(", ") : "N/A",
-                ficheTechnique: p.ficheTechnique ? "Disponible" : "Non disponible",
-                video: p.video ? "Disponible" : "Non disponible",
+      // 1.bis Si la recherche exacte n'a rien donné, tester avec les termes discriminants
+      if (!p) {
+        const stopWords = new Set([
+          "fauteuil", "dent", "dentaire", "equipement", "équipement", "materiel", "matériel",
+          "le", "la", "les", "un", "une", "des", "du", "de", "d", "l", "pour", "avec", "sans",
+          "modele", "modèle", "produit", "marque", "vs", "et"
+        ]);
+        const tokens = q
+          .toLowerCase()
+          .split(/[\s,+'"-_/]+/)
+          .map((t) => t.trim())
+          .filter((t) => t.length >= 2);
+
+        const distinctiveTokens = tokens.filter((t) => !stopWords.has(t));
+        const searchTokens = distinctiveTokens.length > 0 ? distinctiveTokens : tokens;
+
+        for (const token of searchTokens) {
+          try {
+            const fallbackProducts = await searchProducts(token);
+            if (Array.isArray(fallbackProducts) && fallbackProducts.length > 0) {
+              const matched =
+                fallbackProducts.find(
+                  (fp) => !selectedIds.has(fp.id) && tokens.some((tok) => fp.nom.toLowerCase().includes(tok))
+                ) ||
+                fallbackProducts.find((fp) => !selectedIds.has(fp.id)) ||
+                fallbackProducts[0];
+              if (matched) {
+                p = matched;
+                console.log(`🎯 [compare_products] Produit trouvé via terme alternatif "${token}" : "${p.nom}"`);
+                break;
               }
-            : null,
-          webInfo,
-          message: p
-            ? "Produit présent dans le catalogue RZMedical."
-            : `Produit "${kw}" absent du catalogue RZMedical. Exclu de la comparaison.`,
-        };
-      })
-    );
+            }
+          } catch {}
+        }
+      }
+
+      if (p) {
+        selectedIds.add(p.id);
+      }
+
+      // 2. Recherche web UNIQUEMENT pour les produits du catalogue afin d'enrichir la fiche technique
+      let webInfo: { title: string; url: string; content: string }[] = [];
+      if (p) {
+        const descLen = p.description ? p.description.trim().length : 0;
+        console.log(`✅ [compare_products] Produit sélectionné : "${p.nom}"`);
+        console.log(`   - Marque : ${p.marque?.nom ?? "N/A"} | Réf : ${p.reference}`);
+        console.log(`   - Description en base (${descLen} car.) : ${p.description ? `"${p.description.slice(0, 100)}..."` : "VIDE / INEXISTANTE"}`);
+        onLog?.(`📦 BDD : "${p.nom}" (${p.marque?.nom ?? "Sans marque"})`);
+
+        try {
+          const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique spécifications`.trim();
+          console.log(`🚀 [compare_products] Recherche Tavily pour enrichir "${p.nom}"`);
+          webInfo = await performWebSearch(searchQuery, 4, onLog);
+          console.log(`📥 [compare_products] WebInfo : ${webInfo.length} résultat(s) Tavily pour "${p.nom}"`);
+        } catch (webErr) {
+          console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
+          webInfo = [];
+        }
+      } else {
+        console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical → exclu de la comparaison.`);
+        onLog?.(`ℹ️ Produit "${q}" non présent dans le catalogue RZMedical`);
+      }
+      console.log(`======================================================\n`);
+
+      results.push({
+        keyword: kw,
+        dansCatalogue: !!p,
+        produit: p
+          ? {
+              nom: p.nom,
+              reference: p.reference,
+              prix: Number(p.prix),
+              remise: Number(p.remise),
+              prixFinal: p.remise > 0
+                ? Number(p.prix) * (1 - Number(p.remise) / 100)
+                : Number(p.prix),
+              stock: p.stock ?? 0,
+              disponible: p.disponible,
+              marque: p.marque?.nom ?? "N/A",
+              categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
+              sousCategorie: p.sousCategorie?.nom ?? "N/A",
+              description: (p.description ?? "").slice(0, 800),
+              paysFabrication: p.paysFabrication ?? "N/A",
+              tva: p.tva ? `${Number(p.tva)}%` : "N/A",
+              motsCles: Array.isArray(p.motsCles) && p.motsCles.length > 0 ? p.motsCles.join(", ") : "N/A",
+              ficheTechnique: p.ficheTechnique ? "Disponible" : "Non disponible",
+              video: p.video ? "Disponible" : "Non disponible",
+            }
+          : null,
+        webInfo,
+        message: p
+          ? "Produit présent dans le catalogue RZMedical."
+          : `Produit "${kw}" absent du catalogue RZMedical. Exclu de la comparaison.`,
+      });
+    }
 
     const trouves = results.filter((r) => r.dansCatalogue);
     const absents = results.filter((r) => !r.dansCatalogue);
