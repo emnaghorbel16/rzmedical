@@ -33,7 +33,7 @@ const DELAY_BETWEEN_BATCHES_MS = parseInt(process.env.BATCH_DELAY_MS || '2500', 
 const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
 
 // ─── Cache mémoire (évite les doublons dans le même run) ─────────────────────
-const _descCache = new Map<string, string>();
+const _descCache = new Map<string, { description: string; motsCles: string[] }>();
 
 // ─── Détection dynamique du modèle Groq disponible ───────────────────────────
 async function resolveGroqModel(apiKey: string): Promise<string> {
@@ -85,7 +85,7 @@ async function reformulateDescription(opts: {
   sousCategorie?: string;
   marque?: string;
   paysFabrication?: string;
-}): Promise<string> {
+}): Promise<{ description: string; motsCles: string[] }> {
   if (!API_KEY) {
     throw new Error('Ni OPENAI_API_KEY ni GROQ_API_KEY ne sont définis dans le fichier .env');
   }
@@ -132,7 +132,16 @@ RÈGLES TYPOGRAPHIQUES & COULEURS (À UTILISER AVEC SOBRIÉTÉ) :
 RÈGLES IMPÉRATIVES :
 1. Rigueur médicale absolue : base-toi sur le type de produit et les informations fournies. N'invente AUCUNE donnée fantaisiste.
 2. Commence directement par le corps du texte — JAMAIS par "Voici", "Découvrez", "Fiche produit :" ou des listes de métadonnées brutes.
-3. Réponds UNIQUEMENT avec le texte final de la fiche produit prêt à être affiché, rien d'autre.`;
+3. Génère également entre 5 et 12 mots-clés SEO pertinents pour ce produit (termes techniques, marque, usage, spécialité médicale, synonymes courants en français).
+4. Réponds UNIQUEMENT avec un objet JSON valide ayant exactement deux champs :
+   - "description" : le texte final de la fiche produit (120-180 mots, formaté comme demandé ci-dessus)
+   - "motsCles" : un tableau de 5 à 12 chaînes de caractères (mots-clés SEO)
+
+EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
+{
+  "description": "Le texte complet de la fiche produit ici...",
+  "motsCles": ["implantologie", "moteur chirurgical", "LED", "COXO", "chirurgie dentaire", "pièce à main"]
+}`;
 
   // Appel API avec gestion automatique du Rate Limit 429 (Groq) et basculement OpenAI
   let data: any = null;
@@ -193,24 +202,47 @@ RÈGLES IMPÉRATIVES :
   }
 
   const choice = data?.choices?.[0];
-  let reformulated = (choice?.message?.content ?? '').trim();
+  let rawContent = (choice?.message?.content ?? '').trim();
 
   // Si content est vide (ex: modèle ayant tout mis dans reasoning)
-  if (!reformulated && (choice?.message?.reasoning || choice?.message?.reasoning_content)) {
-    reformulated = (choice.message.reasoning || choice.message.reasoning_content).trim();
+  if (!rawContent && (choice?.message?.reasoning || choice?.message?.reasoning_content)) {
+    rawContent = (choice.message.reasoning || choice.message.reasoning_content).trim();
   }
 
-  // Nettoyage et normalisation du rendu
-  reformulated = reformulated.replace(/^["'«»]+|["'«»]+$/g, '').trim();
-  reformulated = reformulated.replace(/\*\*([^*]+)\*\*/g, '*$1*');
-
-  if (reformulated.length < 20) {
+  if (rawContent.length < 20) {
     console.error('⚠️ Réponse brute de l\'IA :', JSON.stringify(choice?.message ?? data, null, 2));
-    throw new Error(`Réponse trop courte (${reformulated.length} chars) : "${reformulated}"`);
+    throw new Error(`Réponse trop courte (${rawContent.length} chars) : "${rawContent}"`);
   }
 
-  _descCache.set(cacheKey, reformulated);
-  return reformulated;
+  // Extraire le JSON depuis la réponse (robuste aux blocs ```json ... ```)
+  const jsonMatch = rawContent.match(/```(?:json)?\s*([\s\S]*?)```/) || rawContent.match(/(\{[\s\S]*\})/);
+  const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]).trim() : rawContent.trim();
+
+  let description: string;
+  let motsCles: string[] = [];
+
+  try {
+    const parsed = JSON.parse(jsonStr);
+    description = (parsed.description ?? '').trim();
+    motsCles = Array.isArray(parsed.motsCles)
+      ? parsed.motsCles.map((k: any) => String(k).trim()).filter(Boolean)
+      : [];
+    if (!description) throw new Error('Champ description manquant dans la réponse JSON');
+  } catch {
+    // Fallback : traiter tout le contenu comme description brute (aucun mot-clé)
+    console.warn('   ⚠️ Impossible de parser le JSON — utilisation du contenu brut comme description.');
+    description = rawContent.replace(/^["'«»]+|["'«»]+$/g, '').trim();
+    description = description.replace(/\*\*([^*]+)\*\*/g, '*$1*');
+    motsCles = [];
+  }
+
+  // Normalisation typographique de la description
+  description = description.replace(/^["'«»]+|["'«»]+$/g, '').trim();
+  description = description.replace(/\*\*([^*]+)\*\*/g, '*$1*');
+
+  const result = { description, motsCles };
+  _descCache.set(cacheKey, result);
+  return result;
 }
 
 // ─── Utilitaires ─────────────────────────────────────────────────────────────
@@ -328,7 +360,7 @@ async function runReformulateAllProducts() {
       batch.map(async (produit, i) => {
         const globalIdx = startIdx + i + 1;
         try {
-          const newDesc = await reformulateDescription({
+          const { description: newDesc, motsCles } = await reformulateDescription({
             nom: produit.nom,
             reference: produit.reference,
             rawDescription: produit.description ?? '',
@@ -338,11 +370,17 @@ async function runReformulateAllProducts() {
             paysFabrication: produit.paysFabrication ?? undefined,
           });
 
-          // Mettre à jour uniquement si la description a changé
-          if (newDesc !== produit.description) {
+          // Mettre à jour si description OU mots-clés ont changé
+          const descChanged = newDesc !== produit.description;
+          const hasKeywords = motsCles.length > 0;
+
+          if (descChanged || hasKeywords) {
             await prisma.produit.update({
               where: { id: produit.id },
-              data: { description: newDesc },
+              data: {
+                ...(descChanged ? { description: newDesc } : {}),
+                ...(hasKeywords ? { motsCles } : {}),
+              },
             });
             reformules++;
 
@@ -351,10 +389,11 @@ async function runReformulateAllProducts() {
               `[${globalIdx}/${toProcess.length}] ✅ ${produit.nom}\n` +
               `   Avant : ${(produit.description ?? '').slice(0, 100)}${(produit.description ?? '').length > 100 ? '…' : ''}\n` +
               `   Après : ${newDesc.slice(0, 100)}${newDesc.length > 100 ? '…' : ''}\n` +
+              `   Mots-clés (${motsCles.length}) : ${motsCles.join(', ')}\n` +
               `${'─'.repeat(80)}\n`;
             fs.appendFileSync(REPORT_PATH, line, 'utf-8');
 
-            console.log(`   [${globalIdx}] ✅ ${produit.nom.slice(0, 60)}`);
+            console.log(`   [${globalIdx}] ✅ ${produit.nom.slice(0, 55)} [${motsCles.length} mots-clés]`);
           } else {
             inchanges++;
             console.log(`   [${globalIdx}] ≡  Inchangé : ${produit.nom.slice(0, 60)}`);
