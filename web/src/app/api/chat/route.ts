@@ -109,6 +109,10 @@ async function groqStreamChat(
           fallbackModels.filter((m) => m !== nextFallback)
         );
       }
+      // Si tous les modèles ont été épuisés, attendre 2s pour que le quota de tokens se recharge
+      console.warn(`⚠️ [Groq Stream 429] Quota atteint sur tous les modèles, attente 2000ms avant réessai final...`);
+      await new Promise((r) => setTimeout(r, 2000));
+      return groqStreamChat(messages, model, onDelta, []);
     }
     const errorText = await response.text();
     console.error(`❌ [groqStreamChat] Erreur Groq Stream HTTP ${response.status} sur modèle ${model}:`, errorText.slice(0, 400));
@@ -211,7 +215,7 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
             results.push({
               title: titles[i] || "Résultat web",
               url: urls[i] || "",
-              content: (snippets[i] || "").slice(0, 750),
+              content: (snippets[i] || "").slice(0, 300),
             });
             console.log(`   └─ [Web ${i + 1}] "${titles[i]}" (${urls[i]?.slice(0, 45) ?? ""}...)`);
             console.log(`      Extrait: ${(snippets[i] || "").slice(0, 140)}...`);
@@ -267,13 +271,13 @@ async function tavilySearch(query: string, maxResults = 4, onLog?: (msg: string)
       return [];
     }
     const data = await res.json();
-    const results: { title: string; url: string; content: string }[] = (data.results ?? []).map((r: any) => ({
+    const results: { title: string; url: string; content: string }[] = (data.results ?? []).slice(0, maxResults).map((r: any) => ({
       title: r.title ?? "",
       url: r.url ?? "",
-      content: (r.content ?? "").slice(0, 1200),
+      content: (r.content ?? "").slice(0, 300),
     }));
     if (data.answer) {
-      results.unshift({ title: "Synthèse Tavily", url: "", content: data.answer.slice(0, 600) });
+      results.unshift({ title: "Synthèse", url: "", content: data.answer.slice(0, 350) });
     }
     console.log(`✅ [Tavily] Succès ! ${results.length} résultat(s) retourné(s) par Tavily AI pour "${query}"`);
     onLog?.(`✅ Tavily a répondu : ${results.length} résultat(s) trouvés`);
@@ -665,7 +669,7 @@ async function executeTool(
         try {
           const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique spécifications`.trim();
           console.log(`🚀 [compare_products] Recherche Tavily pour enrichir "${p.nom}"`);
-          webInfo = await performWebSearch(searchQuery, 4, onLog);
+          webInfo = await performWebSearch(searchQuery, 2, onLog);
           console.log(`📥 [compare_products] WebInfo : ${webInfo.length} résultat(s) Tavily pour "${p.nom}"`);
         } catch (webErr) {
           console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
@@ -694,7 +698,7 @@ async function executeTool(
               marque: p.marque?.nom ?? "N/A",
               categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
               sousCategorie: p.sousCategorie?.nom ?? "N/A",
-              description: (p.description ?? "").slice(0, 800),
+              description: (p.description ?? "").slice(0, 300),
               paysFabrication: p.paysFabrication ?? "N/A",
               tva: p.tva ? `${Number(p.tva)}%` : "N/A",
               motsCles: Array.isArray(p.motsCles) && p.motsCles.length > 0 ? p.motsCles.join(", ") : "N/A",
