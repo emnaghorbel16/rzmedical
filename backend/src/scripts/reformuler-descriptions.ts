@@ -287,16 +287,27 @@ async function runReformulateAllProducts() {
   // ── Sous-catégorie spécifique via --sous-cat=NOM
   const sousCatArg = process.argv.find((a) => a.startsWith('--sous-cat='))?.split('=').slice(1).join('=');
   // ── Limite optionnelle via --limit=N
-  const limitArg = parseInt(process.argv.find((a) => a.startsWith('--limit='))?.split('=')[1] ?? '0', 10);
+  // ── Sauter les premiers produits via --start=N (ex: --start=4) ou --skip=N (ex: --skip=3)
+  const startArg = parseInt(process.argv.find((a) => a.startsWith('--start='))?.split('=')[1] ?? '0', 10);
+  const skipArg = parseInt(process.argv.find((a) => a.startsWith('--skip='))?.split('=')[1] ?? '0', 10);
+  const effectiveSkip = startArg > 1 ? startArg - 1 : (skipArg > 0 ? skipArg : 0);
+
+  // ── ID de départ spécifique via --start-id=ID
+  const startIdArg = parseInt(process.argv.find((a) => a.startsWith('--start-id='))?.split('=')[1] ?? '0', 10);
 
   console.log(`⚙️  Options :`);
   console.log(`   --only-empty  : ${onlyEmpty ? 'OUI (reformule uniquement les descriptions absentes/courtes)' : 'NON (reformule tous les produits)'}`);
+  console.log(`   --start       : ${effectiveSkip > 0 ? `commence à partir du produit #${effectiveSkip + 1} (saute les ${effectiveSkip} premiers)` : 'dès le 1er produit'}`);
+  if (startIdArg > 0) {
+    console.log(`   --start-id    : ID produit >= ${startIdArg}`);
+  }
   console.log(`   --sous-cat    : ${sousCatArg ?? 'toutes'}`);
   console.log(`   --limit       : ${limitArg > 0 ? limitArg : 'aucune'}`);
   console.log(`   Batch size    : ${BATCH_SIZE} produits en parallèle\n`);
 
   // ── Construire le filtre Prisma ───────────────────────────────────────────
   const where: any = {
+    ...(startIdArg > 0 ? { id: { gte: startIdArg } } : {}),
     sousCategorie: sousCatArg
       ? { nom: { contains: sousCatArg, mode: 'insensitive' } }
       : undefined,
@@ -322,6 +333,7 @@ async function runReformulateAllProducts() {
       },
     },
     orderBy: { id: 'asc' },
+    ...(effectiveSkip > 0 ? { skip: effectiveSkip } : {}),
     ...(limitArg > 0 ? { take: limitArg } : {}),
   });
 
@@ -362,7 +374,7 @@ async function runReformulateAllProducts() {
     // Traiter le lot en parallèle
     await Promise.all(
       batch.map(async (produit, i) => {
-        const globalIdx = startIdx + i + 1;
+        const globalIdx = effectiveSkip + startIdx + i + 1;
         try {
           const { description: newDesc, motsCles } = await reformulateDescription({
             nom: produit.nom,
