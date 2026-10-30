@@ -97,14 +97,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://flagcdn.com" />
-        {/* Préchargement de l'image hero (LCP) */}
-        <link
-          rel="preload"
-          as="image"
-          href="/images/hero_bg.webp"
-          type="image/webp"
-          fetchPriority="high"
-        />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {/* Google Analytics */}
