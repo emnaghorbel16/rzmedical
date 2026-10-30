@@ -26,8 +26,8 @@ let MODEL = cliModelArg
 // Taille du lot traité en parallèle (1 pour rester sous les 8 000 TPM de Groq)
 const BATCH_SIZE = parseInt(process.env.BATCH_SIZE || '1', 10);
 
-// Délai entre les requêtes (ms) pour respecter les quotas Groq
-const DELAY_BETWEEN_BATCHES_MS = parseInt(process.env.BATCH_DELAY_MS || '2500', 10);
+// Délai entre les requêtes (ms) pour respecter les 8 000 TPM de Groq
+const DELAY_BETWEEN_BATCHES_MS = parseInt(process.env.BATCH_DELAY_MS || '6000', 10);
 
 // Fichier de rapport final
 const REPORT_PATH = path.join(process.cwd(), 'reformulation-rapport.txt');
@@ -164,7 +164,7 @@ EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
       body: JSON.stringify({
         model: MODEL,
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 1000, // Suffisant pour que le modèle ne soit jamais coupé
+        max_tokens: 500, // Suffisant pour 180 mots + mots-clés, réduit la pré-réservation TPM Groq
         temperature: 0.5,
         ...(isReasoningModel
           ? { reasoning_effort: 'low', reasoning_format: 'parsed' }
@@ -185,8 +185,27 @@ EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
     // Gestion intelligente du Rate Limit 429 de Groq
     if (res.status === 429) {
       const errText = await res.text();
-      const match = errText.match(/try again in ([0-9.]+)s/i);
-      const waitSeconds = match ? Math.ceil(parseFloat(match[1])) + 2 : Math.min(30, 6 * attempt);
+
+      // Si on utilisait gpt-oss-120b et qu'on prend un 429, basculer sur qwen/qwen3.8-27b (quota TPM Groq distinct !)
+      if (!cliModelArg && MODEL === 'openai/gpt-oss-120b' && attempt === 1) {
+        console.warn(`   ⏳ Quota TPM 120b atteint. Basculement direct sur qwen/qwen3.8-27b (quota TPM séparé)...`);
+        MODEL = 'qwen/qwen3.8-27b';
+        await sleep(1500);
+        continue;
+      }
+
+      // Calcul du temps d'attente exact demandé par Groq (ex: "try again in 14.5s")
+      let waitSeconds = 20;
+      const matchMinSec = errText.match(/try again in (?:(\d+)m\s*)?([0-9.]+)s/i);
+      if (matchMinSec) {
+        const mins = matchMinSec[1] ? parseInt(matchMinSec[1], 10) : 0;
+        const secs = parseFloat(matchMinSec[2]);
+        waitSeconds = Math.ceil(mins * 60 + secs) + 3;
+      } else {
+        const matchSec = errText.match(/([0-9.]+)s/);
+        waitSeconds = matchSec ? Math.ceil(parseFloat(matchSec[1])) + 3 : Math.min(45, 12 * attempt);
+      }
+
       console.warn(`   ⏳ Limite Groq (429 TPM) atteinte. Pause de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
       await sleep(waitSeconds * 1000);
       continue;
