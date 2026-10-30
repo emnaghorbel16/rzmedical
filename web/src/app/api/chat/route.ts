@@ -374,15 +374,16 @@ Règles importantes :
 - Si un outil renvoie une erreur d'authentification, explique poliment au client qu'il doit se connecter à son compte pour accéder à cette information.
 
 --- RÈGLES DE COMPARAISON DE PRODUITS ---
-RÈGLE ABSOLUE : Tu compares UNIQUEMENT les produits vendus dans le catalogue RZMedical.
-- Si le client demande de comparer des produits dont l'un n'est pas dans le catalogue (produit: null / dansCatalogue: false) :
-  👉 Ne compare PAS ce produit hors catalogue.
-  👉 Informe poliment le client que ce produit ne fait pas partie du catalogue RZMedical et propose des alternatives disponibles chez RZMedical.
-  👉 Tu ne peux générer un tableau comparatif [COMPARE|...] QUE si au moins 2 produits sont bien présents dans le catalogue RZMedical.
-- Quand le client demande de comparer deux produits ou plus disponibles dans le catalogue :
-  1. Utilise l'outil compare_products avec les mots-clés courts de chaque produit.
-  2. L'outil renvoie : les données du catalogue RZMedical ET le champ webInfo (recherche web effectuée pour compléter les descriptions ou données techniques manquantes de chaque produit du catalogue).
-  3. Génère ensuite UN SEUL tag [COMPARE|...] structuré.
+- Quand le client demande de comparer des produits :
+  1. Utilise TOUJOURS l'outil compare_products avec les mots-clés courts de chaque produit.
+  2. L'outil cherche d'abord dans le catalogue RZMedical, puis enrichit CHAQUE produit avec une recherche Tavily (que le produit soit dans le catalogue ou non).
+  3. Tu reçois pour chaque produit : dansCatalogue (true/false), les données BDD si disponibles, et le champ webInfo (résultats Tavily).
+  4. Génère UN SEUL tag [COMPARE|...] structuré.
+
+RÈGLE AFFICHAGE :
+- Si un produit est dans le catalogue RZMedical (dansCatalogue: true) : utilise ses données BDD (prix, stock, référence) et complète avec webInfo pour les specs techniques. Indique "✅ Vendu par RZMedical" dans une ligne du tableau.
+- Si un produit n'est PAS dans le catalogue (dansCatalogue: false) : utilise uniquement le webInfo pour construire sa colonne. Indique "❌ Non vendu par RZMedical" dans une ligne du tableau. Ne donne pas de prix ni de stock inventés.
+- Tu peux générer un tableau comparatif même si aucun produit n'est dans le catalogue, tant que le webInfo contient des informations techniques suffisantes.
 
 FORMAT OBLIGATOIRE :
 [COMPARE|Nom Produit A|Nom Produit B]
@@ -767,8 +768,18 @@ async function executeTool(
             }
           }
         } else {
-          console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical -> Aucune recherche web effectuée.`);
-          onLog?.(`⚠️ Produit "${q}" absent du catalogue RZMedical`);
+          // Produit absent du catalogue : on recherche quand même sur le web pour récupérer les specs
+          console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical → Recherche Tavily pour specs externes.`);
+          onLog?.(`⚠️ Produit "${q}" absent du catalogue RZMedical — recherche web en cours...`);
+          try {
+            const searchQuery = `${q} fiche technique spécifications équipement médical`.trim();
+            console.log(`🚀 [compare_products] Recherche Tavily (hors catalogue) pour "${q}"`);
+            webInfo = await performWebSearch(searchQuery, 4, onLog);
+            console.log(`📥 [compare_products] WebInfo hors catalogue : ${webInfo.length} résultat(s) pour "${q}"`);
+          } catch (webErr) {
+            console.error(`❌ [compare_products] Erreur recherche web hors catalogue pour "${q}":`, webErr);
+            webInfo = [];
+          }
         }
         console.log(`======================================================\n`);
 
