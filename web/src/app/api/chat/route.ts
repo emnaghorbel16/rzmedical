@@ -1026,11 +1026,12 @@ export async function POST(req: Request) {
             const toolCalls: ToolCall[] | undefined = message?.tool_calls;
 
             if (!toolCalls || toolCalls.length === 0) {
+              // Aucun outil : réponse directe sans streaming
               if (!toolExecuted && message?.content) {
                 controller.enqueue(
                   encoder.encode(`data: ${JSON.stringify({ text: message.content })}\n\n`)
                 );
-                recordGroqUsage(response.data, response.headers, GROQ_MODEL).catch(() => {});
+                recordGroqUsage(response.data, response.headers, TOOL_MODEL).catch(() => {});
               }
               break;
             }
@@ -1049,6 +1050,13 @@ export async function POST(req: Request) {
               toolCalls.map((tc) => runToolCall(tc, clientToken, onLog))
             );
             groqMessages.push(...toolResults);
+
+            // ── OPTIMISATION RATE LIMIT ───────────────────────────────────────
+            // Après exécution des outils on sort immédiatement du loop.
+            // La réponse finale est rédigée par STREAM_MODEL (openai/gpt-oss-20b)
+            // qui a des quotas séparés de TOOL_MODEL (qwen/qwen3.8-27b).
+            // Cela évite un 2e appel qwen et divise par 2 le risque de 429.
+            break;
           }
 
           // Si des outils ont été exécutés, on stream la réponse finale token par token en direct !
