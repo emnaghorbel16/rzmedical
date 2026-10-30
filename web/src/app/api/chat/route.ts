@@ -16,9 +16,14 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MAX_TOOL_ROUNDS = 4; // compare_products + web_search peuvent enchaîner plusieurs appels
 const MAX_HISTORY_MESSAGES = 10; // Nombre max de messages à envoyer à Groq (évite les dépassements de tokens)
 
+const DEFAULT_FALLBACK_MODELS = [
+  "llama-3.3-70b-versatile",
+  "llama-3.1-8b-instant",
+];
+
 async function groqChat(
   body: Record<string, unknown>,
-  fallbackModel?: string,
+  fallbackModels: string[] = DEFAULT_FALLBACK_MODELS,
   attempt = 0
 ): Promise<{ data: any; headers: Headers }> {
   const apiKey = process.env.GROQ_API_KEY;
@@ -35,21 +40,20 @@ async function groqChat(
 
   if (!response.ok) {
     if (response.status === 429) {
-      // Essayer le modèle de secours en premier si disponible
-      if (fallbackModel && body.model !== fallbackModel) {
-        console.warn(`Rate limit on ${body.model}, switching to fallback ${fallbackModel}`);
-        return groqChat({ ...body, model: fallbackModel }, undefined, 0);
+      const currentModel = String(body.model);
+      const nextFallback = fallbackModels.find((m) => m !== currentModel);
+      if (nextFallback) {
+        console.warn(`⚠️ [Groq 429] Limite atteinte sur ${currentModel}, basculement automatique vers ${nextFallback}`);
+        return groqChat(
+          { ...body, model: nextFallback },
+          fallbackModels.filter((m) => m !== nextFallback),
+          0
+        );
       }
-      // Retry avec délai exponentiel jusqu'à 2 fois
-      if (attempt < 2) {
-        // Groq envoie le délai dans le header retry-after ou x-ratelimit-reset-tokens
-        const retryAfterHeader = response.headers.get("retry-after");
-        const waitMs = retryAfterHeader
-          ? Math.ceil(parseFloat(retryAfterHeader) * 1000)
-          : (attempt + 1) * 10_000; // 10s puis 20s
-        console.warn(`Groq 429, retrying in ${waitMs}ms (attempt ${attempt + 1})...`);
-        await new Promise((r) => setTimeout(r, waitMs));
-        return groqChat(body, fallbackModel, attempt + 1);
+      if (attempt < 1) {
+        console.warn(`⚠️ [Groq 429] Attente 1500ms avant réessai sur ${currentModel}...`);
+        await new Promise((r) => setTimeout(r, 1500));
+        return groqChat(body, fallbackModels, attempt + 1);
       }
       throw new Error(
         "Le chatbot est temporairement surchargé. Veuillez réessayer dans quelques secondes."
@@ -67,7 +71,7 @@ async function groqStreamChat(
   messages: any[],
   model: string,
   onDelta: (chunk: string) => void,
-  fallbackModel?: string
+  fallbackModels: string[] = DEFAULT_FALLBACK_MODELS
 ): Promise<{ text: string; headers?: Headers }> {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) throw new Error("GROQ_API_KEY n'est pas configurée.");
@@ -87,9 +91,17 @@ async function groqStreamChat(
   });
 
   if (!response.ok) {
-    if (response.status === 429 && fallbackModel && model !== fallbackModel) {
-      console.warn(`Rate limit on ${model} (stream), switching to fallback ${fallbackModel}`);
-      return groqStreamChat(messages, fallbackModel, onDelta);
+    if (response.status === 429) {
+      const nextFallback = fallbackModels.find((m) => m !== model);
+      if (nextFallback) {
+        console.warn(`⚠️ [Groq Stream 429] Limite sur ${model}, basculement immédiat vers ${nextFallback}`);
+        return groqStreamChat(
+          messages,
+          nextFallback,
+          onDelta,
+          fallbackModels.filter((m) => m !== nextFallback)
+        );
+      }
     }
     const errorText = await response.text();
     throw new Error(`Erreur Groq Stream (${response.status}): ${errorText}`);
@@ -949,8 +961,11 @@ export async function POST(req: Request) {
       });
     }
 
-    const GROQ_MODEL = process.env.GROQ_MODEL || "qwen/qwen3.8-27b";
-    const FALLBACK_MODEL = "openai/gpt-oss-20b";
+    const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+    const fallbacks = [
+      "llama-3.3-70b-versatile",
+      "llama-3.1-8b-instant",
+    ].filter((m) => m !== GROQ_MODEL);
     const clientToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
     // Traitement des images avant l'orchestration principale
@@ -1002,7 +1017,7 @@ export async function POST(req: Request) {
                 tool_choice: "auto",
                 stream: false,
               },
-              FALLBACK_MODEL
+              fallbacks
             );
 
             const choice = response.data?.choices?.[0];
@@ -1046,7 +1061,7 @@ export async function POST(req: Request) {
                   encoder.encode(`data: ${JSON.stringify({ text: delta })}\n\n`)
                 );
               },
-              FALLBACK_MODEL
+              fallbacks
             );
             recordGroqUsage(
               { usage: { total_tokens: 400 } },
