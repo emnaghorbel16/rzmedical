@@ -584,12 +584,53 @@ export function ChatWidget() {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // Mobile keyboard detection
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Détection mobile + adaptation au clavier virtuel via visualViewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    const vv = window.visualViewport;
+    if (!vv) return () => window.removeEventListener("resize", checkMobile);
+
+    const onViewportResize = () => {
+      // La différence entre la hauteur de la fenêtre et le visualViewport = clavier
+      const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setKeyboardOffset(offset);
+      // Scroll vers le bas quand le clavier apparaît
+      if (offset > 50) {
+        setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+      }
+    };
+
+    vv.addEventListener("resize", onViewportResize);
+    vv.addEventListener("scroll", onViewportResize);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      vv.removeEventListener("resize", onViewportResize);
+      vv.removeEventListener("scroll", onViewportResize);
+    };
+  }, []);
+
+  // Bloquer le scroll de la page en arrière-plan sur mobile quand le chat est ouvert
+  useEffect(() => {
+    if (isMobile && open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMobile, open]);
 
   // Scroll automatique vers le bas
   useLayoutEffect(() => {
@@ -857,12 +898,20 @@ export function ChatWidget() {
           role="dialog"
           aria-label="Assistant RZBot"
           aria-modal="true"
-          className="chat-window-enter fixed bottom-24 right-4 sm:right-6 z-[110] flex flex-col w-[340px] sm:w-[380px] h-[560px] max-h-[80vh] rounded-2xl overflow-hidden"
+          className={`chat-window-enter fixed z-[110] flex flex-col overflow-hidden ${
+            isMobile
+              ? "inset-0 rounded-none"
+              : "bottom-24 right-4 sm:right-6 w-[340px] sm:w-[380px] h-[560px] max-h-[80vh] rounded-2xl"
+          }`}
           style={{
             background: "#ffffff",
-            border: "1px solid #e2e8f0",
-            boxShadow:
-              "0 20px 60px rgba(12,35,64,0.14), 0 4px 16px rgba(12,35,64,0.06)",
+            border: isMobile ? "none" : "1px solid #e2e8f0",
+            boxShadow: isMobile
+              ? "none"
+              : "0 20px 60px rgba(12,35,64,0.14), 0 4px 16px rgba(12,35,64,0.06)",
+            ...(isMobile && keyboardOffset > 0
+              ? { bottom: keyboardOffset }
+              : {}),
           }}
         >
           {/* ── Header navy gradient ─────────────────────────────────────── */}
@@ -920,8 +969,8 @@ export function ChatWidget() {
           {/* ── Zone de messages — fond gris très clair ──────────────────── */}
           <div
             id="rzbot-scroll"
-            className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth"
-            style={{ background: "#f8fafc" }}
+            className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 space-y-3 scroll-smooth"
+            style={{ background: "#f8fafc", overscrollBehavior: "contain" }}
           >
             {/* Message de bienvenue */}
             {messages.length === 0 && (
@@ -973,7 +1022,10 @@ export function ChatWidget() {
           {/* ── Zone de saisie — fond blanc ──────────────────────────────── */}
           <div
             className="flex-shrink-0 border-t border-slate-100 px-3 py-3"
-            style={{ background: "#ffffff" }}
+            style={{
+              background: "#ffffff",
+              paddingBottom: isMobile ? `max(12px, env(safe-area-inset-bottom))` : "12px",
+            }}
           >
             {/* Image Preview Area */}
             {selectedImage && (
@@ -1063,7 +1115,8 @@ export function ChatWidget() {
         </div>
       )}
 
-      {/* ── Bouton FAB ────────────────────────────────────────────────────── */}
+      {/* ── Bouton FAB — masqué sur mobile quand le chat est ouvert ─────── */}
+      {(!isMobile || !open) && (
       <div className="fixed bottom-5 right-4 sm:right-6 z-[110]">
         {!open && (
           <span
@@ -1108,6 +1161,7 @@ export function ChatWidget() {
           </span>
         </button>
       </div>
+      )}
     </>
   );
 }
