@@ -27,6 +27,7 @@ async function exportProducts() {
       nom: true,
       reference: true,
       description: true,
+      video: true,
       paysFabrication: true,
       sousCategorie: {
         select: {
@@ -55,6 +56,7 @@ async function exportProducts() {
     categorie: (p.sousCategorie as any)?.categorie?.nom ?? '',
     sousCategorie: p.sousCategorie?.nom ?? '',
     description_actuelle: p.description ?? '',
+    video: p.video ?? '',
   }));
 
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2), 'utf-8');

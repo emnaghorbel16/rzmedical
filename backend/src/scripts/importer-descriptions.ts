@@ -49,6 +49,8 @@ async function importDescriptions() {
       motsCles = (item.motsCles ?? item.keywords ?? item.mots_cles).split(',').map((k: string) => k.trim()).filter(Boolean);
     }
 
+    const video = (item.video ?? item.youtube ?? item.videoUrl ?? item.youtubeUrl ?? '').trim();
+
     if (!id || !description) {
       ignores++;
       continue;
@@ -60,10 +62,11 @@ async function importDescriptions() {
         data: {
           description,
           ...(motsCles.length > 0 ? { motsCles } : {}),
+          ...(video ? { video } : {}),
         },
       });
       misAJour++;
-      console.log(`   ✅ [#${id}] Description mise à jour (${motsCles.length} mots-clés)`);
+      console.log(`   ✅ [#${id}] Description mise à jour (${motsCles.length} mots-clés${video ? ', vidéo YouTube incluse' : ''})`);
     } catch (err: any) {
       erreurs++;
       console.error(`   ❌ [#${id}] Erreur lors de la mise à jour: ${err.message}`);
