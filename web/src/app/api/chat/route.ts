@@ -370,9 +370,13 @@ Règles impératives :
 7. CARTES PRODUIT : Dès que tu mentionnes un produit du catalogue issu de ta recherche, insère OBLIGATOIREMENT ce tag : [PRODUCT|Nom exact|Prix|Reference]
    Exemple : "Nous disposons de ce modèle. [PRODUCT|Tensiomètre Omron M3|150|REF-OMR-M3]"
 8. SUGGESTIONS DE QUESTIONS : À la fin de CHAQUE réponse sans exception, propose 1 ou 2 questions sous ce tag exact, formulées DU POINT DE VUE DU CLIENT : [SUGGESTION|Question client]
-   Exemples : [SUGGESTION|Quels sont vos délais de livraison ?] ou [SUGGESTION|Puis-je obtenir un devis pour cet équipement ?]
+   INTERDICTION ABSOLUE DANS LES SUGGESTIONS : Ne propose et ne cite JAMAIS dans les suggestions des produits qui ne sont PAS dans le catalogue RZMedical ! Toutes les suggestions de produits doivent concerner exclusivement des produits réellement vendus par RZMedical ou des questions de service (délais, garantie, devis).
+   Exemples : [SUGGESTION|Quels sont vos délais de livraison ?] ou [SUGGESTION|Puis-je obtenir un devis pour ce produit ?]
    (Interdiction de poser des questions ouvertes en texte libre sans ce tag).
-9. FORMAT COMPARATIF : En cas de demande de comparaison :
+9. FORMAT COMPARATIF :
+   RÈGLE STRICTE ET ABSOLUE : Tu dois COMPARER UNIQUEMENT DES PRODUITS PRÉSENTS DANS LE CATALOGUE RZMEDICAL. Ne compare JAMAIS de produits hors catalogue !
+   - Si un produit demandé n'est pas dans le catalogue RZMedical, indique clairement qu'il n'est pas commercialisé par RZMedical et qu'on ne compare que les produits de notre catalogue.
+   - Ne construis de tableau [COMPARE|...] QUE si au moins 2 produits sont présents dans le catalogue RZMedical.
    [COMPARE|Produit A|Produit B]
    [COMPARE_ROW|Critère|Valeur A|Valeur B]
    [COMPARE_END]
@@ -623,18 +627,9 @@ async function executeTool(
             }
           }
         } else {
-          // Produit absent du catalogue : on recherche quand même sur le web pour récupérer les specs
-          console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical → Recherche Tavily pour specs externes.`);
-          onLog?.(`⚠️ Produit "${q}" absent du catalogue RZMedical — recherche web en cours...`);
-          try {
-            const searchQuery = `${q} fiche technique spécifications équipement médical`.trim();
-            console.log(`🚀 [compare_products] Recherche Tavily (hors catalogue) pour "${q}"`);
-            webInfo = await performWebSearch(searchQuery, 4, onLog);
-            console.log(`📥 [compare_products] WebInfo hors catalogue : ${webInfo.length} résultat(s) pour "${q}"`);
-          } catch (webErr) {
-            console.error(`❌ [compare_products] Erreur recherche web hors catalogue pour "${q}":`, webErr);
-            webInfo = [];
-          }
+          // Produit absent du catalogue : on ne recherche pas sur le web car RZMedical ne compare que son catalogue
+          console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical → exclu de la comparaison.`);
+          onLog?.(`ℹ️ Produit "${q}" non présent dans le catalogue RZMedical`);
         }
         console.log(`======================================================\n`);
 
@@ -666,22 +661,51 @@ async function executeTool(
           webInfo,
           message: p
             ? "Produit présent dans le catalogue RZMedical."
-            : `Produit "${kw}" absent du catalogue RZMedical : caractéristiques techniques récupérées via recherche web Tavily pour la comparaison.`,
+            : `Produit "${kw}" absent du catalogue RZMedical. Exclu de la comparaison.`,
         };
       })
     );
 
     const trouves = results.filter((r) => r.dansCatalogue);
+    const absents = results.filter((r) => !r.dansCatalogue);
+
+    if (trouves.length < 2) {
+      return {
+        totalDemandes: keywords.length,
+        nombreDansCatalogue: trouves.length,
+        produitsDansCatalogue: trouves,
+        produitsAbsents: absents.map((a) => a.keyword),
+        consigne:
+          "RÈGLE COMPARATIF STRICTE : Moins de 2 produits demandés sont présents dans le catalogue RZMedical. " +
+          "Ne construis AUCUN tableau [COMPARE|...]. " +
+          "Indique poliment au client que RZMedical ne commercialise pas " +
+          absents.map((a) => `"${a.keyword}"`).join(", ") +
+          " et que nous comparons exclusivement les produits disponibles dans notre catalogue. " +
+          (trouves.length === 1
+            ? `Présente le seul produit trouvé (${trouves[0].produit?.nom}) avec sa carte [PRODUCT|...]. `
+            : "") +
+          "INTERDICTION FORMELLE : Ne propose JAMAIS dans [SUGGESTION|...] des produits qui ne sont pas dans le catalogue RZMedical !",
+      };
+    }
+
     return {
       totalDemandes: keywords.length,
       nombreDansCatalogue: trouves.length,
-      produits: results,
+      produits: trouves,
+      produitsAbsents: absents.map((a) => a.keyword),
       consigne:
-        "RÈGLE COMPARATIF : Construis OBLIGATOIREMENT le tableau comparatif [COMPARE|...] pour TOUS les produits demandés. " +
-        "1) Pour les produits vendus par RZMedical (dansCatalogue: true) : affiche leurs données officielles (prix, remise, réf) et complète OBLIGATOIREMENT les spécifications techniques avec le champ webInfo (Tavily). " +
-        "2) Pour les produits non vendus par RZMedical (dansCatalogue: false) : utilise EXCLUSIVEMENT le champ webInfo (Tavily) pour remplir leurs caractéristiques techniques sans inventer de prix. " +
-        "3) INTERDICTION : Ne JAMAIS inclure de ligne 'Stock' ni de ligne 'Disponibilité catalogue' dans le tableau. " +
-        "4) EXPLOITE À FOND les informations techniques contenues dans webInfo (puissance, dimensions, fonctionnalités, matériaux, options, etc.) pour créer un tableau riche avec de vrais critères techniques.",
+        "RÈGLE COMPARATIF : Construis le tableau comparatif [COMPARE|...] EXCLUSIVEMENT pour les " +
+        trouves.length +
+        " produits du catalogue RZMedical : " +
+        trouves.map((t) => `"${t.produit?.nom}"`).join(", ") +
+        ". " +
+        (absents.length > 0
+          ? `Précise que ${absents.map((a) => `"${a.keyword}"`).join(", ")} n'est pas commercialisé par RZMedical et a été exclu. `
+          : "") +
+        "INTERDICTIONS : " +
+        "1) N'inclus JAMAIS de produit hors catalogue dans le tableau. " +
+        "2) Ne JAMAIS inclure de ligne 'Stock' ni de ligne 'Disponibilité catalogue'. " +
+        "3) Ne JAMAIS proposer dans [SUGGESTION|...] des produits qui ne sont pas dans le catalogue RZMedical.",
     };
   }
 
