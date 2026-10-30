@@ -16,10 +16,9 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MAX_TOOL_ROUNDS = 4; // compare_products + web_search peuvent enchaîner plusieurs appels
 const MAX_HISTORY_MESSAGES = 10; // Nombre max de messages à envoyer à Groq (évite les dépassements de tokens)
 
-const DEFAULT_FALLBACK_MODELS = [
-  "llama-3.3-70b-versatile",
-  "llama-3.1-8b-instant",
-];
+// Modèles disponibles sur ce compte Groq
+const TOOL_MODEL = "qwen/qwen3.8-27b";     // supporte les tool_calls
+const DEFAULT_FALLBACK_MODELS: string[] = []; // pas d'autres modèles connus sur ce compte
 
 async function groqChat(
   body: Record<string, unknown>,
@@ -963,16 +962,11 @@ export async function POST(req: Request) {
       });
     }
 
-    // Modèle principal Groq (depuis env, défaut: llama-3.3-70b-versatile qui supporte les tool_calls)
-    const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
-    // Modèle de rédaction finale (streaming) — peut être différent du modèle tool-calling
-    const STREAM_MODEL = ["openai/gpt-oss-20b"].includes(GROQ_MODEL)
-      ? "llama-3.3-70b-versatile"  // gpt-oss-20b ne supporte pas bien le rôle "tool" en stream
-      : GROQ_MODEL;
-    const fallbacks = [
-      "llama-3.3-70b-versatile",
-      "llama-3.1-8b-instant",
-    ].filter((m) => m !== GROQ_MODEL);
+    // GROQ_MODEL depuis env = modèle de rédaction finale (ex: openai/gpt-oss-20b)
+    const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+    // TOOL_MODEL = modèle pour les tool calls (qwen supporte role:tool, openai/gpt-oss-20b non)
+    const STREAM_MODEL = GROQ_MODEL;
+    const fallbacks: string[] = [];
     const clientToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
     // Traitement des images avant l'orchestration principale
@@ -1018,7 +1012,7 @@ export async function POST(req: Request) {
           for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
             const response = await groqChat(
               {
-                model: GROQ_MODEL,
+                model: TOOL_MODEL,
                 messages: groqMessages,
                 tools,
                 tool_choice: "auto",
