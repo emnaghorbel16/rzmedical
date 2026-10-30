@@ -17,11 +17,13 @@ const cliModelArg = process.argv.find((a) => a.startsWith('--model='))?.split('=
 let API_URL = IS_OPENAI
   ? 'https://api.openai.com/v1/chat/completions'
   : 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_ROTATION_MODELS = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'allam-2-7b'];
+
 let MODEL = cliModelArg
   ? cliModelArg
   : IS_OPENAI
     ? (process.env.OPENAI_MODEL || 'gpt-4o-mini')
-    : (process.env.GROQ_MODEL || 'openai/gpt-oss-120b');
+    : (process.env.GROQ_MODEL || 'qwen/qwen3.8-27b');
 
 // Taille du lot traité en parallèle (1 pour rester sous les 8 000 TPM de Groq)
 const BATCH_SIZE = parseInt(process.env.BATCH_SIZE || '1', 10);
@@ -186,27 +188,32 @@ EXEMPLE DE FORMAT DE RÉPONSE (respecte exactement cette structure) :
     if (res.status === 429) {
       const errText = await res.text();
 
-      // Si on utilisait gpt-oss-120b et qu'on prend un 429, basculer sur qwen/qwen3.8-27b (quota TPM Groq distinct !)
-      if (!cliModelArg && MODEL === 'openai/gpt-oss-120b' && attempt === 1) {
-        console.warn(`   ⏳ Quota TPM 120b atteint. Basculement direct sur qwen/qwen3.8-27b (quota TPM séparé)...`);
-        MODEL = 'qwen/qwen3.8-27b';
-        await sleep(1500);
-        continue;
+      // En cas de 429, on bascule immédiatement sur un autre modèle disponible ayant un quota séparé !
+      if (!cliModelArg && !IS_OPENAI) {
+        const curIdx = GROQ_ROTATION_MODELS.indexOf(MODEL);
+        const nextIdx = (curIdx + 1) % GROQ_ROTATION_MODELS.length;
+        const nextModel = GROQ_ROTATION_MODELS[nextIdx];
+        if (nextModel && nextModel !== MODEL) {
+          console.warn(`   🔄 Limite atteinte sur ${MODEL}. Basculement instantané sur ${nextModel} (quota séparé)...`);
+          MODEL = nextModel;
+          await sleep(2000);
+          continue;
+        }
       }
 
-      // Calcul du temps d'attente exact demandé par Groq (ex: "try again in 14.5s")
-      let waitSeconds = 20;
+      // Calcul du temps d'attente (plafonné à 20s max pour ne jamais bloquer)
+      let waitSeconds = 15;
       const matchMinSec = errText.match(/try again in (?:(\d+)m\s*)?([0-9.]+)s/i);
       if (matchMinSec) {
         const mins = matchMinSec[1] ? parseInt(matchMinSec[1], 10) : 0;
         const secs = parseFloat(matchMinSec[2]);
-        waitSeconds = Math.ceil(mins * 60 + secs) + 3;
+        waitSeconds = Math.min(25, Math.ceil(mins * 60 + secs));
       } else {
         const matchSec = errText.match(/([0-9.]+)s/);
-        waitSeconds = matchSec ? Math.ceil(parseFloat(matchSec[1])) + 3 : Math.min(45, 12 * attempt);
+        waitSeconds = matchSec ? Math.min(25, Math.ceil(parseFloat(matchSec[1]))) : Math.min(25, 6 * attempt);
       }
 
-      console.warn(`   ⏳ Limite Groq (429 TPM) atteinte. Pause de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
+      console.warn(`   ⏳ Limite Groq atteinte. Pause courte de ${waitSeconds}s puis reprise automatique (${attempt}/${maxRetries})...`);
       await sleep(waitSeconds * 1000);
       continue;
     }
