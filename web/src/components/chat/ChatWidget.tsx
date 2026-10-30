@@ -297,13 +297,15 @@ function CompareTable({
 
   return (
     <div
-      className="my-3 w-full overflow-hidden rounded-2xl border border-slate-200/80 shadow-lg"
+      className="my-3 w-full overflow-x-auto rounded-2xl border border-slate-200/80 shadow-lg"
       style={{ maxWidth: "100%" }}
     >
+      {/* inner wrapper forces a minimum width so names never get crushed */}
+      <div style={{ minWidth: `${96 + products.length * 130}px` }}>
       {/* ── Header produits ── */}
       <div
         className="grid"
-        style={{ gridTemplateColumns: `96px repeat(${colCount}, 1fr)` }}
+        style={{ gridTemplateColumns: `96px repeat(${colCount}, minmax(130px, 1fr))` }}
       >
         {/* Coin haut-gauche vide */}
         <div
@@ -323,7 +325,7 @@ function CompareTable({
               : "linear-gradient(135deg, #1a3a5c 0%, #0d47a1 100%)"
             }}
           >
-            <span className="text-[11px] font-bold text-white text-center leading-tight line-clamp-2">
+            <span className="text-[11px] font-bold text-white text-center leading-tight break-words">
               {name}
             </span>
             {i === 0 && colCount === 2 && (
@@ -342,7 +344,7 @@ function CompareTable({
           key={ri}
           className="grid items-stretch border-b border-slate-100 last:border-b-0"
           style={{
-            gridTemplateColumns: `96px repeat(${colCount}, 1fr)`,
+            gridTemplateColumns: `96px repeat(${colCount}, minmax(130px, 1fr))`,
             background: ri % 2 === 0 ? "#ffffff" : "#f8fafd",
           }}
         >
@@ -368,6 +370,7 @@ function CompareTable({
         style={{ background: "linear-gradient(135deg, #0c2340 0%, #1565c0 100%)" }}
       >
         Comparaison RZBot · données catalogue RZMedical
+      </div>
       </div>
     </div>
   );
