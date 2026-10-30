@@ -176,7 +176,7 @@ async function tavilySearch(query: string, maxResults = 3, onLog?: (msg: string)
     const results: { title: string; url: string; content: string }[] = (data.results ?? []).map((r: any) => ({
       title: r.title ?? "",
       url: r.url ?? "",
-      content: (r.content ?? "").slice(0, 750),
+      content: (r.content ?? "").slice(0, 1200),
     }));
     if (data.answer) {
       results.unshift({ title: "Synthèse Tavily", url: "", content: data.answer.slice(0, 600) });
@@ -419,11 +419,13 @@ Critères spécifiques à ajouter après les critères généraux :
 Si la catégorie n'est pas dans la liste ci-dessus, utilise les critères issus de la description, des motsCles et du webInfo : extrait les caractéristiques RÉELLES du produit (dimensions, matériaux, normes, puissance, capacité...) et n'utilise PAS les exemples d'autres catégories.
 
 IMPORTANT — UTILISATION DE webInfo POUR COMPLÉTER LES DESCRIPTIONS DU CATALOGUE :
-- Pour les produits DU CATALOGUE, si la description ou les caractéristiques techniques dans la base sont incomplètes ou absentes :
-  1. Utilise en priorité les informations présentes dans la base (prix, marque, stock, référence).
-  2. Si la description de la base de données est sommaire ou s'il manque des spécifications techniques précises (précision, dimensions, normes, matériaux, autonomie) → LIS attentivement les résultats "webInfo" (recherche web ciblée sur ce produit) et extrais les données techniques réelles.
-  3. Complète ainsi le tableau comparatif grâce aux données web pour combler les manques de description.
-- N'écris "N/D" QUE si la valeur est introuvable à la fois dans le catalogue et dans le webInfo.
+- Pour chaque produit du catalogue, tu reçois : ses données BDD (prix, marque, stock, description) ET un champ "webInfo" contenant des extraits web sur ce produit spécifique.
+- RÈGLE ABSOLUE DE PRIORITÉ :
+  1. Données BDD (prix, marque, stock, référence, disponibilité, paysFabrication) → TOUJOURS prioritaires, ne jamais les modifier avec le web.
+  2. Données techniques (motorisation, positions, revêtement, crachoir, tablette, commande, dimensions, normes, poids...) → Si absentes ou vagues dans la description BDD, EXTRAIS-LES IMPÉRATIVEMENT du webInfo.
+  3. OBLIGATION : Pour chaque ligne du tableau comparatif qui affiche "Non spécifié" ou "N/D", tu DOIS relire le webInfo du produit concerné et chercher la valeur. Si tu ne la trouves pas dans webInfo, SEULEMENT ALORS écris "N/D".
+- MÉTHODE CONCRÈTE : Pour chaque critère du tableau (ex: "Crachoir"), lis l'intégralité du webInfo du produit A et cherche si "crachoir", "spittoon", "crachat" y apparaît. Fait de même pour le webInfo du produit B.
+- N'écris "N/D" QUE si le terme technique est TOTALEMENT absent des deux sources (description BDD + webInfo).
 - Si les 2 produits sont de catégories DIFFÉRENTES → utilise les critères communs (prix, marque, stock, usage) et mentionne qu'ils ne sont pas directement comparables dans ta recommandation.
 
 --- RÈGLE CRUCIALE : RECHERCHE WEB QUAND UN PRODUIT EST INTROUVABLE DANS LE CATALOGUE ---
@@ -676,8 +678,9 @@ async function executeTool(
           onLog?.(`📦 BDD : Produit "${p.nom}" (${p.marque?.nom ?? "Sans marque"}) trouvé`);
 
           try {
-            const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim();
-            console.log(`🚀 [compare_products] Déclenchement recherche web pour enrichir "${p.nom}"`);
+            // Requête ciblée : nom + marque + référence pour des résultats précis
+            const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique specifications`.trim();
+            console.log(`🚀 [compare_products] Déclenchement recherche web pour enrichir "${p.nom}" (réf: ${p.reference})`);
             webInfo = await performWebSearch(searchQuery, 6, onLog);
             console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
           } catch (webErr) {
@@ -707,10 +710,10 @@ async function executeTool(
                 marque: p.marque?.nom ?? "N/A",
                 categorie: p.sousCategorie?.categorie?.nom ?? "N/A",
                 sousCategorie: p.sousCategorie?.nom ?? "N/A",
-                description: (p.description ?? "").slice(0, 300),
+                description: (p.description ?? "").slice(0, 800),
                 paysFabrication: p.paysFabrication ?? "N/A",
                 tva: p.tva ? `${Number(p.tva)}%` : "N/A",
-                motsCles: Array.isArray(p.motsCles) ? p.motsCles.slice(0, 5).join(", ") : "N/A",
+                motsCles: Array.isArray(p.motsCles) && p.motsCles.length > 0 ? p.motsCles.join(", ") : "N/A",
                 ficheTechnique: p.ficheTechnique ? "Disponible" : "Non disponible",
                 video: p.video ? "Disponible" : "Non disponible",
               }
