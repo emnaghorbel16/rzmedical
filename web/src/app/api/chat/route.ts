@@ -143,14 +143,16 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
   });
 }
 
-async function tavilySearch(query: string, maxResults = 3): Promise<{ title: string; url: string; content: string }[]> {
+async function tavilySearch(query: string, maxResults = 3, onLog?: (msg: string) => void): Promise<{ title: string; url: string; content: string }[]> {
   const apiKey = process.env.TAVILY_API_KEY;
   if (!apiKey) {
-    console.log("ℹ️ [Tavily] Pas de clé TAVILY_API_KEY, passage au moteur DuckDuckGo.");
+    console.log("ℹ️ [Tavily] TAVILY_API_KEY non définie ou vide dans .env.local -> Basculement sur DuckDuckGo");
+    onLog?.("ℹ️ Tavily non configuré (clé absente) -> Recherche DuckDuckGo");
     return [];
   }
 
-  console.log(`🔎 [Tavily] Requête envoyée: "${query}"`);
+  console.log(`🔎 [Tavily] 🚀 Appel API Tavily AI pour : "${query}" (Clé présente: ${apiKey.slice(0, 7)}...)`);
+  onLog?.(`🚀 Appel Tavily AI pour : "${query}"`);
   try {
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
@@ -165,7 +167,9 @@ async function tavilySearch(query: string, maxResults = 3): Promise<{ title: str
       }),
     });
     if (!res.ok) {
-      console.error(`❌ [Tavily] Erreur API statut ${res.status}:`, await res.text().catch(() => ""));
+      const errText = await res.text().catch(() => "");
+      console.error(`❌ [Tavily] Échec API (statut ${res.status}):`, errText);
+      onLog?.(`❌ Erreur Tavily (HTTP ${res.status}) -> Repli DuckDuckGo`);
       return [];
     }
     const data = await res.json();
@@ -177,27 +181,40 @@ async function tavilySearch(query: string, maxResults = 3): Promise<{ title: str
     if (data.answer) {
       results.unshift({ title: "Synthèse Tavily", url: "", content: data.answer.slice(0, 600) });
     }
-    console.log(`✅ [Tavily] ${results.length} résultat(s) retourné(s) pour "${query}"`);
+    console.log(`✅ [Tavily] Succès ! ${results.length} résultat(s) retourné(s) par Tavily AI pour "${query}"`);
+    onLog?.(`✅ Tavily a répondu : ${results.length} résultat(s) trouvés`);
     return results;
   } catch (err) {
     console.error("❌ [Tavily] Erreur exception fetch:", err);
+    onLog?.("❌ Exception réseau Tavily -> Repli DuckDuckGo");
     return [];
   }
 }
 
-async function performWebSearch(query: string, maxResults = 4): Promise<{ title: string; url: string; content: string }[]> {
-  const engine = process.env.TAVILY_API_KEY ? "Tavily" : "DuckDuckGo / Web";
-  console.log(`\n🌐 [RZBot Web Search] Lancement recherche: "${query}" (Moteur: ${engine})`);
+async function performWebSearch(query: string, maxResults = 4, onLog?: (msg: string) => void): Promise<{ title: string; url: string; content: string }[]> {
+  const apiKey = process.env.TAVILY_API_KEY;
+  const isTavilyConfigured = !!(apiKey && apiKey.trim().length > 0);
+  const engine = isTavilyConfigured ? "Tavily AI (Recherche intelligente)" : "DuckDuckGo (Moteur web fallback)";
+  
+  console.log(`\n🌐 [RZBot Web Search] Lancement recherche: "${query}" | Moteur: ${engine}`);
+  onLog?.(`🌐 Début recherche web : "${query}" [Moteur : ${isTavilyConfigured ? "Tavily AI" : "DuckDuckGo"}]`);
   
   let results: { title: string; url: string; content: string }[] = [];
-  if (process.env.TAVILY_API_KEY) {
-    results = await tavilySearch(query, maxResults);
+  if (isTavilyConfigured) {
+    results = await tavilySearch(query, maxResults, onLog);
   }
   if (!results || results.length === 0) {
+    if (isTavilyConfigured) {
+      console.log(`⚠️ [RZBot Web Search] Tavily n'a pas retourné de résultat, passage à DuckDuckGo.`);
+      onLog?.("⚠️ Aucun résultat Tavily -> Essai avec DuckDuckGo...");
+    }
     results = await webSearchFallback(query, maxResults);
+    if (results.length > 0) {
+      onLog?.(`✅ DuckDuckGo : ${results.length} résultat(s) obtenus`);
+    }
   }
 
-  console.log(`✅ [RZBot Web Search] Total ${results.length} résultat(s) web récupéré(s) pour: "${query}"\n`);
+  console.log(`✅ [RZBot Web Search] Terminé : ${results.length} résultat(s) web récupéré(s) pour: "${query}"\n`);
   return results;
 }
 
@@ -617,9 +634,7 @@ async function executeTool(
   if (functionName === "web_search") {
     const query = typeof args.query === "string" && args.query.trim() ? args.query.trim() : "";
     if (!query) throw new Error("Le paramètre 'query' est requis pour web_search.");
-    onLog?.(`🌐 Recherche Web (Google/Web) pour "${query}"...`);
-    const results = await performWebSearch(query, 4);
-    onLog?.(`✅ ${results.length} résultat(s) web récupéré(s) pour "${query}"`);
+    const results = await performWebSearch(query, 4, onLog);
     if (results.length === 0) return { message: "Aucun résultat web trouvé pour cette requête." };
     return results;
   }
@@ -663,10 +678,8 @@ async function executeTool(
           try {
             const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} caracteristiques techniques specifications`.trim();
             console.log(`🚀 [compare_products] Déclenchement recherche web pour enrichir "${p.nom}"`);
-            onLog?.(`🌐 Recherche web technique pour "${p.nom}"...`);
-            webInfo = await performWebSearch(searchQuery, 6);
+            webInfo = await performWebSearch(searchQuery, 6, onLog);
             console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
-            onLog?.(`✅ ${webInfo.length} fiches web techniques récupérées pour "${p.nom}"`);
           } catch (webErr) {
             console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
             webInfo = [];
