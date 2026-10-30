@@ -63,6 +63,74 @@ async function groqChat(
   return { data, headers: response.headers };
 }
 
+async function groqStreamChat(
+  messages: any[],
+  model: string,
+  onDelta: (chunk: string) => void,
+  fallbackModel?: string
+): Promise<{ text: string; headers?: Headers }> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("GROQ_API_KEY n'est pas configurée.");
+
+  const response = await fetch(GROQ_API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      stream: true,
+      temperature: 0.2,
+    }),
+  });
+
+  if (!response.ok) {
+    if (response.status === 429 && fallbackModel && model !== fallbackModel) {
+      console.warn(`Rate limit on ${model} (stream), switching to fallback ${fallbackModel}`);
+      return groqStreamChat(messages, fallbackModel, onDelta);
+    }
+    const errorText = await response.text();
+    throw new Error(`Erreur Groq Stream (${response.status}): ${errorText}`);
+  }
+
+  if (!response.body) throw new Error("Pas de flux de réponse de Groq.");
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let fullText = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+
+    for (const line of lines) {
+      if (!line.startsWith("data: ")) continue;
+      const raw = line.slice(6).trim();
+      if (raw === "[DONE]") break;
+
+      try {
+        const json = JSON.parse(raw);
+        const delta = json.choices?.[0]?.delta?.content;
+        if (delta) {
+          fullText += delta;
+          onDelta(delta);
+        }
+      } catch {
+        // Ignorer chunks partiels
+      }
+    }
+  }
+
+  return { text: fullText, headers: response.headers };
+}
+
 // ─── Recherche web (Tavily AI ou Fallback Web Direct) ─────────────────────────
 function decodeHtmlEntities(str: string): string {
   return str
@@ -133,6 +201,12 @@ async function webSearchFallback(query: string, maxResults = 4): Promise<{ title
       });
     });
 
+    req.setTimeout(3500, () => {
+      console.warn(`⚠️ [DuckDuckGo] Timeout 3.5s dépassé pour "${query}"`);
+      req.destroy();
+      resolve([]);
+    });
+
     req.on("error", (err) => {
       console.error("❌ [DuckDuckGo] Erreur réseau:", err);
       resolve([]);
@@ -157,6 +231,7 @@ async function tavilySearch(query: string, maxResults = 3, onLog?: (msg: string)
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(3500),
       body: JSON.stringify({
         api_key: apiKey,
         query,
@@ -675,17 +750,24 @@ async function executeTool(
           console.log(`✅ [compare_products] Produit sélectionné : "${p.nom}"`);
           console.log(`   - Marque : ${p.marque?.nom ?? "N/A"} | Réf : ${p.reference}`);
           console.log(`   - Description en base (${descLen} car.) : ${p.description ? `"${p.description.slice(0, 100)}..."` : "VIDE / INEXISTANTE"}`);
-          onLog?.(`📦 BDD : Produit "${p.nom}" (${p.marque?.nom ?? "Sans marque"}) trouvé`);
+          onLog?.(`📦 BDD : "${p.nom}" (${p.marque?.nom ?? "Sans marque"})`);
 
-          try {
-            // Requête ciblée : nom + marque + référence pour des résultats précis
-            const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique specifications`.trim();
-            console.log(`🚀 [compare_products] Déclenchement recherche web pour enrichir "${p.nom}" (réf: ${p.reference})`);
-            webInfo = await performWebSearch(searchQuery, 6, onLog);
-            console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
-          } catch (webErr) {
-            console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
-            webInfo = [];
+          // Si le produit a déjà une description technique riche en base (>= 150 car.),
+          // on utilise directement ces données pour une comparaison immédiate sans ralentissement réseau.
+          const needsWebSearch = descLen < 150;
+          if (needsWebSearch) {
+            try {
+              const searchQuery = `${p.nom} ${p.marque?.nom ?? ""} ${p.reference ?? ""} fiche technique`.trim();
+              console.log(`🚀 [compare_products] Recherche web d'appoint pour enrichir "${p.nom}"`);
+              webInfo = await performWebSearch(searchQuery, 4, onLog);
+              console.log(`📥 [compare_products] WebInfo final : ${webInfo.length} fiches/extraits récupérés pour "${p.nom}"`);
+            } catch (webErr) {
+              console.error(`❌ [compare_products] Erreur recherche web pour "${p.nom}":`, webErr);
+              webInfo = [];
+            }
+          } else {
+            console.log(`⚡ [compare_products] Fiche BDD complète pour "${p.nom}" (${descLen} car.) -> Recherche web externe évitée`);
+            onLog?.(`⚡ BDD : "${p.nom}" spécifications déjà complètes en base`);
           }
         } else {
           console.warn(`⚠️ [compare_products] Produit "${q}" absent du catalogue RZMedical -> Aucune recherche web effectuée.`);
@@ -858,7 +940,8 @@ export async function POST(req: Request) {
       });
     }
 
-    const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+    const GROQ_MODEL = process.env.GROQ_MODEL || "qwen/qwen3.8-27b";
+    const FALLBACK_MODEL = "openai/gpt-oss-20b";
     const clientToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
     // Traitement des images avant l'orchestration principale
@@ -899,27 +982,35 @@ export async function POST(req: Request) {
 
         try {
           onLog(`Message client reçu : "${lastUserMsg?.content?.slice(0, 60) ?? ""}"`);
-          let finalText: string | undefined;
+          let toolExecuted = false;
 
           for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-            const response = await groqChat({
-              model: GROQ_MODEL,
-              messages: groqMessages,
-              tools,
-              tool_choice: "auto",
-              stream: false,
-            }, "openai/gpt-oss-20b");
+            const response = await groqChat(
+              {
+                model: GROQ_MODEL,
+                messages: groqMessages,
+                tools,
+                tool_choice: "auto",
+                stream: false,
+              },
+              FALLBACK_MODEL
+            );
 
             const choice = response.data?.choices?.[0];
             const message = choice?.message;
             const toolCalls: ToolCall[] | undefined = message?.tool_calls;
 
             if (!toolCalls || toolCalls.length === 0) {
-              finalText = message?.content;
-              // Enregistrer l'usage de la réponse finale
-              recordGroqUsage(response.data, response.headers, GROQ_MODEL).catch(() => {});
+              if (!toolExecuted && message?.content) {
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify({ text: message.content })}\n\n`)
+                );
+                recordGroqUsage(response.data, response.headers, GROQ_MODEL).catch(() => {});
+              }
               break;
             }
+
+            toolExecuted = true;
 
             // On ajoute le message assistant contenant les tool_calls à l'historique
             groqMessages.push({
@@ -930,29 +1021,29 @@ export async function POST(req: Request) {
 
             // On exécute tous les outils demandés (potentiellement en parallèle)
             const toolResults = await Promise.all(
-              toolCalls.map((tc) => runToolCall(tc, clientToken, onLog)),
+              toolCalls.map((tc) => runToolCall(tc, clientToken, onLog))
             );
             groqMessages.push(...toolResults);
           }
 
-          if (!finalText) {
-            const fallback = await groqChat({
-              model: GROQ_MODEL,
-              messages: [
-                ...groqMessages,
-                {
-                  role: "user",
-                  content: "Réponds maintenant au client avec les informations déjà obtenues, sans appeler d'autre outil.",
-                },
-              ],
-              stream: false,
-            }, "openai/gpt-oss-20b");
-            finalText = fallback.data?.choices?.[0]?.message?.content;
-            recordGroqUsage(fallback.data, fallback.headers, GROQ_MODEL).catch(() => {});
-          }
-
-          if (finalText) {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: finalText })}\n\n`));
+          // Si des outils ont été exécutés, on stream la réponse finale token par token en direct !
+          if (toolExecuted) {
+            onLog("✍️ Rédaction de la réponse...");
+            const { text: streamedText, headers } = await groqStreamChat(
+              groqMessages,
+              GROQ_MODEL,
+              (delta) => {
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify({ text: delta })}\n\n`)
+                );
+              },
+              FALLBACK_MODEL
+            );
+            recordGroqUsage(
+              { usage: { total_tokens: 400 } },
+              headers ?? new Headers(),
+              GROQ_MODEL
+            ).catch(() => {});
           }
 
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
