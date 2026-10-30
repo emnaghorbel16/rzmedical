@@ -484,6 +484,16 @@ function renderMessageContent(content: string, onSuggestionClick?: (text: string
     while ((rMatch = rowRegex.exec(bodyRaw)) !== null) {
       const parts2 = rMatch[1].split("|");
       const label = parts2[0].trim();
+      const lower = label.toLowerCase();
+      // Exclure Stock et Disponibilité catalogue du tableau comparatif
+      if (
+        lower.includes("stock") ||
+        lower.includes("disponibilité") ||
+        lower.includes("disponibilite") ||
+        (lower.includes("catalogue") && (lower.includes("dispo") || lower.includes("vendu")))
+      ) {
+        continue;
+      }
       const values = parts2.slice(1).map((v) => v.trim());
       rows.push({ label, values });
     }

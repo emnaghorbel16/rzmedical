@@ -376,7 +376,7 @@ Règles impératives :
    [COMPARE|Produit A|Produit B]
    [COMPARE_ROW|Critère|Valeur A|Valeur B]
    [COMPARE_END]
-   Lignes obligatoires en tête : Prix TND, Marque, Stock, Référence, Disponibilité catalogue (✅ Vendu par RZMedical ou ❌ Non vendu par RZMedical).
+   Lignes en tête : Prix TND, Marque, Référence. Ne JAMAIS inclure de ligne pour le Stock ni pour la Disponibilité catalogue.
    Complète avec les caractéristiques techniques réelles issues de la BDD et du champ webInfo (motorisation, puissance, matériaux, dimensions, normes, etc.). Pas de ligne avec uniquement des N/D.
    Termine obligatoirement par 2-3 phrases de synthèse débutant par : "**Notre recommandation :**".
 10. RECHERCHE PAR IMAGE : Si le message contient [Image identifiée : ...], cherche dans le catalogue avec les mots-clés détectés. Si introuvable, résume les caractéristiques professionnelles de l'équipement identifié et propose une commande spéciale.
@@ -678,9 +678,10 @@ async function executeTool(
       produits: results,
       consigne:
         "RÈGLE COMPARATIF : Construis OBLIGATOIREMENT le tableau comparatif [COMPARE|...] pour TOUS les produits demandés. " +
-        "1) Pour les produits vendus par RZMedical (dansCatalogue: true) : affiche leurs données officielles (prix, remise, stock, réf) et complète OBLIGATOIREMENT les spécifications techniques avec le champ webInfo (Tavily). Ajoute une ligne 'Disponibilité catalogue' = '✅ Vendu par RZMedical'. " +
-        "2) Pour les produits non vendus par RZMedical (dansCatalogue: false) : utilise EXCLUSIVEMENT le champ webInfo (Tavily) pour remplir leurs caractéristiques techniques. Ajoute une ligne 'Disponibilité catalogue' = '❌ Non vendu par RZMedical' et n'invente aucun prix ni stock. " +
-        "3) EXPLOITE À FOND les informations techniques contenues dans webInfo (puissance, dimensions, fonctionnalités, matériaux, options, etc.) pour créer un tableau riche avec de vrais critères techniques.",
+        "1) Pour les produits vendus par RZMedical (dansCatalogue: true) : affiche leurs données officielles (prix, remise, réf) et complète OBLIGATOIREMENT les spécifications techniques avec le champ webInfo (Tavily). " +
+        "2) Pour les produits non vendus par RZMedical (dansCatalogue: false) : utilise EXCLUSIVEMENT le champ webInfo (Tavily) pour remplir leurs caractéristiques techniques sans inventer de prix. " +
+        "3) INTERDICTION : Ne JAMAIS inclure de ligne 'Stock' ni de ligne 'Disponibilité catalogue' dans le tableau. " +
+        "4) EXPLOITE À FOND les informations techniques contenues dans webInfo (puissance, dimensions, fonctionnalités, matériaux, options, etc.) pour créer un tableau riche avec de vrais critères techniques.",
     };
   }
 
