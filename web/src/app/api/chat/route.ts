@@ -963,7 +963,12 @@ export async function POST(req: Request) {
       });
     }
 
-    const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+    // Modèle principal Groq (depuis env, défaut: llama-3.3-70b-versatile qui supporte les tool_calls)
+    const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+    // Modèle de rédaction finale (streaming) — peut être différent du modèle tool-calling
+    const STREAM_MODEL = ["openai/gpt-oss-20b"].includes(GROQ_MODEL)
+      ? "llama-3.3-70b-versatile"  // gpt-oss-20b ne supporte pas bien le rôle "tool" en stream
+      : GROQ_MODEL;
     const fallbacks = [
       "llama-3.3-70b-versatile",
       "llama-3.1-8b-instant",
@@ -1057,7 +1062,7 @@ export async function POST(req: Request) {
             onLog("✍️ Rédaction de la réponse...");
             const { text: streamedText, headers } = await groqStreamChat(
               groqMessages,
-              GROQ_MODEL,
+              STREAM_MODEL,
               (delta) => {
                 controller.enqueue(
                   encoder.encode(`data: ${JSON.stringify({ text: delta })}\n\n`)
