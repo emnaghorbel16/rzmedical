@@ -373,10 +373,24 @@ Règles impératives :
 6. COORDONNÉES OFFICIELLES : Pour toute demande d'adresse, téléphone, email ou site, utilise l'outil get_contact_info.
 7. CARTES PRODUIT : Dès que tu mentionnes un produit du catalogue issu de ta recherche, insère OBLIGATOIREMENT ce tag : [PRODUCT|Nom exact|Prix|Reference]
    Exemple : "Nous disposons de ce modèle. [PRODUCT|Tensiomètre Omron M3|150|REF-OMR-M3]"
-8. SUGGESTIONS DE QUESTIONS : À la fin de CHAQUE réponse sans exception, propose 1 ou 2 questions sous ce tag exact, formulées DU POINT DE VUE DU CLIENT : [SUGGESTION|Question client]
-   INTERDICTION ABSOLUE DANS LES SUGGESTIONS : Ne propose et ne cite JAMAIS dans les suggestions des produits qui ne sont PAS dans le catalogue RZMedical ! Toutes les suggestions de produits doivent concerner exclusivement des produits réellement vendus par RZMedical ou des questions de service (délais, garantie, devis).
-   Exemples : [SUGGESTION|Quels sont vos délais de livraison ?] ou [SUGGESTION|Puis-je obtenir un devis pour ce produit ?]
-   (Interdiction de poser des questions ouvertes en texte libre sans ce tag).
+8. SUGGESTIONS CLICABLES : À la fin de CHAQUE réponse sans exception, propose 1 ou 2 suggestions sous ce tag exact : [SUGGESTION|Message client]
+   RÈGLE ABSOLUE - FORMULATION 100% DU POINT DE VUE DU CLIENT (« COMME L'UTILISATEUR PARLE ») :
+   - Ces suggestions sont des boutons que le client clique pour PARLER au chatbot.
+   - Le texte DOIT IMPÉRATIVEMENT être écrit du point de vue du client (1ère personne ou requête client adressée à RZMedical).
+   - ⛔ INTERDICTION FORMELLE d'utiliser le vouvoiement ou de poser une question au client !
+     ❌ STRICTEMENT INTERDIT :
+        [SUGGESTION|Pourriez-vous m'indiquer les deux modèles que vous souhaitez comparer ?]
+        [SUGGESTION|Quel modèle de tensiomètre souhaitez-vous comparer ?]
+        [SUGGESTION|Quel type d'équipement dentaire aimeriez-vous comparer ?]
+        [SUGGESTION|Que souhaitez-vous savoir sur...]
+     ✔️ EXEMPLES VALIDES (ce que l'utilisateur envoie au chatbot) :
+        [SUGGESTION|Je souhaite comparer deux tensiomètres du catalogue]
+        [SUGGESTION|Quels sont les fauteuils dentaires disponibles ?]
+        [SUGGESTION|Proposez-moi deux modèles à comparer]
+        [SUGGESTION|Comparer le fauteuil P3-i et le 208D]
+        [SUGGESTION|Puis-je obtenir un devis personnalisé ?]
+        [SUGGESTION|Quels sont vos délais de livraison ?]
+   - ⛔ INTERDICTION ABSOLUE : Ne JAMAIS citer ni proposer de produits hors du catalogue RZMedical.
 9. FORMAT COMPARATIF :
    RÈGLE STRICTE ET ABSOLUE : Tu dois COMPARER UNIQUEMENT DES PRODUITS PRÉSENTS DANS LE CATALOGUE RZMEDICAL. Ne compare JAMAIS de produits hors catalogue !
    - Pour les mots-clés de compare_products : utilise TOUJOURS les vrais noms, marques ou modèles courts des produits existant dans le catalogue RZMedical (ex: ["Ultimate", "P3"] ou ["Omron M3", "Rossmax X3"]), jamais des noms inventés.
@@ -731,7 +745,8 @@ async function executeTool(
           (trouves.length === 1
             ? `Présente le seul produit trouvé (${trouves[0].produit?.nom}) avec sa carte [PRODUCT|...]. `
             : "") +
-          "INTERDICTION FORMELLE : Ne propose JAMAIS dans [SUGGESTION|...] des produits qui ne sont pas dans le catalogue RZMedical !",
+          "INTERDICTION FORMELLE : Ne propose JAMAIS dans [SUGGESTION|...] des produits qui ne sont pas dans le catalogue RZMedical ! " +
+          "RÈGLE SUGGESTIONS : Rédige TOUS les [SUGGESTION|...] du point de vue de l'utilisateur qui parle au bot (ex: [SUGGESTION|Proposez-moi deux modèles à comparer], [SUGGESTION|Quels sont vos équipements en stock ?]). INTERDICTION de vouvoyer ou de poser une question au client.",
       };
     }
 
@@ -752,7 +767,8 @@ async function executeTool(
         "INTERDICTIONS : " +
         "1) N'inclus JAMAIS de produit hors catalogue dans le tableau. " +
         "2) Ne JAMAIS inclure de ligne 'Stock' ni de ligne 'Disponibilité catalogue'. " +
-        "3) Ne JAMAIS proposer dans [SUGGESTION|...] des produits qui ne sont pas dans le catalogue RZMedical.",
+        "3) Ne JAMAIS proposer dans [SUGGESTION|...] des produits qui ne sont pas dans le catalogue RZMedical. " +
+        "4) RÈGLE SUGGESTIONS : Tous les [SUGGESTION|...] doivent être écrits comme des requêtes de l'utilisateur (ex: [SUGGESTION|Je souhaite comparer deux modèles], [SUGGESTION|Puis-je obtenir un devis ?]). Aucune question posée à l'utilisateur.",
     };
   }
 

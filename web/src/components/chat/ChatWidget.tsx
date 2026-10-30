@@ -376,6 +376,58 @@ function CompareTable({
   );
 }
 
+// ── Normalisation des suggestions côté client (orientées 100% utilisateur) ──
+function normalizeUserSuggestion(text: string): string {
+  let s = (text || "").trim();
+  s = s.replace(/^["'«]+|["'»]+$/g, "").trim();
+  if (!s) return "";
+
+  // Cas 1 : "Pour pouvoir réaliser une comparaison précise, pourriez-vous m'indiquer les deux modèles..."
+  if (/pourriez[- ]vous/i.test(s) || /indiquez[- ]moi/i.test(s)) {
+    if (/compar/i.test(s)) {
+      return "Proposez-moi deux modèles à comparer";
+    }
+    return "Aidez-moi à choisir un équipement";
+  }
+
+  // Cas 2 : "Quel modèle de [X] souhaitez-vous comparer ?" -> "Je souhaite comparer des [X]"
+  const matchSouhaitez = s.match(/^quel(?:le)?s?\s+(?:modèle|type|équipement|référence)?s?\s*(?:d[’']|de\s+)?(.*?)\s+(?:souhaitez|aimeriez|désirez)[- ]vous\s+comparer/i);
+  if (matchSouhaitez && matchSouhaitez[1]) {
+    const item = matchSouhaitez[1].trim();
+    return `Je souhaite comparer des ${item}`;
+  }
+
+  // Cas 3 : "Quel type d’équipement dentaire aimeriez‑vous comparer..."
+  const matchTypeAimeriez = s.match(/^quel(?:le)?s?\s+(?:type|catégorie|gamme)?s?\s*(?:d[’']|de\s+)?(.*?)\s+aimeriez[- ]vous\s+(?:comparer|découvrir|voir)/i);
+  if (matchTypeAimeriez && matchTypeAimeriez[1]) {
+    const item = matchTypeAimeriez[1].trim();
+    return `Je souhaite comparer des ${item}`;
+  }
+
+  // Cas 4 : "Que souhaitez-vous savoir sur [X] ?" -> "En savoir plus sur [X]"
+  const matchSavoir = s.match(/^(?:que|qu['’])\s*souhaitez[- ]vous\s+savoir\s+(?:sur\s+)?(.*)/i);
+  if (matchSavoir && matchSavoir[1]) {
+    return `En savoir plus sur ${matchSavoir[1].replace(/\?$/, "").trim()}`;
+  }
+
+  // Cas 5 : "Souhaitez-vous un devis..." -> "Puis-je obtenir un devis ?"
+  if (/^souhaitez[- ]vous\s+(?:un\s+devis|une\s+offre)/i.test(s)) {
+    return "Puis-je obtenir un devis ?";
+  }
+
+  // Cas 6 : "Voulez-vous..." -> "Je souhaite..."
+  if (/^voulez[- ]vous\s+/i.test(s)) {
+    s = s.replace(/^voulez[- ]vous\s+/i, "Je souhaite ");
+  }
+
+  // Si c'est transformé en "Je souhaite...", on retire le '?' final
+  if (/^je souhaite/i.test(s) && s.endsWith("?")) {
+    s = s.slice(0, -1).trim();
+  }
+
+  return s;
+}
+
 // ── Rendu inline (PRODUCT + SUGGESTION) ───────────────────────────────────────
 
 function renderInlineContent(content: string, onSuggestionClick?: (text: string) => void) {
@@ -395,7 +447,11 @@ function renderInlineContent(content: string, onSuggestionClick?: (text: string)
     }
 
     if (match[4]) {
-      const suggestionText = match[4];
+      const suggestionText = normalizeUserSuggestion(match[4]);
+      if (!suggestionText) {
+        lastIndex = regex.lastIndex;
+        continue;
+      }
       inlineParts.push(
         <button
           key={`sugg-${match.index}`}
