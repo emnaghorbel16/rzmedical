@@ -144,12 +144,67 @@ function TypingDots() {
   );
 }
 
+// ── Parser de tableaux Markdown standards ─────────────────────────────────────
+
+function parseMarkdownTables(text: string): string {
+  const tableRegex = /((?:^[ \t]*\|?.+\|.+[ \t]*\r?\n)(?:^[ \t]*\|?[\s\-:]+[\s\-:|]+[ \t]*\r?\n)(?:^[ \t]*\|?.+\|.+[ \t]*(?:\r?\n|$))+)/gm;
+
+  return text.replace(tableRegex, (match) => {
+    const lines = match.trim().split(/\r?\n/).filter((l) => l.trim().length > 0);
+    if (lines.length < 2) return match;
+
+    const parseRow = (line: string) => {
+      let trimmed = line.trim();
+      if (trimmed.startsWith("|")) trimmed = trimmed.slice(1);
+      if (trimmed.endsWith("|")) trimmed = trimmed.slice(0, -1);
+      return trimmed.split("|").map((cell) => cell.trim());
+    };
+
+    const headerCols = parseRow(lines[0]);
+    const bodyLines = lines.slice(2);
+
+    let html = '<div class="my-2.5 w-full overflow-x-auto rounded-xl border border-slate-200/90 shadow-sm bg-white"><table class="w-full text-left border-collapse text-[11px]">';
+    
+    // Header dégradé Navy RZMedical
+    html += '<thead style="background: linear-gradient(135deg, #0c2340 0%, #1a3a6b 100%);" class="text-white"><tr>';
+    for (const h of headerCols) {
+      html += `<th class="px-3 py-2 text-[10.5px] font-bold tracking-wide border-b border-navy-900/40 text-left whitespace-nowrap">${h}</th>`;
+    }
+    html += '</tr></thead>';
+
+    // Body
+    html += '<tbody class="divide-y divide-slate-100">';
+    bodyLines.forEach((rowLine, idx) => {
+      const cols = parseRow(rowLine);
+      const bg = idx % 2 === 0 ? "bg-white" : "bg-slate-50/70";
+      html += `<tr class="${bg} hover:bg-azure-50/60 transition-colors">`;
+      cols.forEach((cell) => {
+        let cellFormatted = cell;
+        if (cell.includes("Disponible")) {
+          cellFormatted = `<span class="inline-block px-1.5 py-0.5 rounded-full text-[9.5px] font-bold bg-emerald-100 text-emerald-800">${cell}</span>`;
+        } else if (cell.includes("Épuisé") || cell.includes("Rupture")) {
+          cellFormatted = `<span class="inline-block px-1.5 py-0.5 rounded-full text-[9.5px] font-bold bg-red-100 text-red-700">${cell}</span>`;
+        } else if (/^\d[\d\s,.]*\s*(TND|dt|DT)?$/i.test(cell.trim())) {
+          cellFormatted = `<span class="font-bold text-azure-700">${cell}</span>`;
+        }
+        html += `<td class="px-3 py-2 text-slate-700 leading-snug border-r border-slate-100 last:border-r-0 whitespace-nowrap">${cellFormatted}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  });
+}
+
 // ── Markdown simplifié ────────────────────────────────────────────────────────
 
 function renderMarkdown(text: string): string {
-  return text
+  const withTables = parseMarkdownTables(text);
+
+  return withTables
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-0.5 text-azure-600 hover:text-azure-700 underline font-semibold transition-colors">$1 ↗</a>')
     .replace(/`(.+?)`/g, '<code class="bg-slate-100 text-slate-700 px-1 py-0.5 rounded text-[11px] font-mono border border-slate-200">$1</code>')
     .replace(/^### (.+)$/gm, '<p class="font-semibold text-navy-700 mt-2 mb-0.5">$1</p>')
     .replace(/^## (.+)$/gm, '<p class="font-bold text-navy-800 mt-2 mb-1">$1</p>')
