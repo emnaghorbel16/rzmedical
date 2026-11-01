@@ -51,6 +51,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     });
 
+    // 2. Pages de sous-catégories (ex: /dentaire/sous-categories/autoclaves)
+    const subcategories = await getSubcategories();
+    subcategories.forEach((sub) => {
+      const catSlug = sub.categorie?.nom ? toSlug(sub.categorie.nom) : null;
+      if (!catSlug) return;
+      routes.push({
+        url: `${baseUrl}/${catSlug}/sous-categories/${toSlug(sub.nom)}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.75,
+      });
+    });
+
     // 3. Pages de produits — on inclut TOUS les produits (même en rupture)
     // Les produits en rupture restent indexés → pas de perte de ranking quand
     // ils reviennent en stock.

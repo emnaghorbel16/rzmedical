@@ -74,7 +74,7 @@ export function ProductCard({
         {image ? (
           <Image
             src={imageUrl(image)}
-            alt={product.nom}
+            alt={`${product.nom}${product.marque?.nom ? ` ${product.marque.nom}` : ""} — Randz Medical Tunisie`}
             fill
             sizes={IMAGE_SIZES}
             preload={priority}

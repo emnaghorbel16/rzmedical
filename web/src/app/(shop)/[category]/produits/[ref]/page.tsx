@@ -176,7 +176,10 @@ export default async function CategoryProductPage({ params }: { params: Params }
 
         {/* Galerie + infos */}
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-10 xl:gap-14">
-          <Gallery images={product.images ?? []} alt={product.nom} />
+          <Gallery
+            images={product.images ?? []}
+            alt={`${product.nom}${product.marque?.nom ? ` ${product.marque.nom}` : ""} — Randz Medical Tunisie`}
+          />
           <div className="mt-8 lg:mt-0 lg:sticky lg:top-24">
             <ProductInfo product={product} />
           </div>
