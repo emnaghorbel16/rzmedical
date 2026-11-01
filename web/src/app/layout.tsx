@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/providers";
 import { getCompanyInfo, imageUrl } from "@/lib/api";
@@ -103,21 +102,24 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://flagcdn.com" />
+
+        {/* Google Analytics (dans <head> pour validation Google Search Console) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-8KYNSN9MQP"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-8KYNSN9MQP');
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {/* Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-8KYNSN9MQP"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-8KYNSN9MQP');
-          `}
-        </Script>
         <CompanyProvider initialData={companyInfo}>
           <Providers>{children}</Providers>
         </CompanyProvider>
