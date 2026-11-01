@@ -20,9 +20,9 @@ import { PackageIcon } from "@/components/ui/icons";
 import { PRODUCT_GRID_CLASS } from "@/components/catalogue/ProductGrid";
 
 export const metadata: Metadata = {
-  title: "Catalogue",
+  title: "Catalogue Matériel Médical & Dentaire — Prix Tunisie | Randz Medical",
   description:
-    "Découvrez notre catalogue de matériel médical et dentaire : équipements, consommables et instruments de qualité, livrés partout en Tunisie.",
+    "Parcourez le catalogue Randz Medical : équipements dentaires, matériel médical, consommables et instruments chirurgicaux de marques certifiées. Meilleurs prix en Tunisie, livraison rapide partout sur le territoire.",
   alternates: {
     canonical: "/catalogue",
   },

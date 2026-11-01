@@ -134,6 +134,68 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
       </head>
+
+      {/* JSON-LD — Organisation & MedicalBusiness (référencement local Google) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": ["MedicalBusiness", "Organization"],
+                "@id": `${siteUrl}/#organization`,
+                name: "Randz Medical",
+                alternateName: ["RZMedical", "rzmedical"],
+                url: siteUrl,
+                logo: `${siteUrl}/icon.png`,
+                telephone: "+21628113131",
+                email: "randzmedical@outlook.com",
+                address: {
+                  "@type": "PostalAddress",
+                  addressCountry: "TN",
+                  addressLocality: "Tunis",
+                  addressRegion: "Tunis",
+                },
+                openingHoursSpecification: [
+                  {
+                    "@type": "OpeningHoursSpecification",
+                    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                    opens: "08:30",
+                    closes: "18:00",
+                  },
+                ],
+                sameAs: [],
+                description:
+                  "Distributeur de matériel médical et dentaire professionnel en Tunisie. Équipements certifiés, consommables et instruments de marques reconnues. Livraison rapide sur tout le territoire tunisien.",
+                priceRange: "$$",
+                currenciesAccepted: "TND",
+                paymentAccepted: "Cash, Virement bancaire",
+                areaServed: {
+                  "@type": "Country",
+                  name: "Tunisie",
+                },
+              },
+              {
+                "@type": "WebSite",
+                "@id": `${siteUrl}/#website`,
+                url: siteUrl,
+                name: "Randz Medical",
+                publisher: { "@id": `${siteUrl}/#organization` },
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: {
+                    "@type": "EntryPoint",
+                    urlTemplate: `${siteUrl}/catalogue?q={search_term_string}`,
+                  },
+                  "query-input": "required name=search_term_string",
+                },
+                inLanguage: "fr-TN",
+              },
+            ],
+          }),
+        }}
+      />
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {/* Google Tag Manager — fallback noscript (début du <body>) */}
         <noscript>

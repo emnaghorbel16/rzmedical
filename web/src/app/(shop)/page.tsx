@@ -22,9 +22,9 @@ import { buttonVariants } from "@/components/ui/Button";
 import { ArrowRightIcon, PhoneIcon } from "@/components/ui/icons";
 
 export const metadata: Metadata = {
-  title: "Accueil",
+  title: "Matériel Médical et Dentaire Professionnel en Tunisie | Randz Medical",
   description:
-    "RZmedical — matériel médical et dentaire pour les professionnels de santé en Tunisie. Livraison rapide, produits certifiés et support expert.",
+    "Randz Medical, votre distributeur de matériel médical et dentaire en Tunisie. Fauteuils dentaires, autoclaves, consommables, instruments chirurgicaux — marques certifiées, livraison rapide. Contactez-nous : +216 28 113 131.",
 };
 
 async function loadHome(): Promise<{

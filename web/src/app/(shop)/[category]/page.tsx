@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cat) return {};
 
   return {
-    title: cat.nom,
-    description: `Découvrez tous nos produits de la catégorie ${cat.nom} pour les professionnels de santé en Tunisie.`,
+    title: `${cat.nom} — Matériel & Équipements Professionnels | Randz Medical Tunisie`,
+    description: `Achetez du matériel ${cat.nom.toLowerCase()} professionnel en Tunisie : équipements certifiés, consommables et instruments de marques reconnues. Livraison rapide sur tout le territoire. Randz Medical.`,
     alternates: {
       canonical: `/${catSlug}`,
     },

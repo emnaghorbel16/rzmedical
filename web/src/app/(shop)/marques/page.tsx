@@ -4,9 +4,9 @@ import { BrandStrip } from "@/components/catalogue/BrandStrip";
 import { Container } from "@/components/ui/Container";
 
 export const metadata: Metadata = {
-  title: "Toutes nos marques | RZMedical",
+  title: "Nos Marques Partenaires — Matériel Médical & Dentaire | Randz Medical Tunisie",
   description:
-    "Decouvrez toutes les marques partenaires de RZMedical. Materiel medical et dentaire des references reconnues du secteur.",
+    "Découvrez toutes les marques de matériel médical et dentaire distribuées par Randz Medical en Tunisie : 3M, NSK, Dentsply, Coltene, Morita et bien d’autres. Équipements certifiés CE, disponibles en stock, livraison rapide.",
 };
 
 export const revalidate = 3600;
