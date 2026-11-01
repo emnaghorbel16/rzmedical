@@ -77,6 +77,9 @@ export async function generateMetadata(): Promise<Metadata> {
       url: siteUrl,
     },
     robots: { index: true, follow: true },
+    verification: {
+      google: "0x5_Sk4D3lUqOUHxZOwO8ri42S5GXSaRS3FVBapaWZE",
+    },
   };
 }
 
