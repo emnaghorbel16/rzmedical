@@ -1,0 +1,3121 @@
+[2026-10-29T13:54:23.883Z] 📋 Total URLs : 1745
+[2026-10-29T13:54:23.888Z] ✅ Déjà soumises : 0
+[2026-10-29T13:54:23.888Z] ⏳ Restantes à soumettre : 1745
+[2026-10-29T13:54:23.889Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-10-29T13:54:23.889Z] 🔑 Obtention du token OAuth2...
+[2026-10-29T13:54:24.357Z] ✅ Token obtenu !
+[2026-10-29T13:54:32.513Z]   ✅ 10/200 soumises...
+[2026-10-29T13:54:39.877Z]   ✅ 20/200 soumises...
+[2026-10-29T13:54:48.073Z]   ✅ 30/200 soumises...
+[2026-10-29T13:54:56.493Z]   ✅ 40/200 soumises...
+[2026-10-29T13:55:04.033Z]   ✅ 50/200 soumises...
+[2026-10-29T13:55:11.217Z]   ✅ 60/200 soumises...
+[2026-10-29T13:55:18.530Z]   ✅ 70/200 soumises...
+[2026-10-29T13:55:27.911Z]   ✅ 80/200 soumises...
+[2026-10-29T13:55:38.246Z] 📋 Total URLs : 1745
+[2026-10-29T13:55:38.250Z] ✅ Déjà soumises : 80
+[2026-10-29T13:55:38.251Z] ⏳ Restantes à soumettre : 1665
+[2026-10-29T13:55:38.251Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-10-29T13:55:38.252Z] 🔑 Obtention du token OAuth2...
+[2026-10-29T13:55:38.446Z] ✅ Token obtenu !
+[2026-10-29T13:55:45.724Z]   ✅ 10/200 soumises...
+[2026-10-29T13:55:53.140Z]   ✅ 20/200 soumises...
+[2026-10-29T13:56:02.309Z]   ✅ 30/200 soumises...
+[2026-10-29T13:56:10.137Z]   ✅ 40/200 soumises...
+[2026-10-29T13:56:17.662Z]   ✅ 50/200 soumises...
+[2026-10-29T13:56:24.857Z]   ✅ 60/200 soumises...
+[2026-10-29T13:56:32.081Z]   ✅ 70/200 soumises...
+[2026-10-29T13:56:39.293Z]   ✅ 80/200 soumises...
+[2026-10-29T13:56:46.976Z]   ✅ 90/200 soumises...
+[2026-10-29T13:56:54.437Z]   ✅ 100/200 soumises...
+[2026-10-29T13:57:01.820Z]   ✅ 110/200 soumises...
+[2026-10-29T13:57:09.251Z]   ✅ 120/200 soumises...
+[2026-10-29T13:57:10.491Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-15DBB6FC → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:11.051Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-30A0F343 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:12.592Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-C42B548E → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_location": "global",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:13.147Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D02148 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:13.708Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D0A7DD → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:14.257Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-3F0447E8 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:14.813Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-F092BD38 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:15.374Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-152BF853 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_location": "global",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:15.930Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-7017C69C → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:16.510Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D0C844 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:17.074Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-68530220 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:17.635Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D0A7A7 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:18.200Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-954586B0 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_location": "global",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:18.751Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-7017BE84 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:19.398Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D0A7AA → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:19.955Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-30A0EE5E → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:20.574Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-49CD1910 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:21.122Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-B7643DC2 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:21.676Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-15EEB327 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:22.240Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-B20653CC → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:23.222Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-6005BD00 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:23.783Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-6005AE76 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:24.340Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-88C63767 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:24.903Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-88C63763 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:25.493Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-88C63765 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:26.065Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-985AF274 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:26.617Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-1507533F → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:27.178Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D0A7A5 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:27.747Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-B7643731 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:28.298Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017CBC2 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:28.870Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-6A5BBC0D → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:29.426Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-985AF522 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:30.001Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017CBBF → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:30.551Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-8C0C1457 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:31.101Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C891 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:31.655Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C865 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:32.208Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C85E → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:32.770Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C849 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:33.326Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C842 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "window_start_time": "1793257200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:33.889Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C861 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:34.451Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C840 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:35.139Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C863 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:35.695Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C75D → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:36.257Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C847 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "window_start_time": "1793257200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:36.842Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C844 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:37.399Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-7017C83D → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:37.955Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-15774CD3 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:38.526Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-17D93BD0 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:39.136Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-6A5BBC14 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:39.708Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-17D93BCE → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "quota_location": "global",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:40.270Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-17D93BD1 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:40.835Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-17F29364 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:41.399Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-9FB527A8 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:41.958Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-6A5BBC11 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:42.517Z]   ⚠️  [429] https://randzmedical.com/produit/HYGD-F0AD4F43 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "consumer": "projects/456415814052",
+          "window_start_time": "1793257200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:43.511Z] 📋 Total URLs : 1745
+[2026-10-29T13:57:43.516Z] ✅ Déjà soumises : 202
+[2026-10-29T13:57:43.518Z] ⏳ Restantes à soumettre : 1543
+[2026-10-29T13:57:43.519Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-10-29T13:57:43.520Z] 🔑 Obtention du token OAuth2...
+[2026-10-29T13:57:44.022Z] ✅ Token obtenu !
+[2026-10-29T13:57:44.562Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-15DBB6FC → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:45.118Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-30A0F343 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:45.768Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-C42B548E → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T13:57:46.341Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D02148 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "indexing.googleapis.com",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:10:56.550Z] 📋 Total URLs : 1745
+[2026-10-29T14:10:56.564Z] ✅ Déjà soumises : 202
+[2026-10-29T14:10:56.564Z] ⏳ Restantes à soumettre : 1543
+[2026-10-29T14:10:56.564Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-10-29T14:10:56.565Z] 🔑 Obtention du token OAuth2...
+[2026-10-29T14:10:57.812Z] ✅ Token obtenu !
+[2026-10-29T14:10:58.521Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-15DBB6FC → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:10:59.917Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-C42B548E → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:11:00.493Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D02148 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:11:01.882Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-3F0447E8 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:11:03.245Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-152BF853 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "quota_unit": "1/d/{project}",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793257200",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:11:03.802Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-7017C69C → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:11:04.580Z]   ✅ 10/200 soumises...
+[2026-10-29T14:11:05.138Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-68530220 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_limit_value": "200",
+          "window_start_time": "1793257200",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-29T14:11:05.688Z]   ⚠️  [429] https://randzmedical.com/produit/OBTU-76D0A7A7 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793257200",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T09:24:01.915Z] 📋 Total URLs : 1745
+[2026-10-30T09:24:01.938Z] ✅ Déjà soumises : 206
+[2026-10-30T09:24:01.940Z] ⏳ Restantes à soumettre : 1539
+[2026-10-30T09:24:01.941Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-10-30T09:24:01.943Z] 🔑 Obtention du token OAuth2...
+[2026-10-30T09:24:02.251Z] ✅ Token obtenu !
+[2026-10-30T09:24:09.479Z]   ✅ 10/200 soumises...
+[2026-10-30T09:24:16.705Z]   ✅ 20/200 soumises...
+[2026-10-30T09:24:23.662Z]   ✅ 30/200 soumises...
+[2026-10-30T09:24:30.352Z]   ✅ 40/200 soumises...
+[2026-10-30T09:24:37.349Z]   ✅ 50/200 soumises...
+[2026-10-30T09:24:44.128Z]   ✅ 60/200 soumises...
+[2026-10-30T09:24:50.986Z]   ✅ 70/200 soumises...
+[2026-10-30T09:24:57.654Z]   ✅ 80/200 soumises...
+[2026-10-30T09:25:04.563Z]   ✅ 90/200 soumises...
+[2026-10-30T09:25:11.423Z]   ✅ 100/200 soumises...
+[2026-10-30T09:25:18.078Z]   ✅ 110/200 soumises...
+[2026-10-30T09:25:24.905Z]   ✅ 120/200 soumises...
+[2026-10-30T09:25:31.802Z]   ✅ 130/200 soumises...
+[2026-10-30T09:25:38.537Z]   ✅ 140/200 soumises...
+[2026-10-30T09:25:45.306Z]   ✅ 150/200 soumises...
+[2026-10-30T09:25:52.253Z]   ✅ 160/200 soumises...
+[2026-10-30T09:25:59.007Z]   ✅ 170/200 soumises...
+[2026-10-30T09:26:05.904Z]   ✅ 180/200 soumises...
+[2026-10-30T09:26:12.713Z]   ✅ 190/200 soumises...
+[2026-10-30T09:26:19.638Z]   ✅ 200/200 soumises...
+[2026-10-30T09:26:20.143Z] 
+════════════════════════════════════════
+[2026-10-30T09:26:20.144Z] ✅ Soumises avec succès : 200
+[2026-10-30T09:26:20.145Z] ❌ Erreurs : 0
+[2026-10-30T09:26:20.145Z] 📦 Restantes pour demain : 1339
+[2026-10-30T09:26:20.146Z] ════════════════════════════════════════
+[2026-10-30T09:26:20.146Z] 
+⏰ Relancez le script demain pour soumettre les 1339 URLs restantes.
+[2026-10-30T09:26:20.147Z]    Le script reprend automatiquement là où il s'est arrêté.
+[2026-10-30T15:36:51.614Z] 📋 Total URLs : 1745
+[2026-10-30T15:36:51.697Z] ✅ Déjà soumises : 406
+[2026-10-30T15:36:51.701Z] ⏳ Restantes à soumettre : 1339
+[2026-10-30T15:36:51.702Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-10-30T15:36:51.703Z] 🔑 Obtention du token OAuth2...
+[2026-10-30T15:36:52.060Z] ✅ Token obtenu !
+[2026-10-30T15:36:53.149Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD188F → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793343600",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:53.739Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD1895 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793343600",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:55.135Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD18DF → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793343600",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:55.711Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD18E7 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793343600",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:57.048Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD18E5 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793343600",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:58.321Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD18E3 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793343600",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:58.910Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD18D9 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793343600",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:36:59.477Z]   ⚠️  [429] https://randzmedical.com/produit/ORTH-49CD18E1 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "window_start_time": "1793343600",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:00.047Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-985AF302 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793343600",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:00.621Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-B76440CD → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793343600",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:01.197Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-035AAD47 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "200",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "window_start_time": "1793343600",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "consumer": "projects/456415814052",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:02.043Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-B76440D1 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793343600",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:02.843Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-B76440CF → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "window_start_time": "1793343600",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:03.425Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-B76440CA → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793343600",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:03.986Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-B76440C8 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793343600",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:04.555Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-B76440C6 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "window_start_time": "1793343600",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:05.125Z]   ⚠️  [429] https://randzmedical.com/produit/MOBI-035AAD45 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "window_start_time": "1793343600",
+          "quota_location": "global",
+          "service": "indexing.googleapis.com",
+          "consumer": "projects/456415814052",
+          "quota_unit": "1/d/{project}",
+          "quota_limit_value": "200"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:05.704Z]   ⚠️  [429] https://randzmedical.com/produit/MATL-F092BD42 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "window_start_time": "1793343600",
+          "quota_location": "global",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit_value": "200",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-10-30T15:37:06.293Z]   ⚠️  [429] https://randzmedical.com/produit/MATL-F092BD48 → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793343600",
+          "quota_unit": "1/d/{project}",
+          "quota_location": "global",
+          "quota_limit_value": "200",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "service": "indexing.googleapis.com",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-11-01T07:57:37.235Z] 📋 Total URLs : 1745
+[2026-11-01T07:57:37.470Z] ✅ Déjà soumises : 410
+[2026-11-01T07:57:37.473Z] ⏳ Restantes à soumettre : 1335
+[2026-11-01T07:57:38.070Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-11-01T07:57:38.179Z] 🔑 Obtention du token OAuth2...
+[2026-11-01T07:57:38.487Z] ✅ Token obtenu !
+[2026-11-01T07:57:47.195Z]   ✅ 10/200 soumises...
+[2026-11-01T07:57:54.621Z]   ✅ 20/200 soumises...
+[2026-11-01T07:58:02.593Z]   ✅ 30/200 soumises...
+[2026-11-01T07:58:09.518Z]   ✅ 40/200 soumises...
+[2026-11-01T07:58:16.389Z]   ✅ 50/200 soumises...
+[2026-11-01T07:58:23.365Z]   ✅ 60/200 soumises...
+[2026-11-01T07:58:30.163Z]   ✅ 70/200 soumises...
+[2026-11-01T07:58:37.222Z]   ✅ 80/200 soumises...
+[2026-11-01T07:58:44.145Z]   ✅ 90/200 soumises...
+[2026-11-01T07:58:50.808Z]   ✅ 100/200 soumises...
+[2026-11-01T07:58:57.719Z]   ✅ 110/200 soumises...
+[2026-11-01T07:59:04.505Z]   ✅ 120/200 soumises...
+[2026-11-01T07:59:11.287Z]   ✅ 130/200 soumises...
+[2026-11-01T07:59:18.141Z]   ✅ 140/200 soumises...
+[2026-11-01T07:59:24.969Z]   ✅ 150/200 soumises...
+[2026-11-01T07:59:32.359Z]   ✅ 160/200 soumises...
+[2026-11-01T07:59:43.009Z]   ✅ 170/200 soumises...
+[2026-11-01T07:59:49.916Z]   ✅ 180/200 soumises...
+[2026-11-01T07:59:56.844Z]   ✅ 190/200 soumises...
+[2026-11-01T08:00:03.284Z]   ⚠️  [429] https://randzmedical.com/produit/IMPL-6258445F → {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Publish requests' and limit 'Publish requests per day' of service 'indexing.googleapis.com' for consumer 'project_number:456415814052'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "window_start_time": "1793516400",
+          "quota_unit": "1/d/{project}",
+          "consumer": "projects/456415814052",
+          "quota_metric": "indexing.googleapis.com/v3_publish_requests",
+          "quota_location": "global",
+          "quota_limit": "DefaultPublishRequestsPerDayPerProject",
+          "quota_limit_value": "200",
+          "service": "indexing.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-11-01T08:00:03.797Z] 
+════════════════════════════════════════
+[2026-11-01T08:00:03.798Z] ✅ Soumises avec succès : 199
+[2026-11-01T08:00:03.798Z] ❌ Erreurs : 1
+[2026-11-01T08:00:03.799Z] 📦 Restantes pour demain : 1135
+[2026-11-01T08:00:03.800Z] ════════════════════════════════════════
+[2026-11-01T08:00:03.800Z] 
+⏰ Relancez le script demain pour soumettre les 1135 URLs restantes.
+[2026-11-01T08:00:03.801Z]    Le script reprend automatiquement là où il s'est arrêté.
+[2026-11-02T08:39:38.243Z] 📋 Total URLs : 1745
+[2026-11-02T08:39:38.265Z] ✅ Déjà soumises : 609
+[2026-11-02T08:39:38.266Z] ⏳ Restantes à soumettre : 1136
+[2026-11-02T08:39:38.268Z] 
+🚀 Soumission du lot de 200 URLs (limite API : 200/jour)...
+[2026-11-02T08:39:38.269Z] 🔑 Obtention du token OAuth2...
+[2026-11-02T08:39:38.530Z] ✅ Token obtenu !
+[2026-11-02T08:39:46.179Z]   ✅ 10/200 soumises...
+[2026-11-02T08:39:53.988Z]   ✅ 20/200 soumises...
+[2026-11-02T08:40:01.642Z]   ✅ 30/200 soumises...
+[2026-11-02T08:40:08.930Z]   ✅ 40/200 soumises...
+[2026-11-02T08:40:16.285Z]   ✅ 50/200 soumises...
+[2026-11-02T08:40:23.925Z]   ✅ 60/200 soumises...
+[2026-11-02T08:40:31.158Z]   ✅ 70/200 soumises...
+[2026-11-02T08:40:38.445Z]   ✅ 80/200 soumises...
+[2026-11-02T08:40:45.676Z]   ✅ 90/200 soumises...
+[2026-11-02T08:40:53.191Z]   ✅ 100/200 soumises...
+[2026-11-02T08:41:00.481Z]   ✅ 110/200 soumises...
+[2026-11-02T08:41:07.991Z]   ✅ 120/200 soumises...
+[2026-11-02T08:41:15.205Z]   ✅ 130/200 soumises...
+[2026-11-02T08:41:22.631Z]   ✅ 140/200 soumises...
+[2026-11-02T08:41:30.700Z]   ✅ 150/200 soumises...
+[2026-11-02T08:41:37.922Z]   ✅ 160/200 soumises...
+[2026-11-02T08:41:45.187Z]   ✅ 170/200 soumises...
+[2026-11-02T08:41:52.458Z]   ✅ 180/200 soumises...
+[2026-11-02T08:41:59.765Z]   ✅ 190/200 soumises...
+[2026-11-02T08:42:06.836Z]   ✅ 200/200 soumises...
+[2026-11-02T08:42:07.341Z] 
+════════════════════════════════════════
+[2026-11-02T08:42:07.343Z] ✅ Soumises avec succès : 200
+[2026-11-02T08:42:07.344Z] ❌ Erreurs : 0
+[2026-11-02T08:42:07.346Z] 📦 Restantes pour demain : 936
+[2026-11-02T08:42:07.347Z] ════════════════════════════════════════
+[2026-11-02T08:42:07.348Z] 
+⏰ Relancez le script demain pour soumettre les 936 URLs restantes.
+[2026-11-02T08:42:07.351Z]    Le script reprend automatiquement là où il s'est arrêté.
