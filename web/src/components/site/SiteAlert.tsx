@@ -122,117 +122,141 @@ function PopupAlert({ alert, onDismiss }: { alert: AlerteSite; onDismiss: () => 
   return (
     <>
       <AlertKeyframes />
+      {/* Overlay */}
       <div
         onClick={onDismiss}
         className="rz-anim fixed inset-0 z-[9998] bg-navy-950/60 backdrop-blur-sm"
         style={{ animation: "rz-overlay-in 220ms ease both" }}
         aria-hidden="true"
       />
+
+      {/* Dialog wrapper — flex-center with safe padding */}
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="rz-alert-title"
-        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6"
+        className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6"
         style={{ pointerEvents: "none" }}
       >
-        <div className="relative w-full max-w-[850px]" style={{ pointerEvents: "auto" }}>
-          {/* Subtle glow behind the modal */}
+        <div
+          className="relative w-full sm:max-w-[520px] md:max-w-[850px]"
+          style={{ pointerEvents: "auto" }}
+        >
+          {/* Glow — desktop only */}
           <div
-            className="rz-anim pointer-events-none absolute -inset-6 -z-10 rounded-[32px] blur-3xl opacity-50"
+            className="rz-anim pointer-events-none absolute -inset-6 -z-10 hidden md:block rounded-[32px] blur-3xl opacity-50"
             style={{ background: s.glow, animation: "rz-glow-pulse 3.6s ease-in-out infinite" }}
             aria-hidden="true"
           />
 
           <div
             ref={modalRef}
-            className="rz-anim flex flex-col md:flex-row w-full overflow-hidden rounded-[24px] bg-white shadow-[0_32px_64px_-12px_rgba(15,23,42,0.3)] ring-1 ring-slate-900/5"
+            className="rz-anim flex flex-col md:flex-row w-full overflow-hidden
+              rounded-t-[24px] sm:rounded-[20px] md:rounded-[24px]
+              bg-white
+              shadow-[0_-8px_40px_-8px_rgba(15,23,42,0.25)] sm:shadow-[0_32px_64px_-12px_rgba(15,23,42,0.3)]
+              ring-1 ring-slate-900/5
+              max-h-[92dvh] sm:max-h-none overflow-y-auto sm:overflow-visible"
             style={{ animation: "rz-modal-in 320ms cubic-bezier(0.16,1,0.3,1) both" }}
           >
-            {/* Left Pane (Hidden on mobile, visible on md+) */}
-            <div className="relative hidden md:flex flex-col items-center justify-center p-6 md:w-[45%] shrink-0 overflow-hidden bg-gradient-to-br from-azure-400 to-azure-600">
-              {/* Background bubbles (mimicking the exact shapes in the screenshot) */}
+            {/* ── Mobile header strip (visible on mobile only) ── */}
+            <div
+              className="md:hidden flex items-center justify-between px-5 py-4"
+              style={{ background: `linear-gradient(135deg, ${s.accent}ee, ${s.accent})` }}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="text-[13px] font-black text-white tracking-wide">RZ Medical</span>
+                <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white">
+                  100% Gratuit
+                </span>
+              </div>
+              <button
+                onClick={onDismiss}
+                aria-label="Fermer"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* ── Desktop left pane ── */}
+            <div className="relative hidden md:flex flex-col items-center justify-center p-6 md:w-[42%] shrink-0 overflow-hidden bg-gradient-to-br from-azure-400 to-azure-600">
               <div className="absolute -left-16 top-12 h-48 w-48 rounded-full bg-azure-300/20 blur-[2px]" />
               <div className="absolute -left-8 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-azure-300/20 blur-[2px]" />
               <div className="absolute -right-20 -bottom-10 h-72 w-72 rounded-full bg-azure-300/10 blur-[2px]" />
               <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-azure-300/15 blur-3xl" />
 
-              {/* Inner "Book Cover" Card matching the screenshot style */}
-              <div className="relative z-10 flex h-[100%] w-full flex-col rounded-md bg-gradient-to-br from-[#60b6e9] via-[#0ea5e9] to-[#0284c7] p-6 text-white shadow-2xl ring-1 ring-white/15">
-
-                {/* Top header */}
+              <div className="relative z-10 flex h-full w-full flex-col rounded-xl bg-gradient-to-br from-[#60b6e9] via-[#0ea5e9] to-[#0284c7] p-6 text-white shadow-2xl ring-1 ring-white/15">
                 <div className="flex items-center justify-between mb-auto">
-                  <div className="flex items-center gap-2">
-
-                    <span className="text-[12.5px] font-bold">RZ Medical</span>
-                  </div>
+                  <span className="text-[12.5px] font-bold">RZ Medical</span>
                   <span className="rounded-full bg-white px-2.5 py-0.5 text-[9px] font-black uppercase text-azure-600 shadow-sm">
                     Gratuit
                   </span>
                 </div>
-
-                {/* Center content */}
                 <div className="my-auto flex flex-col items-center text-center">
-                  <p className="mb-4 text-[9px] font-bold uppercase tracking-[0.2em] text-azure-100">
-                    Édition Professionnelle
-                  </p>
-                  <h3 className="text-[36px] font-black leading-[1.05] tracking-tight text-white drop-shadow-sm">
+                  <p className="mb-4 text-[9px] font-bold uppercase tracking-[0.2em] text-azure-100">Édition Professionnelle</p>
+                  <h3 className="text-[34px] font-black leading-[1.05] tracking-tight text-white drop-shadow-sm">
                     Catalogue<br />
                     <span className="font-serif italic font-normal text-azure-50">Privé</span>
                   </h3>
-                  <p className="mt-6 text-[13px] leading-relaxed text-azure-50 max-w-[220px]">
-                    Déverrouillez notre catalogue complet pour découvrir les tarifs préférentiels réservés aux professionnels de la santé.
+                  <p className="mt-5 text-[13px] leading-relaxed text-azure-50 max-w-[200px]">
+                    Découvrez les tarifs préférentiels réservés aux professionnels de la santé.
                   </p>
                 </div>
-
-                {/* Bottom pills */}
                 <div className="mt-auto flex flex-wrap justify-center gap-2">
-                  <span className="rounded-full border border-white/40 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-white">
-                    Offres exclusives
-                  </span>
-                  <span className="rounded-full border border-white/40 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-white">
-                    Devis en ligne
-                  </span>
+                  <span className="rounded-full border border-white/40 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-white">Offres exclusives</span>
+                  <span className="rounded-full border border-white/40 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-white">Devis en ligne</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Pane */}
-            <div className="relative flex flex-col justify-center bg-white p-7 md:w-[58%] md:p-10 lg:p-12">
+            {/* ── Right / main pane ── */}
+            <div className="relative flex flex-col justify-center bg-white
+              px-5 py-6
+              sm:px-8 sm:py-8
+              md:w-[58%] md:px-10 md:py-10
+              lg:px-12">
+
+              {/* Close button — desktop only (mobile has it in the header strip) */}
               <button
                 onClick={onDismiss}
                 aria-label="Fermer"
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 sm:right-6 sm:top-6"
+                className="absolute right-5 top-5 hidden md:flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
               >
                 <X size={16} />
               </button>
 
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-azure-50 px-3.5 py-1.5 ring-1 ring-azure-500/20">
-                <span className="text-[11px] font-black uppercase tracking-wider text-azure-700">
-                  {alert.type === 'INFO' ? 'Nouveau compte' : alert.type}
+              {/* Badge */}
+              <div className="mb-3 inline-flex items-center gap-2 self-start rounded-full bg-azure-50 px-3 py-1 ring-1 ring-azure-500/20">
+                <span className="text-[10.5px] font-black uppercase tracking-wider text-azure-700">
+                  {alert.type === "INFO" ? "Nouveau compte" : alert.type}
                 </span>
-                <span className="text-[11px] text-azure-600/60 font-medium">• 100% Gratuit</span>
+                <span className="text-[10.5px] text-azure-600/60 font-medium">• Gratuit</span>
               </div>
 
+              {/* Title */}
               <h2
                 id="rz-alert-title"
-                className="mb-4 text-[26px] font-bold leading-tight tracking-tight text-slate-900 sm:text-[32px]"
+                className="mb-2.5 text-[22px] font-bold leading-tight tracking-tight text-slate-900
+                  sm:text-[26px] md:text-[30px]"
               >
                 {alert.titre}
               </h2>
 
-              <p className="mb-6 text-[15px] leading-relaxed text-slate-600">
+              {/* Message */}
+              <p className="mb-5 text-[13.5px] sm:text-[15px] leading-relaxed text-slate-600">
                 {alert.message}
               </p>
 
               {/* Checklist */}
-              <ul className="mb-8 space-y-3.5">
+              <ul className="mb-6 space-y-2.5 sm:space-y-3">
                 {[
-                  "Profitez d'offres exclusives et de remises",
-                  "Suivez vos commandes en temps réel",
-                  "Accédez à vos factures et devis en ligne"
+                  "Offres exclusives et remises professionnelles",
+                  "Suivi de commandes en temps réel",
+                  "Factures et devis accessibles en ligne",
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-[14px] font-medium text-slate-700">
-                    <svg className="mt-0.5 h-4.5 w-4.5 shrink-0 text-azure-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <li key={i} className="flex items-start gap-2.5 text-[13px] sm:text-[14px] font-medium text-slate-700">
+                    <svg className="mt-0.5 h-4 w-4 shrink-0 text-azure-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>{item}</span>
@@ -240,31 +264,32 @@ function PopupAlert({ alert, onDismiss }: { alert: AlerteSite; onDismiss: () => 
                 ))}
               </ul>
 
-              <div className="flex flex-col sm:flex-row items-center gap-3">
+              {/* CTAs */}
+              <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
                 {alert.lien && alert.texteBouton && (
                   <button
-                    onClick={() => {
-                      onDismiss();
-                      router.push(alert.lien!);
-                    }}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 text-[15px] font-bold text-white transition-all active:scale-[0.98]"
-                    style={{
-                      background: s.accent,
-                      boxShadow: `0 4px 14px ${s.glow}`
-                    }}
+                    onClick={() => { onDismiss(); router.push(alert.lien!); }}
+                    className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl
+                      px-6 py-3.5
+                      text-[14px] sm:text-[15px] font-bold text-white
+                      transition-all active:scale-[0.98]"
+                    style={{ background: s.accent, boxShadow: `0 4px 14px ${s.glow}` }}
                   >
+                    <ArrowRight size={16} />
                     {alert.texteBouton}
                   </button>
                 )}
                 <button
                   onClick={onDismiss}
-                  className="w-full sm:w-auto rounded-xl px-6 py-3.5 text-[14px] font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                  className="w-full sm:w-auto rounded-xl px-5 py-3.5
+                    text-[13.5px] font-semibold text-slate-500
+                    hover:bg-slate-100 hover:text-slate-700 transition-colors"
                 >
-                  Non merci, plus tard
+                  Plus tard
                 </button>
               </div>
 
-              <p className="mt-6 text-[12px] text-slate-400 font-medium">
+              <p className="mt-5 text-[11.5px] text-slate-400 font-medium">
                 Rejoignez des centaines de professionnels de la santé.
               </p>
             </div>
