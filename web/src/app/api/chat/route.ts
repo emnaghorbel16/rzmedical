@@ -141,7 +141,10 @@ async function groqStreamChat(
 
       try {
         const json = JSON.parse(raw);
-        const delta = json.choices?.[0]?.delta?.content;
+        const deltaObj = json.choices?.[0]?.delta;
+        // openai/gpt-oss-120b envoie le raisonnement via delta.reasoning (channel "analysis")
+        // et le contenu final via delta.content — on ignore le reasoning, on attend le content
+        const delta = deltaObj?.content;
         if (delta) {
           fullText += delta;
           onDelta(delta);
@@ -152,6 +155,7 @@ async function groqStreamChat(
     }
   }
 
+  // Si le modèle n'a émis aucun delta.content (ex: bug ou réponse vide), on retourne quand même
   return { text: fullText, headers: response.headers };
 }
 
