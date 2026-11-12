@@ -1039,6 +1039,12 @@ export async function POST(req: Request) {
                   }
                 } catch {}
               }
+              // Récupérer la véritable adresse IP client (gérer les proxys multi-sauts)
+              const rawXff = req.headers.get("x-forwarded-for");
+              const clientIp = rawXff
+                ? rawXff.split(",")[0].trim()
+                : (req.headers.get("x-real-ip") || req.headers.get("cf-connecting-ip") || undefined);
+
               // Envoyer tous les messages (user + assistant) au backend
               fetch(`${backendUrl}/api/chat-logs/save`, {
                 method: "POST",
@@ -1049,7 +1055,7 @@ export async function POST(req: Request) {
                 body: JSON.stringify({
                   sessionId,
                   clientId,
-                  ipAddress: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || undefined,
+                  ipAddress: clientIp,
                   userAgent: req.headers.get("user-agent") || undefined,
                   messages: groqMessages
                     .filter((m) => m.role === "user" || m.role === "assistant")
