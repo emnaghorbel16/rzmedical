@@ -99,7 +99,7 @@ router.get('/', requireAuth, async (req: Request, res: Response) => {
 // GET /api/chat-logs/:id — Détail d'une conversation avec tous ses messages
 router.get('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(String(req.params.id), 10);
     const conversation = await prisma.chatConversation.findUnique({
       where: { id },
       include: {
@@ -124,7 +124,7 @@ router.get('/:id', requireAuth, async (req: Request, res: Response) => {
 // DELETE /api/chat-logs/:id — Supprimer une conversation
 router.delete('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(String(req.params.id), 10);
     await prisma.chatConversation.delete({ where: { id } });
     res.json({ ok: true });
   } catch (err) {
