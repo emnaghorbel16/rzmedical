@@ -16,15 +16,15 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MAX_TOOL_ROUNDS = 4; // compare_products + web_search peuvent enchaîner plusieurs appels
 const MAX_HISTORY_MESSAGES = 10; // Nombre max de messages à envoyer à Groq (évite les dépassements de tokens)
 
-// Modèles validés et disponibles sur Groq (chacun avec ses quotas TPM séparés)
+// Modèles validés et disponibles sur ce compte Groq (chacun avec ses quotas TPM séparés)
 const GROQ_MODELS = [
-  "llama-3.3-70b-versatile",
-  "llama-3.1-8b-instant",
-  "llama3-groq-70b-8192-tool-use-preview",
+  "qwen/qwen3.8-27b",
+  "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
 ] as const;
 const DEFAULT_FALLBACK_MODELS = [
-  "llama3-groq-70b-8192-tool-use-preview",
-  "llama-3.1-8b-instant",
+  "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
 ];
 
 async function groqChat(
@@ -831,8 +831,7 @@ async function runToolCall(toolCall: ToolCall, clientToken?: string, onLog?: (ms
 async function analyzeImageWithVision(base64Image: string): Promise<string> {
   // Groq vision-capable models available on this account
   const VISION_MODELS = [
-    "llama-3.2-11b-vision-preview",
-    "llama-3.2-90b-vision-preview",
+    "qwen/qwen3.8-27b",
   ];
 
   const visionMessages = [
@@ -892,12 +891,12 @@ export async function POST(req: Request) {
       });
     }
 
-    // Modèle pour la sélection des outils (llama-3.3-70b supporte bien les tool calls)
-    const TOOL_MODEL = process.env.GROQ_TOOL_MODEL || "llama-3.3-70b-versatile";
-    // Modèle pour la rédaction finale en streaming (llama-3.1-8b-instant = rapide + bucket TPM séparé)
+    // Modèle pour la sélection des outils (priorité qwen/qwen3.8-27b sur bucket TPM séparé)
+    const TOOL_MODEL = process.env.GROQ_TOOL_MODEL || "qwen/qwen3.8-27b";
+    // Modèle pour la rédaction finale (priorité openai/gpt-oss-120b sur un bucket TPM différent pour doubler la capacité)
     const STREAM_MODEL =
       process.env.GROQ_STREAM_MODEL ||
-      (TOOL_MODEL === "llama-3.3-70b-versatile" ? "llama-3.1-8b-instant" : "llama-3.3-70b-versatile");
+      (TOOL_MODEL === "qwen/qwen3.8-27b" ? "openai/gpt-oss-120b" : "qwen/qwen3.8-27b");
 
     const toolFallbacks = GROQ_MODELS.filter((m) => m !== TOOL_MODEL);
     const streamFallbacks = GROQ_MODELS.filter((m) => m !== STREAM_MODEL);
