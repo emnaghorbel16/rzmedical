@@ -32,6 +32,7 @@ import stockRoutes from './modules/stock/stock.routes';
 import stockCommercialRoutes from './modules/stock-commercial/stock-commercial.routes';
 import groqStatsRoutes from './modules/groq-stats/groq-stats.routes';
 import avisRoutes from './modules/avis/avis.routes';
+import chatLogsRoutes from './modules/chat-logs/chat-logs.routes';
 
 const app = express();
 
@@ -165,6 +166,7 @@ app.use('/api/stock', stockRoutes);
 app.use('/api/stock-commercial', stockCommercialRoutes);
 app.use('/api/groq-stats', groqStatsRoutes);
 app.use('/api/avis', avisRoutes);
+app.use('/api/chat-logs', chatLogsRoutes);
 
 app.get('/', (_req, res) => {
   res.json({ message: 'API RZMedical' });

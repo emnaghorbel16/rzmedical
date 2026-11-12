@@ -799,13 +799,24 @@ export function ChatWidget() {
       console.log("💬 [RZBot Navigateur (F12)] Envoi du message au serveur:", text.trim() || "(image)");
 
       try {
+        // ID de session persistant par onglet/visiteur
+        let sessionId = "";
+        try {
+          sessionId = sessionStorage.getItem("rzmedical_chat_session_id") || "";
+          if (!sessionId) {
+            sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+            sessionStorage.setItem("rzmedical_chat_session_id", sessionId);
+          }
+        } catch {}
+
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...(sessionId ? { "x-session-id": sessionId } : {}),
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
-          body: JSON.stringify({ messages: history }),
+          body: JSON.stringify({ messages: history, sessionId }),
           signal: ctrl.signal,
         });
 

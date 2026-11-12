@@ -884,7 +884,7 @@ export async function POST(req: Request) {
   console.log("\n=======================================================");
   console.log("🚀 [SERVER /api/chat] NOUVELLE REQUÊTE CHAT REÇUE DU NAVIGATEUR !");
   try {
-    const { messages } = (await req.json()) as { messages: ChatMessage[] };
+    const { messages, sessionId } = (await req.json()) as { messages: ChatMessage[]; sessionId?: string };
     const lastUserMsg = messages?.[messages.length - 1];
     console.log(`📩 [SERVER /api/chat] Message du client : "${lastUserMsg?.content ?? "(aucun texte)"}"`);
 
@@ -1018,6 +1018,46 @@ export async function POST(req: Request) {
 
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
+
+          // ── Sauvegarde de la conversation en BDD (non bloquant) ──────────
+          try {
+            const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+            const secret = process.env.INTERNAL_SECRET;
+            if (secret) {
+              const sessionId = req.headers.get("x-session-id") || `anon-${Date.now()}`;
+              const clientToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+              // Résoudre l'ID client depuis le token si présent
+              let clientId: number | undefined;
+              if (clientToken) {
+                try {
+                  const meRes = await fetch(`${backendUrl}/api/client-auth/me`, {
+                    headers: { Authorization: `Bearer ${clientToken}` },
+                  });
+                  if (meRes.ok) {
+                    const me = await meRes.json();
+                    clientId = me?.id;
+                  }
+                } catch {}
+              }
+              // Envoyer tous les messages (user + assistant) au backend
+              fetch(`${backendUrl}/api/chat-logs/save`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-internal-secret": secret,
+                },
+                body: JSON.stringify({
+                  sessionId,
+                  clientId,
+                  ipAddress: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || undefined,
+                  userAgent: req.headers.get("user-agent") || undefined,
+                  messages: groqMessages
+                    .filter((m) => m.role === "user" || m.role === "assistant")
+                    .map((m) => ({ role: m.role, content: m.content || "" })),
+                }),
+              }).catch(() => {});
+            }
+          } catch {}
         } catch (err) {
           const message = err instanceof Error ? err.message : "Erreur Groq";
           console.error("❌ [RZBot stream] EXCEPTION dans le stream:", message);

@@ -155,6 +155,9 @@ model Utilisateur {
   // Avis produits
   avisClients          AvisClient[]
 
+  // Conversations chatbot RZBot
+  chatConversations    ChatConversation[]
+
   @@unique([email, typeUtilisateur])
   @@map("utilisateurs")
 }
@@ -1265,4 +1268,35 @@ model GroqUsage {
 
   @@index([creeLe])
   @@map("groq_usage")
+}
+
+// ─── Conversations RZBot ──────────────────────────────────────────────────────
+
+model ChatConversation {
+  id          Int           @id @default(autoincrement())
+  sessionId   String        @unique   // identifiant session navigateur
+  clientId    Int?                    // lié à Utilisateur si connecté
+  client      Utilisateur?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  ipAddress   String?
+  userAgent   String?
+  messages    ChatMessage[]
+  nbMessages  Int           @default(0)
+  creeLe      DateTime      @default(now())
+  misAJourLe  DateTime      @updatedAt
+
+  @@index([creeLe])
+  @@index([clientId])
+  @@map("chat_conversations")
+}
+
+model ChatMessage {
+  id             Int              @id @default(autoincrement())
+  conversationId Int
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String           // "user" | "assistant"
+  content        String           @db.Text
+  creeLe         DateTime         @default(now())
+
+  @@index([conversationId])
+  @@map("chat_messages")
 }
