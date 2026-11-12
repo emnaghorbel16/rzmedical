@@ -44,10 +44,15 @@ export default function ChatLogsPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [deleting, setDeleting] = useState<number | null>(null);
 
+  const getToken = () => {
+    if (typeof window === "undefined") return "";
+    return localStorage.getItem("rzm_token") || localStorage.getItem("token") || "";
+  };
+
   const fetchList = useCallback(async (p: number) => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken");
+      const token = getToken();
       const res = await fetch(`${getApiUrl()}/chat-logs?page=${p}&limit=20`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -61,7 +66,7 @@ export default function ChatLogsPage() {
 
   const openDetail = async (id: number) => {
     setDetailLoading(true);
-    const token = localStorage.getItem("adminToken");
+    const token = getToken();
     const res = await fetch(`${getApiUrl()}/chat-logs/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -72,7 +77,7 @@ export default function ChatLogsPage() {
   const deleteConv = async (id: number) => {
     if (!confirm("Supprimer cette conversation ?")) return;
     setDeleting(id);
-    const token = localStorage.getItem("adminToken");
+    const token = getToken();
     await fetch(`${getApiUrl()}/chat-logs/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
